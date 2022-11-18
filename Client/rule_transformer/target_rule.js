@@ -1,5 +1,3 @@
-let tracked_params = {};
-
 let access_tracker = (varValue)=>{
     let _type = 'trigger' // trigger or action
     let _value    = varValue
@@ -13,6 +11,7 @@ let access_tracker = (varValue)=>{
 let Office365Mail = require('./trigger_action_modules').Office365Mail;
 let Slack = require('./trigger_action_modules').Slack;
 
+let tracked_params = {};
 tracked_params['Office365Mail.newEmail.Subject'] = access_tracker(Office365Mail.newEmail.Subject);
 
 console.log(tracked_params['Office365Mail.newEmail.Subject'].accessed)
@@ -20,9 +19,6 @@ console.log(tracked_params['Office365Mail.newEmail.Subject'].value)
 console.log(tracked_params['Office365Mail.newEmail.Subject'].accessed)
 
 
-// Rule
-// let Office365Mail = require('./trigger_action_modules').Office365Mail;
-// let Slack = require('./trigger_action_modules').Slack;
 
 // let str = Office365Mail.newEmail.Subject;
 
