@@ -38,22 +38,25 @@ const extractPackageVariable = (str)=>{
 }
 
 const applyForAllVariableOfPackage = (rule, packageKeyword, callback)=>{
+    
+    ruleCopy = (' '+rule).slice(1); // deep copy
+    
     if(packageKeyword == null || packageKeyword.length === 0){
         return;
     }
-    let index = rule.indexOf(packageKeyword);
+
+    let index = ruleCopy.indexOf(packageKeyword);
     while(index != -1){
         
         try{
-            callback(extractPackageVariable(rule.slice(rule.indexOf(packageKeyword))));
+            callback(extractPackageVariable(ruleCopy.slice(ruleCopy.indexOf(packageKeyword))));
         }catch(e){
             console.error(`${e.name}: ${e.message}`);
         }
         
-        rule = rule.slice(rule.indexOf(packageKeyword)+1)
+        ruleCopy = ruleCopy.slice(rule.indexOf(packageKeyword)+1)
 
-        index = rule.indexOf(packageKeyword);
-        console.log(index)
+        index = ruleCopy.indexOf(packageKeyword);
     }
 
 }
@@ -67,14 +70,80 @@ const addToListIfNotExist = (list)=>{
     }
 }
 
+const setAsATrakedParamIfNotYet = (ruleObj)=>{
+    ruleObj.rule += '\n';
+    let pushedParams = [];
+    return (paramName)=>{
+        if(!pushedParams.includes(paramName)){
+            pushedParams.push(paramName);
+            ruleObj.rule += `tracked_params['${paramName}'] = access_tracker(${paramName});\n`;
+        }
+    }
+}
+
+const setReplaceATriggerFiledByItsTracker = (ruleObj)=>{
+    ruleObj.rule += '\n';
+    let pushedParams = [];
+    return (paramName)=>{
+        if(!pushedParams.includes(paramName)){
+            pushedParams.push(paramName);
+            ruleObj.rule = ruleObj.rule.replaceAll(paramName, `tracked_params['${paramName}'].value`);
+        }
+    }
+}
+
 const ruleTransformer = (rule, triggerKeyword, actionKeyword)=>{
 
-    // Computing T'
+    // Compute T'
     trrigerList = []
-    applyForAllVariableOfPackage(ruleExample, triggerKeyword, addToListIfNotExist(trrigerList));
+    applyForAllVariableOfPackage(rule, triggerKeyword, addToListIfNotExist(trrigerList));
 
     console.log('T\' = ')
     console.log(trrigerList);
+
+    // Compute f'
+    let newRule = `
+        
+    `;
+    // -- adding tracker closure
+    newRuleObj = {
+        rule:`
+let access_tracker = (varValue)=>{
+    let _type = 'trigger' // trigger or action
+    let _value    = varValue
+    let _accessed = false
+    return {
+        get value(){_accessed = true; return _value;},
+        get accessed(){return _accessed;}
+    }
+}
+
+let tracked_params = {};
+        `
+    };
+
+    // --- Adding trackers for each trigger field
+    applyForAllVariableOfPackage(rule, triggerKeyword, setAsATrakedParamIfNotYet(newRuleObj));
+
+    // --- Replacing each trigger field by its tracker
+    onlyRulePartModifObj = {
+        rule: rule
+    };
+    applyForAllVariableOfPackage(rule, triggerKeyword, setReplaceATriggerFiledByItsTracker(onlyRulePartModifObj));
+    newRuleObj.rule += '\n'+onlyRulePartModifObj.rule;
+
+    // Adding print code for accessed params
+    newRuleObj.rule += `
+for(traked_param_name in tracked_params){
+    if(tracked_params[traked_param_name].accessed){
+        console.log(traked_param_name);
+    }
+}
+    `;
+
+    // Printing Result
+    console.log('f\' = ');
+    console.log(newRuleObj.rule);
 
 
 }
