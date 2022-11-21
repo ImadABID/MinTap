@@ -30,15 +30,69 @@ const extractPackageVariable = (str)=>{
         }
     }
     
-    if(variableName[variableName.length-1] != '.'){
-        return variableName;
-    }else{
+    // Is it a method
+    if(variableName[variableName.length-1] == '('){
         throw new Error(`"${variableName}" is not a conform variable name !`);
     }
+    
+    return variableName;
 }
 
-const applyForAllVariableOfPackage = (rule, packageKeyword, callback)=>{
+const extractPackageMethodeCall = (str)=>{
+    let methodeCallInstruction = '';
+    let c;
+
+    // extract method name
+    let i;
+    for(i = 0; i < str.length; i++){
+        c = str[i];
+        if(
+            (c >= '0' && c <= '9' && i != 0) ||
+            (c >= 'a' && c <= 'z') ||
+            (c >= 'A' && c <= 'Z') ||
+            (c === '.' && i != 0 ) ||
+            (c === '_')
+        ){
+            methodeCallInstruction += c;
+        }else{
+            break;
+        }
+    }
+
+    if(c!='('){
+        throw new Error(`Can't detect an opening parenthesis for this method"${methodeCallInstruction}"`);
+    }
+
+    methodeCallInstruction+='(';
     
+    // Detecting closing parenthesis
+    let parenthesisNbr = 1;
+    i++;
+    while(parenthesisNbr>0){
+        c = str[i];
+
+        methodeCallInstruction += c;
+
+        switch(c){
+            case '(':
+                parenthesisNbr++;
+                break;
+            case ')':
+                parenthesisNbr--;
+                break;
+        }
+
+        i++;
+        if(i==str.length){
+            throw new Error(`Can't detect an closing parenthesis for this method"${methodeCallInstruction}"`);
+        }
+    }
+
+    return methodeCallInstruction;
+
+}
+
+const applyForAllObjOfPackage = (rule, packageKeyword, extractor, callback)=>{
     ruleCopy = (' '+rule).slice(1); // deep copy
     
     if(packageKeyword == null || packageKeyword.length === 0){
@@ -49,16 +103,23 @@ const applyForAllVariableOfPackage = (rule, packageKeyword, callback)=>{
     while(index != -1){
         
         try{
-            callback(extractPackageVariable(ruleCopy.slice(ruleCopy.indexOf(packageKeyword))));
+            callback(extractor(ruleCopy.slice(ruleCopy.indexOf(packageKeyword))));
         }catch(e){
-            console.error(`${e.name}: ${e.message}`);
+            //console.error(`${e.name}: ${e.message}`);
         }
         
         ruleCopy = ruleCopy.slice(rule.indexOf(packageKeyword)+1)
 
         index = ruleCopy.indexOf(packageKeyword);
     }
+}
 
+const applyForAllVariableOfPackage = (rule, packageKeyword, callback)=>{
+    applyForAllObjOfPackage(rule, packageKeyword, extractPackageVariable, callback);
+}
+
+const applyForAllMethodOfPackage = (rule, packageKeyword, callback)=>{
+    applyForAllObjOfPackage(rule, packageKeyword, extractPackageMethodeCall, callback);
 }
 
 // applyForAllVariableOfPackage's callbacks
@@ -105,7 +166,8 @@ const ruleTransformer = (rule, triggerKeyword, actionKeyword)=>{
     let newRule = `
         
     `;
-    // -- adding tracker closure
+    // --- Adding data-flow tracking logic
+    // --- --- Adding tracker closure & action stub definition
     newRuleObj = {
         rule:`
 let access_tracker = (varValue)=>{
@@ -116,21 +178,31 @@ let access_tracker = (varValue)=>{
         get value(){_accessed = true; return _value;},
         get accessed(){return _accessed;}
     }
-}
+};
+
+const action_stub = (param_list)=>{};
 
 let tracked_params = {};
         `
     };
 
-    // --- Adding trackers for each trigger field
+    // --- --- Adding trackers for each trigger field
     applyForAllVariableOfPackage(rule, triggerKeyword, setAsATrakedParamIfNotYet(newRuleObj));
 
-    // --- Replacing each trigger field by its tracker
+    // --- --- Replacing each trigger field by its tracker
     onlyRulePartModifObj = {
         rule: rule
     };
     applyForAllVariableOfPackage(rule, triggerKeyword, setReplaceATriggerFiledByItsTracker(onlyRulePartModifObj));
     newRuleObj.rule += '\n'+onlyRulePartModifObj.rule;
+
+    // --- Replacing action with stub
+    console.log('--- Debug ---');
+    applyForAllMethodOfPackage(rule, actionKeyword, console.log);
+    console.log('--- ----- ---');
+
+    // --- --- Replacing
+
 
     // Adding print code for accessed params
     newRuleObj.rule += `
@@ -148,4 +220,4 @@ for(traked_param_name in tracked_params){
 
 }
 
-ruleTransformer(ruleExample, 'Office365Mail', '');
+ruleTransformer(ruleExample, 'Office365Mail', 'Slack');
