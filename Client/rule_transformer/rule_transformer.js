@@ -131,6 +131,35 @@ const addToListIfNotExist = (list)=>{
     }
 }
 
+const extartLastPartOfMethodName = (methodeCallInstruction)=>{
+    lastName=''
+    for(let i = 0; i < methodeCallInstruction.length; i++){
+        c = methodeCallInstruction[i];
+        switch(c){
+            case '.':
+                lastName = '';
+                break;
+            case '(':
+                return lastName;
+            default :
+                lastName+=c;
+                break;
+        }
+    }
+    throw Error(`Invalid method call instruction "${methodeCallInstruction}"`);
+}
+
+const rplaceActionMethodeWithStubs = (ruleObj)=>{
+    let processed = [];
+    return (methodeCallInstruction)=>{
+        if(!processed.includes(methodeCallInstruction)){
+            if(extartLastPartOfMethodName(methodeCallInstruction)==='skip'){
+                ruleObj.rule = ruleObj.rule.replaceAll(methodeCallInstruction, 'return');
+            }
+        }
+    };
+}
+
 const setAsATrakedParamIfNotYet = (ruleObj)=>{
     ruleObj.rule += '\n';
     let pushedParams = [];
@@ -194,15 +223,11 @@ let tracked_params = {};
         rule: rule
     };
     applyForAllVariableOfPackage(rule, triggerKeyword, setReplaceATriggerFiledByItsTracker(onlyRulePartModifObj));
-    newRuleObj.rule += '\n'+onlyRulePartModifObj.rule;
 
     // --- Replacing action with stub
-    console.log('--- Debug ---');
-    applyForAllMethodOfPackage(rule, actionKeyword, console.log);
-    console.log('--- ----- ---');
+    applyForAllMethodOfPackage(rule, actionKeyword, rplaceActionMethodeWithStubs(onlyRulePartModifObj));
 
-    // --- --- Replacing
-
+    newRuleObj.rule += '\n'+onlyRulePartModifObj.rule;
 
     // Adding print code for accessed params
     newRuleObj.rule += `
