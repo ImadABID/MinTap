@@ -9,9 +9,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html')
-    console.log("here")
- })
+res.sendFile(__dirname + '/index.html')
+console.log("here")
+})
+
+app.get('/debug', (req, res) => {
+    res.sendFile(__dirname + '/index_debug.html')
+})
+app.get('/rule_transformer.js', (req, res) => {
+    res.sendFile(__dirname + '/rule_transformer.js')
+})
 
 
 app.post('/post_filter_code', (req, res) => {

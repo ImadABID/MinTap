@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinTap Debug</title>
+    <style>
+        textarea.insidefieldset, input.insidefieldset{
+            border: none;
+            margin: 0;
+            width: 98%;
+        }
+        textarea.insidefieldset{
+            resize: none;
+            height: 200px;
+        }
+
+        textarea:focus, input.insidefieldset:focus{
+            outline: none;
+        }
+        fieldset.text_input{
+            padding-left: 12px;
+            padding-right: 0;
+            padding-bottom: 6px;
+            padding-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">MinTap Debug</h1>
+    <table style="width: 80%; margin: auto;">
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Trigger (Office365Mail)</legend>
+                    <ul>
+                        <li>Office365Mail.newEmail.Subject</li>
+                        <li>Office365Mail.newEmail.Body</li>
+                    </ul>
+                 </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Action (Slack)</legend>
+                    <ul>
+                        <li>
+                            Slack.postToChannel.skip()
+                        </li>
+                        <li>
+                            Slack.postToChannel.setMessage(msg_str)
+                        </li>
+                    </ul>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend>Rule</legend>
+                    <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
+                    <textarea id="rule" class="insidefieldset" spellcheck="false"></textarea>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend><img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Refresh_icon.svg" height="14pt" onclick="updateOutput()"> Transformed rule</legend>
+                    <textarea id="transformed_rule" class="insidefieldset"  spellcheck="false"></textarea>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Static filter</legend>
+                    <div id="static_filter"></div>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend><img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Refresh_icon.svg" height="14pt" onclick="executeDynamicFilter()">Dynamic filter</legend>
+                    Data : <br>
+                    <fieldset class="text_input">
+                        <legend>Subject</legend>
+                        <input class="insidefieldset" type="text" id="email_subject">
+                    </fieldset>
+                    <fieldset class="text_input">
+                        <legend>Body</legend>
+                        <textarea class="insidefieldset" type="text" id="email_body" style="height: 80px;"></textarea>
+                    </fieldset><br>
+                    Accessed fields :
+                    <br><br>
+                    <div id="accessed_fields"></div>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    <script>
+
+        let Office365Mail = {
+            newEmail : {
+                Subject : '[IFTTT] Urgent mail',
+                Body : 'Mr Freeman,\nIt is urgent.\nRegards,\nFreewoman'
+            }
+        }
+
+        let Slack = {
+            postToChannel : {
+                skip : ()=>{},
+                setMessage : (msg_str) => {console.log(`Slack sending : ${msg_str}`)}
+            }
+        }
+
+        let rule = `
+let str = Office365Mail.newEmail.Subject;
+
+if(str.indexOf('IFTTT')===-1){
+    Slack.postToChannel.skip();
+}else{
+    Slack.postToChannel.setMessage(
+        'Email ' + Office365Mail.newEmail.Subject + ' just received!'
+        + Office365Mail.newEmail.Body
+    );
+}
+        `;
+
+        // Init fields
+        document.getElementById('rule').value = rule;
+        document.getElementById('email_subject').value = Office365Mail.newEmail.Subject;
+        document.getElementById('email_body').value = Office365Mail.newEmail.Body;
+
+    </script>
+    <script src="./rule_transformer.js"></script>
+    <script>
+        
+        const putAccessedFiledsRes = (str)=>{
+            document.getElementById('accessed_fields').innerHTML = str.replaceAll('\n','<br>');
+        }
+
+        const executeDynamicFilter = ()=>{
+
+            Office365Mail.newEmail.Subject = document.getElementById('email_subject').value;
+            Office365Mail.newEmail.Body = document.getElementById('email_body').value;
+            
+            const func = new Function(`
+                ${document.getElementById('transformed_rule').value};
+            `)
+            func();
+        }
+
+        const updateOutput = ()=>{
+            rule = document.getElementById('rule').value;
+            let trans = ruleTransformer(rule, 'Office365Mail', 'Slack', 'putAccessedFiledsRes');
+            document.getElementById('transformed_rule').value = trans.transformedRule;
+            document.getElementById('static_filter').innerHTML = trans.trigerFields.toString().replaceAll(',','<br>');
+            executeDynamicFilter();
+        }
+        updateOutput();
+
+    </script>
+</body>
+</html>
