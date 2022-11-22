@@ -132,7 +132,7 @@ const addToListIfNotExist = (list)=>{
 }
 
 const extartLastPartOfMethodName = (methodeCallInstruction)=>{
-    lastName=''
+    lastName='';
     for(let i = 0; i < methodeCallInstruction.length; i++){
         c = methodeCallInstruction[i];
         switch(c){
@@ -149,12 +149,27 @@ const extartLastPartOfMethodName = (methodeCallInstruction)=>{
     throw Error(`Invalid method call instruction "${methodeCallInstruction}"`);
 }
 
+const extartMethodName = (methodeCallInstruction)=>{
+    methodName='';
+    for(let i = 0; i < methodeCallInstruction.length; i++){
+        c = methodeCallInstruction[i];
+        if(c === '('){
+            return methodName;
+        }else{
+            methodName+=c;
+        }
+    }
+    throw Error(`Invalid method call instruction "${methodeCallInstruction}"`);
+}
+
 const rplaceActionMethodeWithStubs = (ruleObj)=>{
     let processed = [];
     return (methodeCallInstruction)=>{
         if(!processed.includes(methodeCallInstruction)){
             if(extartLastPartOfMethodName(methodeCallInstruction)==='skip'){
                 ruleObj.rule = ruleObj.rule.replaceAll(methodeCallInstruction, 'return');
+            }else{
+                ruleObj.rule = ruleObj.rule.replaceAll(extartMethodName(methodeCallInstruction), 'action_stub');
             }
         }
     };
