@@ -1,6 +1,7 @@
 let Office365Mail = {
     newEmail : {
-        Subject : '[IFTTT] Urgent mail'
+        Subject : '[IFTTT] Urgent mail',
+        Body : 'Mr Freeman,\nIt is urgent.\nRegards,\nFreewoman'
     }
 }
 

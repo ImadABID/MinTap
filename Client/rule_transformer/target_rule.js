@@ -11,27 +11,32 @@ let access_tracker = (varValue)=>{
     }
 };
 
-let tracked_params = {};
-tracked_params['Office365Mail.newEmail.Subject'] = access_tracker(Office365Mail.newEmail.Subject);
+const action_stub = (param_list)=>{};
 
-console.log(tracked_params['Office365Mail.newEmail.Subject'].accessed)
-console.log(tracked_params['Office365Mail.newEmail.Subject'].value)
-console.log(tracked_params['Office365Mail.newEmail.Subject'].accessed)
-
-
-for(traked_param_name in tracked_params){
-    if(tracked_params[traked_param_name].accessed){
-        console.log(traked_param_name);
+const print_access_tracking_result = ()=>{
+    for(traked_param_name in tracked_params){
+        if(tracked_params[traked_param_name].accessed){
+            console.log(traked_param_name);
+        }
     }
 }
 
-// let str = Office365Mail.newEmail.Subject;
+let tracked_params = {};
+        
+tracked_params['Office365Mail.newEmail.Subject'] = access_tracker(Office365Mail.newEmail.Subject);
+tracked_params['Office365Mail.newEmail.Body'] = access_tracker(Office365Mail.newEmail.Body);
 
-// if(str.indexOf('IFTTT')===-1){
-//     Slack.postToChannel.skip();
-// }else{
-//     Slack.postToChannel.setMessage(
-//         'Email ' + Office365Mail.newEmail.Subject + ' just received!'
-//     );
-// }
-// ---
+
+
+let str = tracked_params['Office365Mail.newEmail.Subject'].value;
+
+if(str.indexOf('IFTTT')===-1){
+    print_access_tracking_result(); return;
+}else{
+    action_stub(
+        'Email ' + tracked_params['Office365Mail.newEmail.Subject'].value + ' just received!'
+        + tracked_params['Office365Mail.newEmail.Body'].value
+    );
+}
+
+print_access_tracking_result();

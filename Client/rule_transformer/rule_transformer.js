@@ -7,6 +7,7 @@ if(str.indexOf('IFTTT')===-1){
 }else{
     Slack.postToChannel.setMessage(
         'Email ' + Office365Mail.newEmail.Subject + ' just received!'
+        + Office365Mail.newEmail.Body
     );
 }
 
@@ -167,7 +168,7 @@ const rplaceActionMethodeWithStubs = (ruleObj)=>{
     return (methodeCallInstruction)=>{
         if(!processed.includes(methodeCallInstruction)){
             if(extartLastPartOfMethodName(methodeCallInstruction)==='skip'){
-                ruleObj.rule = ruleObj.rule.replaceAll(methodeCallInstruction, 'return');
+                ruleObj.rule = ruleObj.rule.replaceAll(methodeCallInstruction, 'print_access_tracking_result(); return');
             }else{
                 ruleObj.rule = ruleObj.rule.replaceAll(extartMethodName(methodeCallInstruction), 'action_stub');
             }
@@ -226,6 +227,14 @@ let access_tracker = (varValue)=>{
 
 const action_stub = (param_list)=>{};
 
+const print_access_tracking_result = ()=>{
+    for(traked_param_name in tracked_params){
+        if(tracked_params[traked_param_name].accessed){
+            console.log(traked_param_name);
+        }
+    }
+}
+
 let tracked_params = {};
         `
     };
@@ -246,11 +255,7 @@ let tracked_params = {};
 
     // Adding print code for accessed params
     newRuleObj.rule += `
-for(traked_param_name in tracked_params){
-    if(tracked_params[traked_param_name].accessed){
-        console.log(traked_param_name);
-    }
-}
+print_access_tracking_result();
     `;
 
     // Printing Result
