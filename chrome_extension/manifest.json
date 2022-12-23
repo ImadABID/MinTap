@@ -14,7 +14,10 @@
     },
     "content_scripts": [
       {
-      "matches": ["*://*/post_filter_code","*://ifttt.com/p/*/applets/new", "*://ifttt.com/services/*/applets/*/edit", "*://ifttt.com/p/*/applets/*/edit"],
+      "matches": ["*://*/post_filter_code",
+      "*://ifttt.com/p/*/applets/new",
+       "*://ifttt.com/services/*/applets/*/edit",
+        "*://ifttt.com/p/*/applets/*/edit"],
       "js": ["content_test.js"]
         }
     ],

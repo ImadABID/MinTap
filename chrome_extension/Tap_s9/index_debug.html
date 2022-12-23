@@ -74,13 +74,13 @@
         <tr>
             <td>
                 <fieldset>
-                    <legend>Static filter</legend>
+                    <legend>Static minimizer</legend>
                     <div id="static_filter"></div>
                 </fieldset>
             </td>
             <td>
                 <fieldset>
-                    <legend><img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Refresh_icon.svg" height="14pt" onclick="executeDynamicFilter()">Dynamic filter</legend>
+                    <legend><img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Refresh_icon.svg" height="14pt" onclick="executeDynamicFilter()">Dynamic minimizer</legend>
                     Data : <br>
                     <fieldset class="text_input">
                         <legend>Subject</legend>
@@ -143,7 +143,7 @@ if(str.indexOf('IFTTT')===-1){
 
             Office365Mail.newEmail.Subject = document.getElementById('email_subject').value;
             Office365Mail.newEmail.Body = document.getElementById('email_body').value;
-            
+
             const func = new Function(`
                 ${document.getElementById('transformed_rule').value};
             `)

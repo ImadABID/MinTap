@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MinTap : AddRule</title>
+  <style>
+    textarea.insidefieldset,
+    input.insidefieldset {
+      border: none;
+      margin: 0;
+      width: 98%;
+    }
+
+    textarea.insidefieldset {
+      resize: none;
+      height: 200px;
+    }
+
+    textarea:focus,
+    input.insidefieldset:focus {
+      outline: none;
+    }
+
+    fieldset.text_input {
+      padding-left: 12px;
+      padding-right: 0;
+      padding-bottom: 6px;
+      padding-top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>MinTap / Add Rule</h1>
+  <fieldset>
+    <legend>Rule</legend>
+    <textarea id="transformed_rule" class="insidefieldset" spellcheck="false"></textarea>
+  </fieldset>
+  <input type="submit" value="Add rule" style="margin: 12px;" onclick="sendRule()">
+  <script>
+    const sendRule = () => {
+      const formData = new FormData();
+      formData.append('title', 'My Vegas Vacation');
+      let data = {'data': 'ok'};
+      fetch(
+        './add_rule',
+        {
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, *cors, same-origin
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json'
+             //'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: 'follow', // manual, *follow, error
+          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data) // body data type must match "Content-Type" header
+        }
+      ).then(resjs => resjs.json()).then((res) => {
+        console.log(res.msg);
+      })
+    }
+  </script>
+</body>
+
+</html>
