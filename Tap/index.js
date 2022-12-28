@@ -3,6 +3,7 @@ const {exec} = require("child_process") ;
  
 const express = require("express");
 
+const tap = require('./tap').tap;
 
 var app = express();
 //app.use(express.urlencoded({ extended: true }));
@@ -20,6 +21,9 @@ app.get('/rule_editor', (req, res) => {
 })
 
 app.post('/add_rule', (req, res) => {
+
+    let ruleID = tap.setRule(`console.log("This is a simple filter code who don't call Trigger methods. We are going to fix that later.");`, 1000);
+    
     console.log(req.body);
     res.send({msg : 'rule saved'});
 })
