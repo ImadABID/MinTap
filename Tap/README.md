@@ -95,7 +95,9 @@ This object is the response of a trigger to the TAP. If a field is not required,
 
 This object is the business logic of the tap application.
 
-Its implementation is done in "tap.js" and it is imported in "index.js"
+Its implementation is done in "tap.js" and it is imported in "index.js" using this line of code :
+
+    const tap = require('./tap').tap;
 
 It has the following methods :
 
