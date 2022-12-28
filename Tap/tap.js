@@ -1,6 +1,19 @@
-const ruleClosure = (ruleID, filterCode, periodInMs)=>{
+
+const ruleClosure = (ruleID, filterCode, triggerApiCallMethodsCode, actuatorApiCallMethodsCode, periodInMs)=>{
+ 
     let intervalID = null;
-    let filerCodeFunction = new Function(filterCode);
+
+    let filerCodeFunction = new Function(
+        triggerApiCallMethodsCode   + '\n' +
+        actuatorApiCallMethodsCode  + '\n' +
+        filterCode
+    );
+
+    console.log(
+        triggerApiCallMethodsCode   + '\n' +
+        actuatorApiCallMethodsCode  + '\n' +
+        filterCode
+    );
 
     const start = ()=>{
         if(intervalID != null){
@@ -25,7 +38,11 @@ const ruleClosure = (ruleID, filterCode, periodInMs)=>{
     const editRule = (newFilterCode)=>{
         stop();
         filterCode = newFilterCode;
-        filerCodeFunction = new Function(filterCode);
+        filerCodeFunction = new Function(
+            triggerApiCallMethodsCode   + '\n' +
+            actuatorApiCallMethodsCode  + '\n' +
+            filterCode
+        );
         start();
     };
 
@@ -50,18 +67,68 @@ const ruleClosure = (ruleID, filterCode, periodInMs)=>{
 // setTimeout(()=>{rule.editRulePeriod(1000)}, 5000)
 
 const tapClosure = ()=>{
+    
     let lastId = 0;
+    
+    const triggers = {};
+    const actuators = {};
     const rules = {};
+
+    /*
+    serviceType : trigger | actuator
+    serviceApiCallMethodsCode : a JavaScript containing the definition of server methods
+    */
+    const registerService = (serviceName, serviceType, serviceApiCallMethodsCode)=>{
+        switch(serviceType){
+            case 'trigger':
+                triggers[serviceName] = {
+                    serviceApiCallMethodsCode : serviceApiCallMethodsCode,
+                }
+                break;
+            case 'actuator':
+                actuators[serviceName] = {
+                    serviceApiCallMethodsCode : serviceApiCallMethodsCode,
+                }
+                break;
+            default :
+                console.log("Unknown service type.");
+                break; 
+        }
+    }
 
     const getNewID = ()=>{
         lastId++;
         return lastId.toString();
     }
 
-    const setRule = (filterCode, periodInMs = 10000)=>{
+    const setRule = (filterCode, triggerName="random int generator", actuatorName = "message logger" , periodInMs = 10000)=>{
+        
         let id = getNewID();
-        rules[id] = ruleClosure(id, filterCode, periodInMs);
+        let triggerApiCallMethodsCode;
+        let actuatorApiCallMethodsCode;
+
+        if(triggers[triggerName]){
+            triggerApiCallMethodsCode = triggers[triggerName].serviceApiCallMethodsCode;
+        }else{
+            console.log("Unknown trigger name");
+        }
+
+        if(actuators[actuatorName]){
+            actuatorApiCallMethodsCode = actuators[actuatorName].serviceApiCallMethodsCode;
+        }else{
+            console.log("Unknown actuator name");
+        }
+
+        rules[id] = ruleClosure(
+            id,
+            filterCode,
+            triggerApiCallMethodsCode,
+            actuatorApiCallMethodsCode,
+            periodInMs
+        );
+
         rules[id].start();
+
     };
 
     const editRule = (newFilterCode, ruleID)=>{
@@ -90,6 +157,7 @@ const tapClosure = ()=>{
     }
 
     return {
+        registerService : registerService,
         setRule : setRule,
         editRule : editRule,
         editRulePeriod : editRulePeriod,
@@ -98,4 +166,18 @@ const tapClosure = ()=>{
 }
 
 const tap = tapClosure();
+
+// register default services
+tap.registerService(
+    "random int generator",
+    "trigger",
+    `const getRandomInt = (max=100)=>{return Math.floor(Math.random() * max);};`
+);
+
+tap.registerService(
+    "message logger",
+    "actuator",
+    `const log = (msg)=>{console.log(msg)};`
+);
+
 module.exports.tap = tap;
