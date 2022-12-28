@@ -99,9 +99,15 @@ Its implementation is done in "tap.js" and it is imported in "index.js"
 
 It has the following methods :
 
-    tap.setRule(filterCode)
+    tap.setRule(filterCode, periodInMs = 10000)
 
-This function takes a filterCode and returns an ID as an int of the created rule.
+This function takes a filterCode and returns an ID of the created rule.
+
+periodInMs is an optional parameter that defines the period in milliseconds between two rule executions. By default it takes 10 seconds. To edit it use the following function :
+
+    tap.editRulePeriod(periodInMs, ruleID)
+
+To edit the rule use :
 
     tap.editRule(filterCode, ruleID)
 
