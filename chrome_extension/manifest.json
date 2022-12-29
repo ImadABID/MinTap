@@ -4,23 +4,20 @@
     "description": "project S9 minTap extension!",
     "permissions": [
       "webRequest",
-      "webRequestBlocking",
-      "*://*/post_filter_code"
+      "tabs",
+      "*://*/rule_edit",
+      "*://*/rule_add",
+      "*://*/add_rule",
+      "webRequestBlocking"
+
+
     ],
     "background": {
       "scripts": [
-        "auth.js"
+        "background.js"
       ]
     },
-    "content_scripts": [
-      {
-      "matches": ["*://*/post_filter_code",
-      "*://ifttt.com/p/*/applets/new",
-       "*://ifttt.com/services/*/applets/*/edit",
-        "*://ifttt.com/p/*/applets/*/edit"],
-      "js": ["content_test.js"]
-        }
-    ],
+
 
   
     "manifest_version": 2

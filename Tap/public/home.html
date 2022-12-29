@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MinTap</title>
+  <style>
+    .section_our_solution .h2 {
+      background-color: rgb(255, 255, 255);
+      border-style: solid;
+      border-radius: 10px;
+      border-width: 0px;
+      padding: 10px;
+      border-color: var(--sec_color);
+      width: 95%;
+      height: 8vh;
+      margin: auto;
+    }
+    .section_our_solution .row {
+      background-color: rgb(226, 226, 226);
+      border-style: solid;
+      border-width: 1px;
+      width: 95%;
+      flex: 0 130%;
+      margin: auto;
+      margin-top: auto;
+    }
+
+    .our_solution_category {
+      display: flex;
+      flex-direction: row;
+      
+      flex-wrap: wrap;
+    }
+
+    .our_solution_category .solution_cards_box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .solution_cards_box .solution_card {
+      flex: 0 100%;
+      background: rgb(255, 255, 255);
+      box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2),
+        0 5px 15px 0 rgba(37, 44, 97, 0.15);
+      border-radius: 15px;
+      margin: 8px;
+      padding: 10px 15px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      width: 250px;
+      min-height: 270px;
+      max-height: 300px;
+      transition: 0.7s;
+    }
+
+    .solution_cards_box .solution_card_add {
+      flex: 0 50%;
+      background: rgb(255, 255, 255);
+      box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2),
+        0 5px 15px 0 rgba(37, 44, 97, 0.15);
+      border-radius: 15px;
+      margin: 8px;
+      padding: 10px 15px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      max-height: 120px;
+      transition: 0.7s;
+    }
+
+    .solution_cards_box .solution_card:hover {
+      background: #f03030;
+      color: #fff;
+      transform: scale(1.1);
+      z-index: 9;
+    }
+
+    .solution_cards_box .solution_card_add:hover {
+      background: #56f030;
+      color: #fff;
+      transform: scale(1.1);
+      z-index: 9;
+    }
+
+    .solution_cards_box .solution_card:hover::before {
+      background: rgb(85 108 214 / 10%);
+    }
+
+    .solution_cards_box .solution_card_add:hover::before {
+      background: rgb(85 108 214 / 10%);
+    }
+
+    .solution_cards_box .solution_card:hover .solu_title h3,
+    .solution_cards_box .solution_card:hover .solu_description p {
+      color: #fff;
+    }
+
+    .solution_cards_box .solution_card_add:hover .solu_title h3,
+    .solution_cards_box .solution_card_add:hover .solu_description p {
+      color: #fff;
+    }
+
+    .solution_cards_box .solution_card:before {
+      content: "";
+      position: absolute;
+      background: rgb(85 108 214 / 5%);
+      width: 170px;
+      height: 400px;
+      z-index: -1;
+      transform: rotate(42deg);
+      right: -56px;
+      top: -23px;
+      border-radius: 35px;
+    }
+
+    .solution_cards_box .solution_card_add:before {
+      content: "";
+      position: absolute;
+      background: rgb(85 108 214 / 5%);
+      width: 170px;
+      height: 400px;
+      z-index: -1;
+      transform: rotate(42deg);
+      right: -56px;
+      top: -23px;
+      border-radius: 35px;
+    }
+
+    .solution_cards_box .solution_card:hover .solu_description button {
+      background: #fff !important;
+      color: #f03030;
+    }
+
+    .solution_cards_box .solution_card_add:hover .solu_description button {
+      background: #fff !important;
+      color: #7df030;
+    }
+
+    .solution_card .solu_title h3 {
+      color: #212121;
+      font-size: 1.3rem;
+      margin-top: 13px;
+      margin-bottom: 13px;
+    }
+
+    .solution_card_add .solu_title h3 {
+      color: #212121;
+      font-size: 1.3rem;
+      margin-top: 13px;
+      margin-bottom: 13px;
+    }
+
+    .solution_card_add .solu_title h3 {
+      color: #212121;
+      font-size: 1.3rem;
+      margin-top: 13px;
+      margin-bottom: 13px;
+    }
+
+    .solution_card .solu_description p {
+      max-height: 150px;
+      min-height: 150px;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+    .solution_card_add .solu_description p {
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+
+    .solution_card .solu_description button {
+      border: 0;
+      border-radius: 15px;
+      background: linear-gradient(140deg,
+          #ca6242 0%,
+          #ca5242 50%,
+          #ca4242c7 75%) !important;
+      color: #fff;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 5px 16px;
+    }
+
+    .solution_card_add .solu_description button {
+      border: 0;
+      border-radius: 15px;
+      background: linear-gradient(140deg,
+          #74ca42 0%,
+          #42ca54 50%,
+          #42ca4dc7 75%) !important;
+      color: #fff;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 5px 16px;
+    }
+
+    .our_solution_content h1 {
+      text-transform: capitalize;
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+    }
+
+    .hover_color_bubble {
+      position: absolute;
+      background: rgb(54 81 207 / 15%);
+      width: 100rem;
+      height: 100rem;
+      left: 0;
+      right: 0;
+      z-index: -1;
+      top: 16rem;
+      border-radius: 50%;
+      transform: rotate(-36deg);
+      left: -18rem;
+      transition: 0.7s;
+    }
+
+    .solution_cards_box .solution_card:hover .hover_color_bubble {
+      top: 0rem;
+    }
+
+    .solution_cards_box .solution_card_add:hover .hover_color_bubble {
+      top: 0rem;
+    }
+
+    /*start media query*/
+    @media screen and (min-width: 320px) {
+      .sol_card_top_3 {
+        position: relative;
+        top: 0;
+      }
+
+      .our_solution_category {
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .our_solution_category .solution_cards_box {
+        flex: auto;
+      }
+    }
+
+    @media only screen and (min-width: 768px) {
+      .our_solution_category .solution_cards_box {
+        flex: 1;
+      }
+    }
+
+    @media only screen and (min-width: 1024px) {
+      .sol_card_top_3 {
+        position: relative;
+        top: -3rem;
+      }
+
+      .our_solution_category {
+        width: 80%;
+        margin: 0 auto;
+      }
+    }
+  </style>
+  <script>
+    fetch(
+      './get_filters'
+    ).then(resjs => resjs.json()).then((res) => {
+      array = res.filters ; 
+      for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+        if (index%2 != 0 )
+        {
+          var our_solution_category = document.getElementById ("our_solution_category");
+          let id = Math.floor (index/2)+1; 
+          var solution_cards_box = document.createElement("div");
+          solution_cards_box.setAttribute("id",id) ; 
+          solution_cards_box.setAttribute("class","solution_cards_box") ; 
+          var solution_card = document.createElement('div');
+          solution_card.setAttribute('class', 'solution_card');
+          var hover_color_bubble = document.createElement('div');
+          hover_color_bubble.setAttribute('class', 'hover_color_bubble');          
+          var solu_title = document.createElement('div');
+          solu_title.setAttribute('class', 'solu_title');    
+          var h3 = document.createElement('h3');
+          h3.innerText =  element.name;   
+          var solu_description = document.createElement('div');
+          solu_description.setAttribute('class', 'solu_description');    
+          var p = document.createElement('p');
+          p.innerText = element.rule;             
+          var aE = document.createElement('a');
+          aE.setAttribute("href", "rule_edit?name="+ element.name)
+          var aR = document.createElement('a');
+          aR.setAttribute("href", "rule_delete?_id="+ element._id)
+          var buttonE = document.createElement('button');
+          buttonE.setAttribute("type", "button")
+          buttonE.setAttribute("class", "read_more_btn")
+          buttonE.innerText = "Edit Rule"; 
+          var buttonD = document.createElement('button');
+          buttonD.setAttribute("type", "button")
+          buttonD.setAttribute("class", "read_more_btn")
+          buttonD.innerText  = "Delete Rule";
+          aE.appendChild(buttonE);
+          aR.appendChild(buttonD);
+          solu_description.appendChild(p);
+          solu_description.appendChild(aE);
+          solu_description.appendChild(aR);
+          solu_title.appendChild(h3);
+          solution_card.appendChild(solu_title);
+          solution_card.appendChild(solu_description);
+          solution_card.appendChild(hover_color_bubble);
+          solution_cards_box.appendChild(solution_card);
+          our_solution_category.appendChild(solution_cards_box);
+        }
+        else{
+          let id = Math.floor (index/2); 
+          var solution_cards_box = document.getElementById(id);
+          var solution_card = document.createElement('div');
+          solution_card.setAttribute('class', 'solution_card');
+          var hover_color_bubble = document.createElement('div');
+          hover_color_bubble.setAttribute('class', 'hover_color_bubble');          
+          var solu_title = document.createElement('div');
+          solu_title.setAttribute('class', 'solu_title');    
+          var h3 = document.createElement('h3');
+          h3.innerText =  element.name;   
+          var solu_description = document.createElement('div');
+          solu_description.setAttribute('class', 'solu_description');    
+          var p = document.createElement('p');
+          p.innerText = element.rule;             
+          var aE = document.createElement('a');
+          aE.setAttribute("href", "rule_edit?name="+ element.name)
+          var aR = document.createElement('a');
+          aR.setAttribute("href", "rule_delete?_id="+ element._id)
+          var buttonE = document.createElement('button');
+          buttonE.setAttribute("type", "button")
+          buttonE.setAttribute("class", "read_more_btn")
+          buttonE.innerText = "Edit Rule"; 
+          var buttonD = document.createElement('button');
+          buttonD.setAttribute("type", "button")
+          buttonD.setAttribute("class", "read_more_btn")
+          buttonD.innerText  = "Delete Rule";
+          aE.appendChild(buttonE);
+          aR.appendChild(buttonD);
+          solu_description.appendChild(p);
+          solu_description.appendChild(aE);
+          solu_description.appendChild(aR);
+          solu_title.appendChild(h3);
+          solution_card.appendChild(solu_title);
+          solution_card.appendChild(solu_description);
+          solution_card.appendChild(hover_color_bubble);
+          solution_cards_box.appendChild(solution_card);
+        }
+
+        
+      }
+
+    })
+  </script>
+</head>
+
+<body>
+  <br><br><br><br><br>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <div class="section_our_solution">
+    <h2 class = 'h2' style="text-align: center;">MinTap</h2>
+
+    <div class="row">
+      
+      <div class="col-lg-12 col-md-12 col-sm-12">
+
+        <div id= "our_solution_category" class="our_solution_category">
+          <div id = "0" , class="solution_cards_box">
+
+            <div class="solution_card_add">
+              <div class="hover_color_bubble"></div>
+              <div class="solu_title">
+                <h3>Add Rule </h3>
+              </div>
+              <div class="solu_description">
+                <a href="rule_add">
+                  <button type="button" class="read_more_btn">Add Rule</button>
+                </a>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
