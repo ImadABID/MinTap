@@ -20,11 +20,9 @@ This document presents :
     - filterCode
     - minimizedAuxiliaryInformation
     - minimizedTriggerData
-    - tap
-3. Trigger API
-4. Actuators API
-5. Web interface API
-6. Debug user interface API
+3. The TAP's business logic
+4. Web interface API
+5. Debug user interface API
 
 ## 1 - HTTP request headers and format
 
@@ -94,8 +92,8 @@ This object is the response of a trigger to the TAP. If a field is not required,
 ## The TAP's business logic  :
 
 The tap object is the business logic of the tap application. Its responsible for :
-- Registering trigger and actuators.
-- Setting/Editing/deleting rules.
+- Registering triggers and actuators.
+- Creating/editing/deleting rules.
 - Executing rules periodically.
 - Giving information to the debug user interface.
 
@@ -103,7 +101,7 @@ Its implementation is done in "tap.js" and it is imported in "index.js" using th
 
     const tap = require('./tap').tap;
 
-### Registering trigger and actuators :
+### Registering triggers and actuators :
 
 To register a service which can be a trigger or an actuator, use the following method :
 
@@ -117,7 +115,7 @@ To register a service which can be a trigger or an actuator, use the following m
 * serviceType : It takes "trigger" or "actuator".
 * serviceApiCallMethodsCode : It's the JavaScript code as a String defining and implementing the methods that can be used in the filter code for this service.
 
-### Setting/Editing/deleting rules :
+### Creating/editing/deleting rules :
 
 To preform this task, the tap object offers the following methods :
 
