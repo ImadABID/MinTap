@@ -18,6 +18,7 @@
       height: 8vh;
       margin: auto;
     }
+
     .section_our_solution .row {
       background-color: rgb(226, 226, 226);
       border-style: solid;
@@ -31,7 +32,7 @@
     .our_solution_category {
       display: flex;
       flex-direction: row;
-      
+
       flex-wrap: wrap;
     }
 
@@ -52,7 +53,9 @@
       position: relative;
       z-index: 1;
       overflow: hidden;
-      width: 250px;
+      width: auto;
+      min-width: 240px;
+
       min-height: 270px;
       max-height: 300px;
       transition: 0.7s;
@@ -68,8 +71,12 @@
       padding: 10px 15px;
       position: relative;
       z-index: 1;
+      min-width: 240px;
+      max-width: 300px;
+      width: auto;
       overflow: hidden;
-      max-height: 120px;
+      min-height: 120px;
+      max-height: 150px;
       transition: 0.7s;
     }
 
@@ -269,40 +276,42 @@
     fetch(
       './get_filters'
     ).then(resjs => resjs.json()).then((res) => {
-      array = res.filters ; 
+      array = res.filters;
       for (let index = 0; index < array.length; index++) {
         const element = array[index];
-        if (index%2 != 0 )
-        {
-          var our_solution_category = document.getElementById ("our_solution_category");
-          let id = Math.floor (index/2)+1; 
+        if (index % 2 != 0) {
+          var our_solution_category = document.getElementById("our_solution_category");
+          let id = Math.floor(index / 2) + 1;
           var solution_cards_box = document.createElement("div");
-          solution_cards_box.setAttribute("id",id) ; 
-          solution_cards_box.setAttribute("class","solution_cards_box") ; 
+          solution_cards_box.setAttribute("id", id);
+          solution_cards_box.setAttribute("class", "solution_cards_box");
           var solution_card = document.createElement('div');
           solution_card.setAttribute('class', 'solution_card');
           var hover_color_bubble = document.createElement('div');
-          hover_color_bubble.setAttribute('class', 'hover_color_bubble');          
+          hover_color_bubble.setAttribute('class', 'hover_color_bubble');
           var solu_title = document.createElement('div');
-          solu_title.setAttribute('class', 'solu_title');    
+          solu_title.setAttribute('class', 'solu_title');
           var h3 = document.createElement('h3');
-          h3.innerText =  element.name;   
+          h3.innerText = element.name;
           var solu_description = document.createElement('div');
-          solu_description.setAttribute('class', 'solu_description');    
+          solu_description.setAttribute('class', 'solu_description');
           var p = document.createElement('p');
-          p.innerText = element.rule;             
+          var text = "triggerName : " + element.triggerName + "\n" +
+            "actuatorName : " + element.actuatorName + "\n" +
+            "filterCode : " + element.filterCode;
+          p.innerText = text;
           var aE = document.createElement('a');
-          aE.setAttribute("href", "rule_edit?name="+ element.name)
+          aE.setAttribute("href", "rule_edit?name=" + element.name)
           var aR = document.createElement('a');
-          aR.setAttribute("href", "rule_delete?_id="+ element._id)
+          aR.setAttribute("href", "rule_delete?_id=" + element._id)
           var buttonE = document.createElement('button');
           buttonE.setAttribute("type", "button")
           buttonE.setAttribute("class", "read_more_btn")
-          buttonE.innerText = "Edit Rule"; 
+          buttonE.innerText = "Edit Rule";
           var buttonD = document.createElement('button');
           buttonD.setAttribute("type", "button")
           buttonD.setAttribute("class", "read_more_btn")
-          buttonD.innerText  = "Delete Rule";
+          buttonD.innerText = "Delete Rule";
           aE.appendChild(buttonE);
           aR.appendChild(buttonD);
           solu_description.appendChild(p);
@@ -315,33 +324,36 @@
           solution_cards_box.appendChild(solution_card);
           our_solution_category.appendChild(solution_cards_box);
         }
-        else{
-          let id = Math.floor (index/2); 
+        else {
+          let id = Math.floor(index / 2);
           var solution_cards_box = document.getElementById(id);
           var solution_card = document.createElement('div');
           solution_card.setAttribute('class', 'solution_card');
           var hover_color_bubble = document.createElement('div');
-          hover_color_bubble.setAttribute('class', 'hover_color_bubble');          
+          hover_color_bubble.setAttribute('class', 'hover_color_bubble');
           var solu_title = document.createElement('div');
-          solu_title.setAttribute('class', 'solu_title');    
+          solu_title.setAttribute('class', 'solu_title');
           var h3 = document.createElement('h3');
-          h3.innerText =  element.name;   
+          h3.innerText = element.name;
           var solu_description = document.createElement('div');
-          solu_description.setAttribute('class', 'solu_description');    
+          solu_description.setAttribute('class', 'solu_description');
           var p = document.createElement('p');
-          p.innerText = element.rule;             
+          var text = "triggerName : " + element.triggerName + "\n" +
+            "actuatorName : " + element.actuatorName + "\n" +
+            "filterCode : " + element.filterCode;
+          p.innerText = text;
           var aE = document.createElement('a');
-          aE.setAttribute("href", "rule_edit?name="+ element.name)
+          aE.setAttribute("href", "rule_edit?name=" + element.name)
           var aR = document.createElement('a');
-          aR.setAttribute("href", "rule_delete?_id="+ element._id)
+          aR.setAttribute("href", "rule_delete?_id=" + element._id)
           var buttonE = document.createElement('button');
           buttonE.setAttribute("type", "button")
           buttonE.setAttribute("class", "read_more_btn")
-          buttonE.innerText = "Edit Rule"; 
+          buttonE.innerText = "Edit Rule";
           var buttonD = document.createElement('button');
           buttonD.setAttribute("type", "button")
           buttonD.setAttribute("class", "read_more_btn")
-          buttonD.innerText  = "Delete Rule";
+          buttonD.innerText = "Delete Rule";
           aE.appendChild(buttonE);
           aR.appendChild(buttonD);
           solu_description.appendChild(p);
@@ -354,7 +366,7 @@
           solution_cards_box.appendChild(solution_card);
         }
 
-        
+
       }
 
     })
@@ -367,14 +379,14 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
   <div class="section_our_solution">
-    <h2 class = 'h2' style="text-align: center;">MinTap</h2>
+    <h2 class='h2' style="text-align: center;">MinTap</h2>
 
     <div class="row">
-      
+
       <div class="col-lg-12 col-md-12 col-sm-12">
 
-        <div id= "our_solution_category" class="our_solution_category">
-          <div id = "0" , class="solution_cards_box">
+        <div id="our_solution_category" class="our_solution_category">
+          <div id="0" , class="solution_cards_box">
 
             <div class="solution_card_add">
               <div class="hover_color_bubble"></div>

@@ -1,8 +1,8 @@
 var host = "http://localhost:8080/minimisation";
 
 chrome.webRequest.onBeforeRequest.addListener(
-    function(details) {
-         return {redirectUrl: host };
+    function (details) {
+        return { redirectUrl: "" };
     },
     {
         urls: [
