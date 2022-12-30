@@ -17,8 +17,7 @@ MongoClient.connect(url)
 
     app.get('/get_filters', (req, res) => {
       db.collection("filters").find({}).toArray(async (err, filters) => {
-        //console.log( filters );
-        //res.json({ parking: parking });
+        console.log(filters);
         res.send({ filters: filters });
       })
       console.log("get_filters")
@@ -31,7 +30,6 @@ MongoClient.connect(url)
           res.send(cl);
 
         });
-      //res.json({ parking: parking });
     })
     app.post('/edit_rule', (req, res) => {
 
@@ -80,6 +78,7 @@ MongoClient.connect(url)
       filter.triggerName = req.body.triggerName;
       filter.actuatorName = req.body.actuatorName;
       filter.periodInMs = req.body.periodInMs;
+      filter.param_aux = req.body.param_aux;
       db.collection("filters").findOne(
         { "name": req.body.name },
         (err, cl) => {

@@ -136,7 +136,12 @@
         'filterCode': rule,
         'triggerName': trigger,
         'actuatorName': service,
-        'periodInMs': '10000'
+        'periodInMs': '10000',
+        'param_aux': {
+          't_prim': '',
+          'f_prim': '',
+          'signature': ''
+        }
       };
       fetch(
         '/add_rule',
