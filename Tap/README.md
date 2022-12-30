@@ -91,25 +91,55 @@ It is a JavaScript code edited by the user when setting up a rule. It must be a 
 
 This object is the response of a trigger to the TAP. If a field is not required, it return null as a value.
 
-### tap :
+## The TAP's business logic  :
 
-This object is the business logic of the tap application.
+The tap object is the business logic of the tap application. Its responsible for :
+- Registering trigger and actuators.
+- Setting/Editing/deleting rules.
+- Executing rules periodically.
+- Giving information to the debug user interface.
 
 Its implementation is done in "tap.js" and it is imported in "index.js" using this line of code :
 
     const tap = require('./tap').tap;
 
-It has the following methods :
+### Registering trigger and actuators :
 
-    tap.setRule(filterCode, periodInMs = 10000)
+To register a service which can be a trigger or an actuator, use the following method :
+
+    tap.registerService(
+        serviceName,
+        serviceType,
+        serviceApiCallMethodsCode
+    )
+
+* serviceName : It's the name given to the service. It must be unique. If call this method multiple times with the same serviceName, the service will be registered once according to the last call.
+* serviceType : It takes "trigger" or "actuator".
+* serviceApiCallMethodsCode : It's the JavaScript code as a String defining and implementing the methods that can be used in the filter code for this service.
+
+### Setting/Editing/deleting rules :
+
+To preform this task, the tap object offers the following methods :
+
+    tap.setRule(
+        filterCode,
+        triggerName,
+        actuatorName,
+        periodInMs = 10000
+    )
 
 This function takes a filterCode and returns an ID of the created rule.
 
-periodInMs is an optional parameter that defines the period in milliseconds between two rule executions. By default it takes 10 seconds. To edit it use the following function :
+* filterCode : It's the JavaScript code as a String that represents the filter code.
+* triggerName : the trigger name as registered in tap.registerService().
+* actuatorName : the actuator name as registered in tap.registerService().
+* periodInMs : it's an optional parameter that defines the period in milliseconds between two rule executions. By default it takes 10 seconds.
+
+To edit the rule execution period, use :
 
     tap.editRulePeriod(periodInMs, ruleID)
 
-To edit the rule use :
+To edit the rule, use :
 
     tap.editRule(filterCode, ruleID)
 
@@ -119,53 +149,16 @@ This function takes a filterCode and a rule and returns nothing.
 
 This function takes a filterCode and returns an ID as an int of the created rule.
 
-Other functions are going to be added for the debug part.
+### Executing rules periodically :
 
-## 3 - Trigger API
-A compatible trigger with our tap's API must have the flowing route :
+This functionality  is done automatically by the tap object ;
+- It starts executing the rule once added.
+- At rule edition, it restart its execution.
+- At rule deletion, it stops its execution.
 
-    /tap/get_info
+### Giving information to the debug user interface :
 
-The request object :
-
-    <!-- /tap/get_info reqObj-->
-    {
-        minimizedAuxiliaryInformation : {},
-    }
-
-The respond object :
-
-    <!-- /tap/get_info resObj-->
-    {
-        minimizedAuxiliaryInformation : {},
-    }
-
-The respond object :
-
-    <!-- /tap/get_info resObj-->
-    {
-        minimizedTriggerData : {}
-    }
-
-## 4 - Actuators API
-A compatible actuator with our tap's API must have the flowing route :
-
-    /tap/act
-
-The request object :
-
-    <!-- /tap/act reqObj-->
-    {
-        actionMethodName : String,
-        actionMethodParamsList : Array
-    }
-
-The respond object :
-
-    <!-- /tap/act resObj-->
-    {
-        message : String
-    }
+Not yet implemented.
 
 ## 5 - Web interface API
 
