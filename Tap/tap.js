@@ -101,7 +101,13 @@ const tapClosure = ()=>{
         return lastId.toString();
     }
 
-    const setRule = (filterCode, triggerName="random int generator", actuatorName = "message logger" , periodInMs = 10000)=>{
+    const setRule = (
+        filterCode,
+        minimizedAuxiliaryInformation,
+        triggerName="random int generator",
+        actuatorName = "message logger" ,
+        periodInMs = 10000
+    )=>{
         
         let id = getNewID();
         let triggerApiCallMethodsCode;

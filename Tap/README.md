@@ -121,6 +121,7 @@ To preform this task, the tap object offers the following methods :
 
     tap.setRule(
         filterCode,
+        minimizedAuxiliaryInformation,
         triggerName,
         actuatorName,
         periodInMs = 10000
@@ -129,6 +130,7 @@ To preform this task, the tap object offers the following methods :
 This function takes a filterCode and returns an ID of the created rule.
 
 * filterCode : It's the JavaScript code as a String that represents the filter code.
+* minimizedAuxiliaryInformation : As described in section 2.
 * triggerName : the trigger name as registered in tap.registerService().
 * actuatorName : the actuator name as registered in tap.registerService().
 * periodInMs : it's an optional parameter that defines the period in milliseconds between two rule executions. By default it takes 10 seconds.

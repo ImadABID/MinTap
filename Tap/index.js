@@ -22,12 +22,19 @@ app.get('/rule_editor', (req, res) => {
 
 app.post('/add_rule', (req, res) => {
 
+    minimizedAuxiliaryInformation = {
+        transformedFilterCode : "computed by the chrome extension",
+        dependencySet : ["computed", "by", "the", "chrome", "extension"],
+        signature : "computed by the chrome extension"
+    }
+
     let ruleID = tap.setRule(
         `
             if(getRandomInt()%2){
                 log("The generated random int is pair.");
             }
         `,
+        minimizedAuxiliaryInformation,
         "random int generator",
         "message logger",
         1000
