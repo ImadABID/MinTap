@@ -115,6 +115,11 @@ To register a service which can be a trigger or an actuator, use the following m
 * serviceType : It takes "trigger" or "actuator".
 * serviceApiCallMethodsCode : It's the JavaScript code as a String defining and implementing the methods that can be used in the filter code for this service.
 
+For deleting a service use :
+
+    tap.deleteService(serviceName)
+
+
 ### Creating/editing/deleting rules :
 
 To preform this task, the tap object offers the following methods :

@@ -9,12 +9,6 @@ const ruleClosure = (ruleID, filterCode, triggerApiCallMethodsCode, actuatorApiC
         filterCode
     );
 
-    console.log(
-        triggerApiCallMethodsCode   + '\n' +
-        actuatorApiCallMethodsCode  + '\n' +
-        filterCode
-    );
-
     const start = ()=>{
         if(intervalID != null){
             console.log(`rule #${ruleID} is already started and cannot be started again.`)
@@ -96,6 +90,16 @@ const tapClosure = ()=>{
         }
     }
 
+    const deleteService = (serviceName)=>{
+
+        if(triggers[serviceName]){
+            delete triggers[serviceName]
+        }else if(actuators[serviceName]){
+            delete actuators[serviceName];
+        }
+
+    }
+
     const getNewID = ()=>{
         lastId++;
         return lastId.toString();
@@ -164,6 +168,7 @@ const tapClosure = ()=>{
 
     return {
         registerService : registerService,
+        deleteService : deleteService,
         setRule : setRule,
         editRule : editRule,
         editRulePeriod : editRulePeriod,
