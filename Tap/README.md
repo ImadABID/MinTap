@@ -119,6 +119,16 @@ For deleting a service use :
 
     tap.deleteService(serviceName)
 
+Getting service names :
+
+    tap.getServiceNames()
+
+Returns :
+
+    {
+        "triggerNames" : ["trigger", "names", ...],
+        "actuatorsNames" : ["actuator", "names", ...],
+    }
 
 ### Creating/editing/deleting rules :
 

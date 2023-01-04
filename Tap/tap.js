@@ -100,6 +100,17 @@ const tapClosure = ()=>{
 
     }
 
+    const getServiceNames = ()=>{
+
+        const services = {
+            "triggerNames" : Object.keys(triggers),
+            "actuatorsNames" : Object.keys(actuators),
+        }
+
+        return services;
+
+    }
+
     const getNewID = ()=>{
         lastId++;
         return lastId.toString();
@@ -169,6 +180,7 @@ const tapClosure = ()=>{
     return {
         registerService : registerService,
         deleteService : deleteService,
+        getServiceNames : getServiceNames,
         setRule : setRule,
         editRule : editRule,
         editRulePeriod : editRulePeriod,
