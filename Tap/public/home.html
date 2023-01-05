@@ -7,17 +7,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MinTap</title>
   <style>
-    .section_our_solution .h2 {
-      background-color: rgb(255, 255, 255);
-      border-style: solid;
-      border-radius: 10px;
-      border-width: 0px;
-      padding: 10px;
-      border-color: var(--sec_color);
-      width: 95%;
-      height: 8vh;
-      margin: auto;
+    .ten h1 {
+      font-size: 35px;
+      font-weight: 300;
+      text-transform: uppercase;
+      padding-left: 20px;
     }
+
+    .ten h1:before {
+      background-color: #c50000;
+      border-radius: 0.25rem;
+      content: 'Rules';
+      display: block;
+      height: 0.25rem;
+      width: 62px;
+      margin-bottom: 1.5rem;
+
+    }
+    .eleven h1 {
+      font-size: 35px;
+      font-weight: 300;
+      text-transform: uppercase;
+      padding-left: 20px;
+    }
+
+    .eleven h1:before {
+      background-color: #c50000;
+      border-radius: 0.25rem;
+      content: 'Services';
+      display: block;
+      height: 0.25rem;
+      width: 62px;
+      margin-bottom: 1.5rem;
+
+    }  
+
+    .thirteen {
+      margin-bottom: 70px;
+      margin-top: -70px;
+
+    }
+
+    .thirteen h1 {
+      position: relative;
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: 0px;
+      text-transform: uppercase;
+      width: 200px;
+      text-align: center;
+      margin: auto;
+      white-space: nowrap;
+      border: 2px solid #222;
+      padding: 5px 11px 3px 11px;
+    }
+
+    .thirteen h1:before,
+    .thirteen h1:after {
+      background-color: #c50000;
+      position: absolute;
+      content: '';
+      height: 7px;
+
+      width: 7px;
+      border-radius: 50%;
+      bottom: 22px;
+    }
+
+    .thirteen h1:before {
+      left: -20px;
+    }
+
+    .thirteen h1:after {
+      right: -20px;
+    }
+
+
 
     .section_our_solution .row {
       background-color: rgb(226, 226, 226);
@@ -40,6 +105,9 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+
     }
 
     .solution_cards_box .solution_card {
@@ -192,6 +260,7 @@
       color: #fff;
       font-weight: 500;
       font-size: 1rem;
+      margin-right: 10px;
       padding: 5px 16px;
     }
 
@@ -301,7 +370,7 @@
             "filterCode : " + element.filterCode;
           p.innerText = text;
           var aE = document.createElement('a');
-          aE.setAttribute("href", "rule_edit?name=" + element.name)
+          aE.setAttribute("href", "rule_edit?_id=" + element._id)
           var aR = document.createElement('a');
           aR.setAttribute("href", "rule_delete?_id=" + element._id)
           var buttonE = document.createElement('button');
@@ -343,7 +412,7 @@
             "filterCode : " + element.filterCode;
           p.innerText = text;
           var aE = document.createElement('a');
-          aE.setAttribute("href", "rule_edit?name=" + element.name)
+          aE.setAttribute("href", "rule_edit?_id=" + element._id)
           var aR = document.createElement('a');
           aR.setAttribute("href", "rule_delete?_id=" + element._id)
           var buttonE = document.createElement('button');
@@ -369,39 +438,176 @@
 
       }
 
+    });
+
+    fetch(
+      './get_services'
+    ).then(resjs => resjs.json()).then((res) => {
+      array = res.services;
+      for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+        if (index % 2 != 0) {
+          var our_solution_category = document.getElementById("our_solution_category_services");
+          let id = Math.floor(index / 2) + 1;
+          var solution_cards_box = document.createElement("div");
+          let id_s = "service_" + id ; 
+          solution_cards_box.setAttribute("id", id_s);
+          solution_cards_box.setAttribute("class", "solution_cards_box");
+          var solution_card = document.createElement('div');
+          solution_card.setAttribute('class', 'solution_card');
+          var hover_color_bubble = document.createElement('div');
+          hover_color_bubble.setAttribute('class', 'hover_color_bubble');
+          var solu_title = document.createElement('div');
+          solu_title.setAttribute('class', 'solu_title');
+          var h3 = document.createElement('h3');
+          h3.innerText = element.serviceName;
+          var solu_description = document.createElement('div');
+          solu_description.setAttribute('class', 'solu_description');
+          var p = document.createElement('p');
+          var text = "service type : " + element.serviceType + "\n" +
+            "Code : " + element.serviceApiCallMethodsCode;
+          p.innerText = text;
+          var aE = document.createElement('a');
+          aE.setAttribute("href", "service_edit?_id=" + element._id)
+          var aR = document.createElement('a');
+          aR.setAttribute("href", "service_delete?_id=" + element._id)
+          var buttonE = document.createElement('button');
+          buttonE.setAttribute("type", "button")
+          buttonE.setAttribute("class", "read_more_btn")
+          buttonE.innerText = "Edit Service";
+          var buttonD = document.createElement('button');
+          buttonD.setAttribute("type", "button")
+          buttonD.setAttribute("class", "read_more_btn")
+          buttonD.innerText = "Delete Service";
+          aE.appendChild(buttonE);
+          aR.appendChild(buttonD);
+          solu_description.appendChild(p);
+          solu_description.appendChild(aE);
+          solu_description.appendChild(aR);
+          solu_title.appendChild(h3);
+          solution_card.appendChild(solu_title);
+          solution_card.appendChild(solu_description);
+          solution_card.appendChild(hover_color_bubble);
+          solution_cards_box.appendChild(solution_card);
+          our_solution_category.appendChild(solution_cards_box);
+        }
+        else {
+          let id = Math.floor(index / 2);
+          let id_s = "service_"+id;
+          var solution_cards_box = document.getElementById(id_s);
+          var solution_card = document.createElement('div');
+          solution_card.setAttribute('class', 'solution_card');
+          var hover_color_bubble = document.createElement('div');
+          hover_color_bubble.setAttribute('class', 'hover_color_bubble');
+          var solu_title = document.createElement('div');
+          solu_title.setAttribute('class', 'solu_title');
+          var h3 = document.createElement('h3');
+          h3.innerText = element.serviceName;
+          var solu_description = document.createElement('div');
+          solu_description.setAttribute('class', 'solu_description');
+          var p = document.createElement('p');
+          var text = "service type : " + element.serviceType + "\n" +
+            "Code : " + element.serviceApiCallMethodsCode;
+          p.innerText = text;
+          var aE = document.createElement('a');
+          aE.setAttribute("href", "service_edit?_id=" + element._id)
+          var aR = document.createElement('a');
+          aR.setAttribute("href", "service_delete?_id=" + element._id)
+          var buttonE = document.createElement('button');
+          buttonE.setAttribute("type", "button")
+          buttonE.setAttribute("class", "read_more_btn")
+          buttonE.innerText = "Edit Service";
+          var buttonD = document.createElement('button');
+          buttonD.setAttribute("type", "button")
+          buttonD.setAttribute("class", "read_more_btn")
+          buttonD.innerText = "Delete Service";
+          aE.appendChild(buttonE);
+          aR.appendChild(buttonD);
+          solu_description.appendChild(p);
+          solu_description.appendChild(aE);
+          solu_description.appendChild(aR);
+          solu_title.appendChild(h3);
+          solution_card.appendChild(solu_title);
+          solution_card.appendChild(solu_description);
+          solution_card.appendChild(hover_color_bubble);
+          solution_cards_box.appendChild(solution_card);
+        }
+
+
+      }
+
     })
   </script>
 </head>
 
 <body>
-  <br><br><br><br><br>
+  <div>
+    <br><br><br><br><br>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-  <div class="section_our_solution">
-    <h2 class='h2' style="text-align: center;">MinTap</h2>
+    <div class="section_our_solution">
+      <div class="thirteen">
+        <h1>Mintap</h1>
+      </div>
+      <div class="row">
+        <div class="ten">
+          <h1></h1>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12">
 
-    <div class="row">
+          <div id="our_solution_category" class="our_solution_category">
+            <div id="0" , class="solution_cards_box">
 
-      <div class="col-lg-12 col-md-12 col-sm-12">
-
-        <div id="our_solution_category" class="our_solution_category">
-          <div id="0" , class="solution_cards_box">
-
-            <div class="solution_card_add">
-              <div class="hover_color_bubble"></div>
-              <div class="solu_title">
-                <h3>Add Rule </h3>
-              </div>
-              <div class="solu_description">
-                <a href="rule_add">
-                  <button type="button" class="read_more_btn">Add Rule</button>
-                </a>
+              <div class="solution_card_add">
+                <div class="hover_color_bubble"></div>
+                <div class="solu_title">
+                  <h3>Add Rule </h3>
+                </div>
+                <div class="solu_description">
+                  <a href="rule_add">
+                    <button type="button" class="read_more_btn">Add Rule</button>
+                  </a>
+                </div>
               </div>
             </div>
+
+
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <br><br><br><br><br>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <div class="section_our_solution" style="margin-bottom: 30px;">  
+      <div class="row">
+        <div class="eleven">
+          <h1></h1>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
+          <div id="our_solution_category_services" class="our_solution_category">
+            <div id="service_0" , class="solution_cards_box">
+
+              <div class="solution_card_add">
+                <div class="hover_color_bubble"></div>
+                <div class="solu_title">
+                  <h3>Add Service </h3>
+                </div>
+                <div class="solu_description">
+                  <a href="Service_add">
+                    <button type="button" class="read_more_btn">Add Service</button>
+                  </a>
+                </div>
+              </div>
+            </div>
 
 
+          </div>
         </div>
       </div>
     </div>
