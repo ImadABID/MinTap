@@ -20,7 +20,7 @@ app.get('/rule_editor', (req, res) => {
     res.sendFile(__dirname + '/rule_editor.html')
 })
 
-app.post('/add_rule', (req, res) => {
+app.post('/add_rule', async (req, res) => {
 
     minimizedAuxiliaryInformation = {
         transformedFilterCode : "computed by the chrome extension",
@@ -28,7 +28,7 @@ app.post('/add_rule', (req, res) => {
         signature : "computed by the chrome extension"
     }
 
-    let ruleID = tap.setRule(
+    let ruleID = await tap.setRule(
         `
             if(getRandomInt()%2){
                 log("The generated random int is pair.");

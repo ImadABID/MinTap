@@ -68,11 +68,29 @@ const tapClosure = ()=>{
     const actuators = {};
     const rules = {};
 
+    const init = ()=>{
+        return new Promise((resolve)=>{
+            console.log('Tap Init : Start');
+            setTimeout(()=>{
+                console.log('Tap Init : End');
+                resolve();
+            }, 6000);
+        })
+    }
+
+    let initPromise = new Promise(async (resolve)=>{
+        await init();
+        resolve();
+    });
+
     /*
     serviceType : trigger | actuator
     serviceApiCallMethodsCode : a JavaScript containing the definition of server methods
     */
-    const registerService = (serviceName, serviceType, serviceApiCallMethodsCode)=>{
+    const registerService = async (serviceName, serviceType, serviceApiCallMethodsCode)=>{
+        
+        await initPromise;
+        
         switch(serviceType){
             case 'trigger':
                 triggers[serviceName] = {
@@ -90,7 +108,9 @@ const tapClosure = ()=>{
         }
     }
 
-    const deleteService = (serviceName)=>{
+    const deleteService = async (serviceName)=>{
+
+        await initPromise;
 
         if(triggers[serviceName]){
             delete triggers[serviceName]
@@ -100,7 +120,9 @@ const tapClosure = ()=>{
 
     }
 
-    const getServiceNames = ()=>{
+    const getServiceNames = async ()=>{
+
+        await initPromise;
 
         const services = {
             "triggerNames" : Object.keys(triggers),
@@ -111,12 +133,12 @@ const tapClosure = ()=>{
 
     }
 
-    const getNewID = ()=>{
+    const getNewRuleID = ()=>{
         lastId++;
         return lastId.toString();
     }
 
-    const setRule = (
+    const setRule = async (
         filterCode,
         minimizedAuxiliaryInformation,
         triggerName="random int generator",
@@ -124,7 +146,9 @@ const tapClosure = ()=>{
         periodInMs = 10000
     )=>{
         
-        let id = getNewID();
+        await initPromise;
+
+        let id = getNewRuleID();
         let triggerApiCallMethodsCode;
         let actuatorApiCallMethodsCode;
 
@@ -152,7 +176,8 @@ const tapClosure = ()=>{
 
     };
 
-    const editRule = (newFilterCode, ruleID)=>{
+    const editRule = async (newFilterCode, ruleID)=>{
+        await initPromise;
         if(rules[ruleID]){
             rules[ruleID].editRule(newFilterCode);
         }else{
@@ -160,7 +185,8 @@ const tapClosure = ()=>{
         }
     }
 
-    const editRulePeriod = (periodInMs, ruleID)=>{
+    const editRulePeriod = async (periodInMs, ruleID)=>{
+        await initPromise;
         if(rules[ruleID]){
             rules[ruleID].editRulePeriod(periodInMs);
         }else{
@@ -168,7 +194,8 @@ const tapClosure = ()=>{
         }
     }
 
-    const deleteRule = (ruleID)=>{
+    const deleteRule = async (ruleID)=>{
+        await initPromise;
         if(rules[ruleID]){
             rules[ruleID].stop();
             delete rules[ruleID];

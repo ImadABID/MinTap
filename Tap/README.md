@@ -105,7 +105,7 @@ Its implementation is done in "tap.js" and it is imported in "index.js" using th
 
 To register a service which can be a trigger or an actuator, use the following method :
 
-    tap.registerService(
+    await tap.registerService(
         serviceName,
         serviceType,
         serviceApiCallMethodsCode
@@ -117,11 +117,11 @@ To register a service which can be a trigger or an actuator, use the following m
 
 For deleting a service use :
 
-    tap.deleteService(serviceName)
+    await tap.deleteService(serviceName)
 
 Getting service names :
 
-    tap.getServiceNames()
+    await tap.getServiceNames()
 
 Returns :
 
@@ -134,7 +134,7 @@ Returns :
 
 To preform this task, the tap object offers the following methods :
 
-    tap.setRule(
+    await tap.setRule(
         filterCode,
         minimizedAuxiliaryInformation,
         triggerName,
@@ -152,15 +152,15 @@ This function takes a filterCode and returns an ID of the created rule.
 
 To edit the rule execution period, use :
 
-    tap.editRulePeriod(periodInMs, ruleID)
+    await tap.editRulePeriod(periodInMs, ruleID)
 
 To edit the rule, use :
 
-    tap.editRule(filterCode, ruleID)
+    await tap.editRule(filterCode, ruleID)
 
 This function takes a filterCode and a rule and returns nothing.
 
-    tap.deleteRule(ruleID)
+    await tap.deleteRule(ruleID)
 
 This function takes a filterCode and returns an ID as an int of the created rule.
 
