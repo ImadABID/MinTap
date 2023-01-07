@@ -148,12 +148,10 @@
           body: JSON.stringify(data) // body data type must match "Content-Type" header
         }
       ).then(resjs => resjs.json()).then((res) => {
-        if (res.msg == 'rule saved') {
+        if (res.msg == 'service saved') {
           window.location.replace("/");
         }
-        else {
-          alert("this name already exist");
-        }
+
 
       })
     }

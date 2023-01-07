@@ -43,15 +43,16 @@ app.get('/get_service', (req, res) => {
 
 })
 app.post('/add_rule', (req, res) => {
-  let ruleID = tap.setRule(req.body.name,
-    req.body.filterCode,
-    req.body.minimizedAuxiliaryInformation,
-    req.body.triggerName,
-    req.body.actuatorName,
-    req.body.periodInMs
-  );
-  console.log(req.body);
-  res.send({ msg: 'rule saved' });
+  console.log(req.body) ; 
+  // let ruleID = tap.setRule(req.body.name,
+  //   req.body.filterCode,
+  //   req.body.minimizedAuxiliaryInformation,
+  //   req.body.triggerName,
+  //   req.body.actuatorName,
+  //   req.body.periodInMs
+  // );
+  // console.log(req.body);
+  // res.send({ msg: 'rule saved' });
 })
 app.post('/edit_rule', (req, res) => {
 
@@ -71,7 +72,7 @@ app.post('/edit_rule', (req, res) => {
 
 app.post('/edit_service', (req, res) => {
 
-  tap.deleteService(req.body._id)
+  tap.deleteService(req.body.name)
   let serviceID = tap.registerService(req.body.serviceName, req.body.serviceType, req.body.serviceApiCallMethodsCode);
 
 
@@ -95,7 +96,7 @@ app.get('/rule_delete', (req, res) => {
 
 app.get('/service_delete', (req, res) => {
 
-  tap.deleteService(req.query._id);
+  tap.deleteService(req.query.name);
   res.redirect("/")
 
 

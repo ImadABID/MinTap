@@ -125,15 +125,13 @@
   <script>
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    var Id  = urlParams.get('_id');
+    var name  = urlParams.get('name');
     fetch(
-      './get_service?_id=' + Id 
+      './get_service?name=' + name 
     ).then(resjs => resjs.json()).then((res) => {
       document.getElementById("transformed_rule").innerText = res.serviceApiCallMethodsCode;
       document.getElementById("service_type").value = res.serviceType;
       document.getElementById("service_name").innerText = res.serviceName;
-      Id = res._id;
-      console.log(Id);
 
     });
 
@@ -142,7 +140,6 @@
       var serviceName = document.getElementById("service_name").value;
       var serviceType = document.getElementById("service_type").value;
       let data = {
-        '_id': Id,
         'serviceName': serviceName,
         'serviceApiCallMethodsCode': serviceApiCallMethodsCode,
         'serviceType': serviceType,
