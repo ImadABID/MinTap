@@ -161,16 +161,35 @@ const tapClosure = ()=>{
 
     }
 
-    const getAllServices = ()=>{
+    const getAllServices = async ()=>{
+
+        await initPromise;
+        
         return servicesObject;
     }
 
-    const getServiceByName = (name)=>{
+    const getServiceByName = async (name)=>{
+
+        await initPromise;
+        
         servicesObject.forEach((service)=>{
             if(service.serviceName === name){
                 return service;
             }
         })
+    }
+
+    const getServiceNames = async ()=>{
+
+        await initPromise;
+
+        const services = {
+            "triggerNames" : Object.keys(triggers),
+            "actuatorsNames" : Object.keys(actuators),
+        }
+
+        return services;
+
     }
 
     const registerService = async (
@@ -224,29 +243,20 @@ const tapClosure = ()=>{
 
     }
 
-    const getServiceNames = async ()=>{
-
-        await initPromise;
-
-        const services = {
-            "triggerNames" : Object.keys(triggers),
-            "actuatorsNames" : Object.keys(actuators),
-        }
-
-        return services;
-
-    }
-
     const getNewRuleID = ()=>{
         lastId++;
         return lastId.toString();
     }
 
-    const getAllRules = ()=>{
+    const getAllRules = async ()=>{
+        
+        await initPromise;
+
         return rulesObject;
     }
 
-    const getRuleByID = (id)=>{
+    const getRuleByID = async (id)=>{
+        await initPromise;
         return rulesObject[id];
     }
 
