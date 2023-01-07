@@ -119,6 +119,33 @@ For deleting a service use :
 
     await tap.deleteService(serviceName)
 
+Getting a service by its name :
+
+    await getServiceByName(name)
+
+Returns :
+
+    {
+        serviceName : "serviceName",
+        serviceType : "serviceType",
+        serviceApiCallMethodsCode : "serviceApiCallMethodsCode
+    }
+
+Getting all services :
+
+    await getAllServices()
+
+Returns :
+
+    [
+        {
+            serviceName : "serviceName",
+            serviceType : "serviceType",
+            serviceApiCallMethodsCode : "serviceApiCallMethodsCode
+        },
+        ...
+    ]
+
 Getting service names :
 
     await tap.getServiceNames()
@@ -135,6 +162,7 @@ Returns :
 To preform this task, the tap object offers the following methods :
 
     await tap.setRule(
+        ruleName,
         filterCode,
         minimizedAuxiliaryInformation,
         triggerName,
@@ -144,25 +172,51 @@ To preform this task, the tap object offers the following methods :
 
 This function takes a filterCode and returns an ID of the created rule.
 
+* ruleName : A string. Meaningful for users only.
 * filterCode : It's the JavaScript code as a String that represents the filter code.
 * minimizedAuxiliaryInformation : As described in section 2.
 * triggerName : the trigger name as registered in tap.registerService().
 * actuatorName : the actuator name as registered in tap.registerService().
 * periodInMs : it's an optional parameter that defines the period in milliseconds between two rule executions. By default it takes 10 seconds.
 
-To edit the rule execution period, use :
-
-    await tap.editRulePeriod(periodInMs, ruleID)
-
-To edit the rule, use :
-
-    await tap.editRule(filterCode, ruleID)
-
-This function takes a filterCode and a rule and returns nothing.
+Deleting a rule :
 
     await tap.deleteRule(ruleID)
 
 This function takes a filterCode and returns an ID as an int of the created rule.
+
+Getting rule by ID :
+
+    await getRuleByID(id)
+
+Returns :
+
+    {
+        ruleName : "ruleName",
+        filterCode : "filterCode",
+        minimizedAuxiliaryInformation : "minimizedAuxiliaryInformation",
+        triggerName : "triggerName",
+        actuatorName : "actuatorName",
+        periodInMs : periodInMs,
+    }
+
+Getting all rules :
+
+    await getAllRules()
+
+Returns :
+
+    {
+        ruleId : {
+            ruleName : "ruleName",
+            filterCode : "filterCode",
+            minimizedAuxiliaryInformation : "minimizedAuxiliaryInformation",
+            triggerName : "triggerName",
+            actuatorName : "actuatorName",
+            periodInMs : periodInMs, 
+        },
+        ...
+    }
 
 ### Executing rules periodically :
 
