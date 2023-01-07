@@ -12,14 +12,36 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
+  res.sendFile(__dirname + '/public/home.html')
   console.log("here")
 })
 
 app.get('/rule_editor', (req, res) => {
   res.sendFile(__dirname + '/rule_editor.html')
 })
+app.get('/get_filters', (req, res) => {
+  filters = tap.getAllfilters();
+  res.send({ filters: filters });
 
+  console.log("get_filters")
+})
+app.get('/get_services', (req, res) => {
+  services = tap.getAllservices();
+  console.log(services);
+  res.send({ services: services });
+
+})
+app.get('/get_filter', (req, res) => {
+  cl = tap.getOnefilters(req.query._id)
+  res.send(cl);
+
+
+})
+app.get('/get_service', (req, res) => {
+  cl = tap.getOneServices(req.query._id)
+  res.send(cl);
+
+})
 app.post('/add_rule', (req, res) => {
   let ruleID = tap.setRule(req.body.name,
     req.body.filterCode,

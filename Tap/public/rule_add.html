@@ -67,28 +67,28 @@
     }
   </style>
   <script>
-       fetch(
+    fetch(
       './get_services'
     ).then(resjs => resjs.json()).then((res) => {
       array = res.services;
-      
+
       for (let index = 0; index < array.length; index++) {
         const element = array[index];
-        if(element.serviceType=="trigger"){
+        if (element.serviceType == "trigger") {
           var service_name = document.getElementById("service_name");
           var option = document.createElement('option');
-          option.setAttribute("value",element.serviceName);
-          option.innerText =  element.serviceName ; 
+          option.setAttribute("value", element.serviceName);
+          option.innerText = element.serviceName;
           service_name.appendChild(option);
 
- 
+
 
         }
-        else{
+        else {
           var trigger_name = document.getElementById("trigger_name");
           var option = document.createElement('option');
-          option.setAttribute("value",element.serviceName);
-          option.innerText =  element.serviceName ; 
+          option.setAttribute("value", element.serviceName);
+          option.innerText = element.serviceName;
           trigger_name.appendChild(option);
         }
 
@@ -111,7 +111,10 @@
           <td width="92%">
             <fieldset>
               <legend>Rule name</legend>
-              <textarea id="rule_name" class="insidefieldset" spellcheck="false" style="height: 50px;overflow:hidden; "></textarea>
+              <textarea id="rule_name" class="insidefieldset" spellcheck="false"
+                style="height: 50px;overflow:hidden; "></textarea>
+              <text id='text' style="margin: 10px; color: tomato; visibility :hidden;">name should not have special
+                characters </text>
             </fieldset>
           </td>
         </tr>
@@ -137,7 +140,8 @@
           <td width="92%">
             <fieldset>
               <legend>Rule</legend>
-              <textarea id="transformed_rule" class="insidefieldset" spellcheck="false" style="resize: vertical;" ></textarea>
+              <textarea id="transformed_rule" class="insidefieldset" spellcheck="false"
+                style="resize: vertical;"></textarea>
             </fieldset>
           </td>
           <td>
@@ -160,6 +164,7 @@
     </div>
   </div>
   <script>
+    var hidden = false;
     const sendRule = () => {
       var rule = document.getElementById("transformed_rule").value;
       var name = document.getElementById("rule_name").value;
@@ -178,30 +183,39 @@
         }
       };
       console.log(data)
-      fetch(
-        '/add_rule',
-        {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          mode: 'cors', // no-cors, *cors, same-origin
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-            //'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-          body: JSON.stringify(data) // body data type must match "Content-Type" header
-        }
-      ).then(resjs => resjs.json()).then((res) => {
-        if (res.msg == 'rule saved') {
-          window.location.replace("/");
-        }
-        else {
-          alert("this name already exist");
-        }
 
-      })
+      hidden = name.match(/^[^a-zA-Z0-9]+$/) ? false : true;
+      console.log(hidden);
+      if (hidden) {
+        fetch(
+          '/add_rule',
+          {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+              'Content-Type': 'application/json'
+              //'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+          }
+        ).then(resjs => resjs.json()).then((res) => {
+          if (res.msg == 'rule saved') {
+            window.location.replace("/");
+          }
+          else {
+            alert("this name already exist");
+          }
+
+        })
+      }
+      else {
+        text = document.getElementById('text')
+        text.setAttribute('style', "margin: 10px; color: tomato; visibility :visible;")
+      }
     }
   </script>
 </body>
