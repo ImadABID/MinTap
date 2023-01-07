@@ -1,27 +1,19 @@
 {
-    "name": "minTap_S9 extension",
-    "version": "1.0",
-    "description": "project S9 minTap extension!",
-    "permissions": [
-      "webRequest",
-      "webRequestBlocking",
-      "*://*/post_filter_code"
-    ],
-    "background": {
-      "scripts": [
-        "auth.js"
-      ]
-    },
-    "content_scripts": [
-      {
-      "matches": ["*://*/post_filter_code",
-      "*://ifttt.com/p/*/applets/new",
-       "*://ifttt.com/services/*/applets/*/edit",
-        "*://ifttt.com/p/*/applets/*/edit"],
-      "js": ["content_test.js"]
-        }
-    ],
-
-  
-    "manifest_version": 2
-  }
+  "name": "minTap_S9 extension",
+  "version": "1.0",
+  "description": "project S9 minTap extension!",
+  "permissions": [
+    "webRequest",
+    "tabs",
+    "*://*/rule_edit",
+    "*://*/rule_add",
+    "*://*/add_rule",
+    "webRequestBlocking"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "manifest_version": 2
+}

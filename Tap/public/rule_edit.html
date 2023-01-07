@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <title>MinTap : EditRule</title>
+  <style>
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 12px 20px;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      background-color: #f8f8f8;
+      font-size: 16px;
+      resize: none;
+    }
+
+    body {
+      --sec_color: rgba(224, 21, 21, 0.87);
+      width: 98%;
+    }
+
+    div.params_section {
+      border-style: solid;
+      border-radius: 10px;
+      border-width: 1px;
+      padding: 10px;
+      border-color: var(--sec_color);
+      width: 95%;
+      margin: auto;
+      margin-top: 10px;
+    }
+
+
+    div.button {
+      cursor: pointer;
+      border-style: solid;
+      border-radius: 10px;
+      border-width: 1px;
+      margin-top: 25%;
+      padding: 4px;
+      border-color: var(--sec_color);
+    }
+
+    div.button:hover {
+      box-shadow: 0 0 11px var(--sec_color);
+    }
+
+    div.scan_network_config_div {
+      width: 90%;
+      margin-top: auto;
+    }
+
+
+    fieldset {
+
+      padding-top: 0;
+      padding-bottom: 3px;
+
+      width: 90%;
+    }
+  </style>
+   <script>
+    fetch(
+   './get_services'
+ ).then(resjs => resjs.json()).then((res) => {
+   array = res.services;
+   
+   for (let index = 0; index < array.length; index++) {
+     const element = array[index];
+     if(element.serviceType=="trigger"){
+       var service_name = document.getElementById("service_name");
+       var option = document.createElement('option');
+       option.setAttribute("value",element.serviceName);
+       option.innerText =  element.serviceName ; 
+       service_name.appendChild(option);
+
+
+
+     }
+     else{
+       var trigger_name = document.getElementById("trigger_name");
+       var option = document.createElement('option');
+       option.setAttribute("value",element.serviceName);
+       option.innerText =  element.serviceName ; 
+       trigger_name.appendChild(option);
+     }
+
+
+   }
+
+ })
+
+</script>
+</head>
+
+<body>
+
+  <div id="scan_network_config_div_parent" style="margin-top: 3%;">
+    <div class="params_section" id="scan_network_config_div">
+      <h3 style="text-align: center;">Edit Rule</h3>
+
+      <table>
+        <tr>
+          <td width="92%">
+            <fieldset>
+              <legend>Rule name</legend>
+              <textarea id="rule_name" class="insidefieldset" spellcheck="false" style="height: 50px;"></textarea>
+            </fieldset>
+          </td>
+        </tr>
+        <tr>
+          <td width="92%">
+            <fieldset>
+              <legend>Service name</legend>
+              <select id="service_name" class="insidefieldset" spellcheck="false" style="height: 50px;width: 100%;">
+              </select>
+            </fieldset>
+          </td>
+        </tr>
+        <tr>
+          <td width="92%">
+            <fieldset>
+              <legend>Trigger name</legend>
+              <select id="trigger_name" class="insidefieldset" spellcheck="false" style="height: 50px;width: 100%;">
+              </select>
+            </fieldset>
+          </td>
+        </tr>
+        <tr>
+          <td width="92%">
+            <fieldset>
+              <legend>Rule</legend>
+              <textarea id="transformed_rule" class="insidefieldset" spellcheck="false" style="resize: vertical;"></textarea>
+            </fieldset>
+          </td>
+          <td>
+            <div class="button" style="width: 110px;" onclick="sendRule()">
+              <table>
+                <tr>
+                  <td>
+                    <img src="" height="30px" width="auto"></img>
+                  </td>
+                  <td>
+                    edit Rule
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+  <script>
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    var Id = urlParams.get('_id');
+    var obj;
+    fetch(
+      './get_filter?_id=' + Id
+    ).then(resjs => resjs.json()).then((res) => {
+      document.getElementById("transformed_rule").innerText = res.filterCode;
+      obj =res ; 
+      document.getElementById("rule_name").innerText = res.name;
+      document.getElementById("trigger_name").value = res.triggerName;
+      document.getElementById("service_name").value = res.actuatorName;
+
+    });
+
+    const sendRule = () => {
+      var rule = document.getElementById("transformed_rule").value;
+      var name = document.getElementById("rule_name").value;
+      var trigger = document.getElementById("trigger_name").value;
+      var service = document.getElementById("service_name").value;
+      let data = {
+        '_id': Id,
+        'name': name,
+        'filterCode': rule,
+        'triggerName': trigger,
+        'actuatorName': service,
+        'minimizedAuxiliaryInformation': {
+          'transformedFilterCode': res.minimizedAuxiliaryInformation.transformedFilterCode,
+          'dependencySet': res.minimizedAuxiliaryInformation.dependencySet,
+          'signature': res.minimizedAuxiliaryInformation.signature
+        },
+        'periodInMs': '10000'
+      };
+      fetch(
+        './edit_rule',
+        {
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          mode: 'cors', // no-cors, *cors, same-origin
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json'
+            //'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: 'follow', // manual, *follow, error
+          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data) // body data type must match "Content-Type" header
+        }
+      ).then(resjs => resjs.json()).then((res) => {
+        if (res.msg == 'rule updated') {
+          window.location.replace("/");
+        }
+
+      })
+    }
+  </script>
+</body>
+
+</html>
