@@ -29,6 +29,7 @@ app.post('/add_rule', async (req, res) => {
     }
 
     let ruleID = await tap.setRule(
+        'rule name',
         `
             if(getRandomInt()%2){
                 log("The generated random int is pair.");

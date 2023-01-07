@@ -71,7 +71,10 @@ const tapClosure = ()=>{
     const triggers = {};
     const actuators = {};
     const rules = {};
+
+    // Only used to be given to the front-end
     const rulesObject = {};
+    const servicesObject = [];
 
     const servicesCollection = tapDB.collection('services');
     const rulesCollection = tapDB.collection('rules');
@@ -95,6 +98,7 @@ const tapClosure = ()=>{
             await _rulesCursor.forEach((rule)=>{
 
                 _setRule(
+                    rule.ruleName,
                     rule.filterCode,
                     rule.minimizedAuxiliaryInformation,
                     rule.triggerName,
@@ -109,18 +113,18 @@ const tapClosure = ()=>{
         })
     }
 
-    let initPromise = new Promise(async (resolve)=>{
-        await init();
-        console.log(triggers);
-        console.log(actuators);
-        console.log(rulesObject);
-        resolve();
-    });
-
     const deleteAllDB = async ()=>{
         await servicesCollection.deleteMany({});
         await rulesCollection.deleteMany({});
     }
+
+    let initPromise = new Promise(async (resolve)=>{
+        // await deleteAllDB();
+        await init();
+        console.log(servicesObject);
+        console.log(rulesObject);
+        resolve();
+    });
 
     /*
     serviceType : trigger | actuator
@@ -128,6 +132,8 @@ const tapClosure = ()=>{
     */
     const _registerService = (serviceName, serviceType, serviceApiCallMethodsCode)=>{
         
+        let correctType = true;
+
         switch(serviceType){
             case 'trigger':
                 triggers[serviceName] = {
@@ -140,10 +146,31 @@ const tapClosure = ()=>{
                 }
                 break;
             default :
+                correctType =  false;
                 console.log("Unknown service type.");
                 break; 
         }
 
+        if(correctType){
+            servicesObject.push({
+                serviceName : serviceName,
+                serviceType : serviceType,
+                serviceApiCallMethodsCode : serviceApiCallMethodsCode,
+            });
+        }
+
+    }
+
+    const getAllServices = ()=>{
+        return servicesObject;
+    }
+
+    const getServiceByName = (name)=>{
+        servicesObject.forEach((service)=>{
+            if(service.serviceName === name){
+                return service;
+            }
+        })
     }
 
     const registerService = async (
@@ -215,7 +242,16 @@ const tapClosure = ()=>{
         return lastId.toString();
     }
 
+    const getAllRules = ()=>{
+        return rulesObject;
+    }
+
+    const getRuleByID = (id)=>{
+        return rulesObject[id];
+    }
+
     const _setRule = (
+        ruleName,
         filterCode,
         minimizedAuxiliaryInformation,
         triggerName,
@@ -250,6 +286,7 @@ const tapClosure = ()=>{
         rules[id].start();
 
         rulesObject[id] = {
+            ruleName : ruleName,
             filterCode : filterCode,
             minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
             triggerName : triggerName,
@@ -260,6 +297,7 @@ const tapClosure = ()=>{
     };
 
     const setRule = async (
+        ruleName,
         filterCode,
         minimizedAuxiliaryInformation,
         triggerName,
@@ -270,6 +308,7 @@ const tapClosure = ()=>{
         await initPromise;
 
         _setRule(
+            ruleName,
             filterCode,
             minimizedAuxiliaryInformation,
             triggerName,
@@ -290,6 +329,7 @@ const tapClosure = ()=>{
         // create a document that sets the doc
         const updateDoc = {
             $set: {
+                ruleName : ruleName,
                 filterCode : filterCode,
                 minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
                 triggerName : triggerName,
@@ -325,9 +365,13 @@ const tapClosure = ()=>{
     }
 
     return {
+        getServiceByName : getServiceByName,
+        getAllServices : getAllServices,
+        getServiceNames : getServiceNames,
         registerService : registerService,
         deleteService : deleteService,
-        getServiceNames : getServiceNames,
+        getRuleByID : getRuleByID,
+        getAllRules : getAllRules,
         setRule : setRule,
         deleteRule : deleteRule
     }
