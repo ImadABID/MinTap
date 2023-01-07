@@ -71,6 +71,7 @@ const tapClosure = ()=>{
     const triggers = {};
     const actuators = {};
     const rules = {};
+    const rulesObject = {};
 
     const servicesCollection = tapDB.collection('services');
     const rulesCollection = tapDB.collection('rules');
@@ -90,6 +91,19 @@ const tapClosure = ()=>{
 
             })
 
+            const _rulesCursor = rulesCollection.find({});
+            await _rulesCursor.forEach((rule)=>{
+
+                _setRule(
+                    rule.filterCode,
+                    rule.minimizedAuxiliaryInformation,
+                    rule.triggerName,
+                    rule.actuatorName,
+                    rule.periodInMs,
+                );
+
+            })
+
             console.log('Tap Init : End');
             resolve();
         })
@@ -99,6 +113,7 @@ const tapClosure = ()=>{
         await init();
         console.log(triggers);
         console.log(actuators);
+        console.log(rulesObject);
         resolve();
     });
 
@@ -147,12 +162,6 @@ const tapClosure = ()=>{
             serviceApiCallMethodsCode
         );
 
-        // servicesCollection.insertOne({
-        //     serviceName : serviceName,
-        //     serviceType : serviceType,
-        //     serviceApiCallMethodsCode : serviceApiCallMethodsCode,
-        // });
-
         // create a filter for a service to update
         const filter = {
             serviceName: serviceName,
@@ -172,21 +181,19 @@ const tapClosure = ()=>{
         };
         await servicesCollection.updateOne(filter, updateDoc, options);
 
-        console.log('doc inserted');
-
     }
 
     const deleteService = async (serviceName)=>{
 
         await initPromise;
 
-        await servicesCollection.deleteOne({serviceName: serviceName});
-
         if(triggers[serviceName]){
             delete triggers[serviceName]
         }else if(actuators[serviceName]){
             delete actuators[serviceName];
         }
+
+        await servicesCollection.deleteOne({serviceName: serviceName});
 
     }
 
@@ -208,15 +215,13 @@ const tapClosure = ()=>{
         return lastId.toString();
     }
 
-    const setRule = async (
+    const _setRule = (
         filterCode,
         minimizedAuxiliaryInformation,
-        triggerName="random int generator",
-        actuatorName = "message logger" ,
-        periodInMs = 10000
+        triggerName,
+        actuatorName,
+        periodInMs
     )=>{
-        
-        await initPromise;
 
         let id = getNewRuleID();
         let triggerApiCallMethodsCode;
@@ -244,34 +249,79 @@ const tapClosure = ()=>{
 
         rules[id].start();
 
+        rulesObject[id] = {
+            filterCode : filterCode,
+            minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
+            triggerName : triggerName,
+            actuatorName : actuatorName,
+            periodInMs : periodInMs,
+        }
+
     };
 
-    const editRule = async (newFilterCode, ruleID)=>{
-        await initPromise;
-        if(rules[ruleID]){
-            rules[ruleID].editRule(newFilterCode);
-        }else{
-            console.log('ruleID not found');
-        }
-    }
+    const setRule = async (
+        filterCode,
+        minimizedAuxiliaryInformation,
+        triggerName,
+        actuatorName,
+        periodInMs
+    )=>{
 
-    const editRulePeriod = async (periodInMs, ruleID)=>{
         await initPromise;
-        if(rules[ruleID]){
-            rules[ruleID].editRulePeriod(periodInMs);
-        }else{
-            console.log('ruleID not found');
-        }
+
+        _setRule(
+            filterCode,
+            minimizedAuxiliaryInformation,
+            triggerName,
+            actuatorName,
+            periodInMs
+        );
+
+        // create a filter for a service to update
+        const filter = {
+            filterCode: filterCode,
+            triggerName : triggerName,
+            actuatorName : actuatorName,
+        };
+        
+        // this option instructs the method to create a document if no documents match the filter
+        const options = { upsert: true };
+
+        // create a document that sets the doc
+        const updateDoc = {
+            $set: {
+                filterCode : filterCode,
+                minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
+                triggerName : triggerName,
+                actuatorName : actuatorName,
+                periodInMs : periodInMs,
+            },
+        };
+        await rulesCollection.updateOne(filter, updateDoc, options);
+
     }
 
     const deleteRule = async (ruleID)=>{
+
         await initPromise;
+
         if(rules[ruleID]){
             rules[ruleID].stop();
+
+            const ruleObj = rulesObject[ruleID];
+
+            await servicesCollection.deleteOne({
+                filterCode: ruleObj.filterCode,
+                triggerName : ruleObj.triggerName,
+                actuatorName : ruleObj.triggerName,
+            });
+
             delete rules[ruleID];
+
         }else{
             console.log('ruleID not found');
         }
+
     }
 
     return {
@@ -279,8 +329,6 @@ const tapClosure = ()=>{
         deleteService : deleteService,
         getServiceNames : getServiceNames,
         setRule : setRule,
-        editRule : editRule,
-        editRulePeriod : editRulePeriod,
         deleteRule : deleteRule
     }
 }
