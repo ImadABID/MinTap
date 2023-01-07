@@ -468,9 +468,9 @@
             "Code : " + element.serviceApiCallMethodsCode;
           p.innerText = text;
           var aE = document.createElement('a');
-          aE.setAttribute("href", "service_edit?_id=" + element._id)
+          aE.setAttribute("href", "service_edit?name=" + element.serviceName)
           var aR = document.createElement('a');
-          aR.setAttribute("href", "service_delete?_id=" + element._id)
+          aR.setAttribute("href", "service_delete?name=" + element.serviceName)
           var buttonE = document.createElement('button');
           buttonE.setAttribute("type", "button")
           buttonE.setAttribute("class", "read_more_btn")
@@ -510,9 +510,9 @@
             "Code : " + element.serviceApiCallMethodsCode;
           p.innerText = text;
           var aE = document.createElement('a');
-          aE.setAttribute("href", "service_edit?_id=" + element._id)
+          aE.setAttribute("href", "service_edit?name=" + element.serviceName)
           var aR = document.createElement('a');
-          aR.setAttribute("href", "service_delete?_id=" + element._id)
+          aR.setAttribute("href", "service_delete?name=" + element.serviceName)
           var buttonE = document.createElement('button');
           buttonE.setAttribute("type", "button")
           buttonE.setAttribute("class", "read_more_btn")
