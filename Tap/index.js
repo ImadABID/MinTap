@@ -19,26 +19,24 @@ app.get('/', (req, res) => {
 app.get('/rule_editor', (req, res) => {
   res.sendFile(__dirname + '/rule_editor.html')
 })
-app.get('/get_filters', (req, res) => {
-  filters = tap.getAllfilters();
+app.get('/get_filters', async (req, res) => {
+  filters = await tap.getAllRules();
   res.send({ filters: filters });
 
   console.log("get_filters")
 })
-app.get('/get_services', (req, res) => {
-  services = tap.getAllservices();
+app.get('/get_services', async (req, res) => {
+  services = await tap.getAllServices();
   console.log(services);
   res.send({ services: services });
 
 })
-app.get('/get_filter', (req, res) => {
-  cl = tap.getOnefilters(req.query._id)
+app.get('/get_filter', async (req, res) => {
+  cl = await tap.getRuleByID(req.query._id)
   res.send(cl);
-
-
 })
-app.get('/get_service', (req, res) => {
-  cl = tap.getOneServices(req.query._id)
+app.get('/get_service', async (req, res) => {
+  cl = await tap.getServiceByName(req.query.name)
   res.send(cl);
 
 })
@@ -54,11 +52,11 @@ app.post('/add_rule', (req, res) => {
   // console.log(req.body);
   // res.send({ msg: 'rule saved' });
 })
-app.post('/edit_rule', (req, res) => {
+app.post('/edit_rule', async (req, res) => {
 
-  tap.deleteRule(req.body._id)
+  await tap.deleteRule(req.body._id)
 
-  let ruleID = tap.setRule(req.body.name,
+  let ruleID = await tap.setRule(req.body.name,
     req.body.filterCode,
     req.body.minimizedAuxiliaryInformation,
     req.body.triggerName,
@@ -70,9 +68,9 @@ app.post('/edit_rule', (req, res) => {
 
 });
 
-app.post('/edit_service', (req, res) => {
+app.post('/edit_service', async (req, res) => {
 
-  tap.deleteService(req.body.name)
+  await tap.deleteService(req.body.name)
   let serviceID = tap.registerService(req.body.serviceName, req.body.serviceType, req.body.serviceApiCallMethodsCode);
 
 
@@ -81,22 +79,22 @@ app.post('/edit_service', (req, res) => {
 
 });
 
-app.post('/add_service', (req, res) => {
-  let serviceID = tap.registerService(req.body.serviceName, req.body.serviceType, req.body.serviceApiCallMethodsCode);
+app.post('/add_service', async (req, res) => {
+  let serviceID = await tap.registerService(req.body.serviceName, req.body.serviceType, req.body.serviceApiCallMethodsCode);
   console.log(req.body);
   res.send({ msg: 'rule saved' });
 })
-app.get('/rule_delete', (req, res) => {
+app.get('/rule_delete', async (req, res) => {
 
-  tap.deleteRule(req.query._id);
+  await tap.deleteRule(req.query._id);
   res.redirect("/")
 
 
 });
 
-app.get('/service_delete', (req, res) => {
+app.get('/service_delete', async (req, res) => {
 
-  tap.deleteService(req.query.name);
+  await tap.deleteService(req.query.name);
   res.redirect("/")
 
 
