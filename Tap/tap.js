@@ -1,3 +1,7 @@
+const { MongoClient } = require("mongodb");
+
+const mongoClient = new MongoClient('mongodb://localhost:27017/');
+const tapDB = mongoClient.db('tap');
 
 const ruleClosure = (ruleID, filterCode, triggerApiCallMethodsCode, actuatorApiCallMethodsCode, periodInMs)=>{
  
@@ -68,28 +72,46 @@ const tapClosure = ()=>{
     const actuators = {};
     const rules = {};
 
+    const servicesCollection = tapDB.collection('services');
+    const rulesCollection = tapDB.collection('rules');
+
     const init = ()=>{
-        return new Promise((resolve)=>{
+        return new Promise(async (resolve)=>{
             console.log('Tap Init : Start');
-            setTimeout(()=>{
-                console.log('Tap Init : End');
-                resolve();
-            }, 6000);
+
+            const _servicesCursor = servicesCollection.find({});
+            await _servicesCursor.forEach((service)=>{
+
+                _registerService(
+                    service.serviceName,
+                    service.serviceType,
+                    service.serviceApiCallMethodsCode
+                );
+
+            })
+
+            console.log('Tap Init : End');
+            resolve();
         })
     }
 
     let initPromise = new Promise(async (resolve)=>{
         await init();
+        console.log(triggers);
+        console.log(actuators);
         resolve();
     });
+
+    const deleteAllDB = async ()=>{
+        await servicesCollection.deleteMany({});
+        await rulesCollection.deleteMany({});
+    }
 
     /*
     serviceType : trigger | actuator
     serviceApiCallMethodsCode : a JavaScript containing the definition of server methods
     */
-    const registerService = async (serviceName, serviceType, serviceApiCallMethodsCode)=>{
-        
-        await initPromise;
+    const _registerService = (serviceName, serviceType, serviceApiCallMethodsCode)=>{
         
         switch(serviceType){
             case 'trigger':
@@ -106,11 +128,59 @@ const tapClosure = ()=>{
                 console.log("Unknown service type.");
                 break; 
         }
+
+    }
+
+    const registerService = async (
+        serviceName,
+        serviceType,
+        serviceApiCallMethodsCode
+    )=>{
+      
+        console.log('register service');
+
+        await initPromise;
+        
+        _registerService(
+            serviceName,
+            serviceType,
+            serviceApiCallMethodsCode
+        );
+
+        // servicesCollection.insertOne({
+        //     serviceName : serviceName,
+        //     serviceType : serviceType,
+        //     serviceApiCallMethodsCode : serviceApiCallMethodsCode,
+        // });
+
+        // create a filter for a service to update
+        const filter = {
+            serviceName: serviceName,
+            serviceType : serviceType,
+        };
+        
+        // this option instructs the method to create a document if no documents match the filter
+        const options = { upsert: true };
+
+        // create a document that sets the doc
+        const updateDoc = {
+            $set: {
+                serviceName : serviceName,
+                serviceType : serviceType,
+                serviceApiCallMethodsCode : serviceApiCallMethodsCode,
+            },
+        };
+        await servicesCollection.updateOne(filter, updateDoc, options);
+
+        console.log('doc inserted');
+
     }
 
     const deleteService = async (serviceName)=>{
 
         await initPromise;
+
+        await servicesCollection.deleteOne({serviceName: serviceName});
 
         if(triggers[serviceName]){
             delete triggers[serviceName]
