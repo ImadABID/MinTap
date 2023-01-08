@@ -72,9 +72,9 @@ const tapClosure = ()=>{
     const actuators = {};
     const rules = {};
 
-    // Only used to be given to the front-end
+    // Used to store data that the user specified at the set up
+    // and are not necessary for its execution
     const rulesObject = {};
-    const servicesObject = [];
 
     const servicesCollection = tapDB.collection('services');
     const rulesCollection = tapDB.collection('rules');
@@ -121,8 +121,6 @@ const tapClosure = ()=>{
     let initPromise = new Promise(async (resolve)=>{
         // await deleteAllDB();
         await init();
-        console.log(servicesObject);
-        console.log(rulesObject);
         resolve();
     });
 
@@ -131,8 +129,6 @@ const tapClosure = ()=>{
     serviceApiCallMethodsCode : a JavaScript containing the definition of server methods
     */
     const _registerService = (serviceName, serviceType, serviceApiCallMethodsCode)=>{
-        
-        let correctType = true;
 
         switch(serviceType){
             case 'trigger':
@@ -151,67 +147,70 @@ const tapClosure = ()=>{
                 break; 
         }
 
-        if(correctType){
-
-            let added = false;
-
-            console.log('servicesObject before registration :')
-            console.log(servicesObject)
-
-            servicesObject.forEach((serviceObj)=>{
-                if(serviceObj['serviceName'] === serviceName){
-                    console.log('servicesObject : finding a duplicate service name');
-                    serviceObj['serviceType'] = serviceType;
-                    serviceObj['serviceApiCallMethodsCode'] = serviceApiCallMethodsCode;
-                    added = true;
-                }
-            })
-
-            console.log('servicesObject : service added ?');
-            console.log(added);
-
-            if(!added){
-                servicesObject.push({
-                    'serviceName' : serviceName,
-                    'serviceType' : serviceType,
-                    'serviceApiCallMethodsCode' : serviceApiCallMethodsCode,
-                });
-            }
-
-            console.log('servicesObject after registration :')
-            console.log(servicesObject)
-        }
-
     }
 
     const getAllServices = async ()=>{
 
         await initPromise;
-        
-        return servicesObject;
+
+        const services = []
+
+
+        Object.keys(triggers).forEach((triggerName)=>{
+            services.push({
+                'serviceName' : triggerName,
+                'serviceType': 'trigger',
+                'serviceApiCallMethodsCode' : triggers[triggerName].serviceApiCallMethodsCode,
+            })
+        })
+
+        Object.keys(actuators).forEach((actuatorName)=>{
+            services.push({
+                'serviceName' : actuatorName,
+                'serviceType': 'actuator',
+                'serviceApiCallMethodsCode' : actuators[actuatorName].serviceApiCallMethodsCode,
+            })
+        })
+
+        return services;
+
     }
 
     const getServiceByName = async (name)=>{
 
         await initPromise;
         
-        servicesObject.forEach((service)=>{
-            if(service.serviceName === name){
-                return service;
+        if(triggers[name]){
+            return {
+                'serviceName' : name,
+                'serviceType': 'trigger',
+                'serviceApiCallMethodsCode' : triggers[name].serviceApiCallMethodsCode, 
             }
-        })
+        }
+
+        if(actuators[name]){
+            return {
+                'serviceName' : name,
+                'serviceType': 'actuator',
+                'serviceApiCallMethodsCode' : actuators[name].serviceApiCallMethodsCode, 
+            }
+        }
+
+        console.log('getServiceByName : Service Not found');
+        return null;
+
     }
 
     const getServiceNames = async ()=>{
 
         await initPromise;
 
-        const services = {
+        const servicesNames = {
             "triggerNames" : Object.keys(triggers),
             "actuatorsNames" : Object.keys(actuators),
         }
 
-        return services;
+        return servicesNames;
 
     }
 
@@ -261,15 +260,6 @@ const tapClosure = ()=>{
         }else if(actuators[serviceName]){
             delete actuators[serviceName];
         }
-
-        servicesObject.forEach((serviceObj)=>{
-            if(serviceObj.serviceName === serviceName){
-                delete serviceObj;
-            }
-        });
-
-        console.log(`printing servicesObject after deleting the service with the name ${serviceName}`);
-        console.log(servicesObject);
 
         await servicesCollection.deleteOne({serviceName: serviceName});
 
