@@ -152,11 +152,34 @@ const tapClosure = ()=>{
         }
 
         if(correctType){
-            servicesObject.push({
-                serviceName : serviceName,
-                serviceType : serviceType,
-                serviceApiCallMethodsCode : serviceApiCallMethodsCode,
-            });
+
+            let added = false;
+
+            console.log('servicesObject before registration :')
+            console.log(servicesObject)
+
+            servicesObject.forEach((serviceObj)=>{
+                if(serviceObj['serviceName'] === serviceName){
+                    console.log('servicesObject : finding a duplicate service name');
+                    serviceObj['serviceType'] = serviceType;
+                    serviceObj['serviceApiCallMethodsCode'] = serviceApiCallMethodsCode;
+                    added = true;
+                }
+            })
+
+            console.log('servicesObject : service added ?');
+            console.log(added);
+
+            if(!added){
+                servicesObject.push({
+                    'serviceName' : serviceName,
+                    'serviceType' : serviceType,
+                    'serviceApiCallMethodsCode' : serviceApiCallMethodsCode,
+                });
+            }
+
+            console.log('servicesObject after registration :')
+            console.log(servicesObject)
         }
 
     }
@@ -238,6 +261,15 @@ const tapClosure = ()=>{
         }else if(actuators[serviceName]){
             delete actuators[serviceName];
         }
+
+        servicesObject.forEach((serviceObj)=>{
+            if(serviceObj.serviceName === serviceName){
+                delete serviceObj;
+            }
+        });
+
+        console.log(`printing servicesObject after deleting the service with the name ${serviceName}`);
+        console.log(servicesObject);
 
         await servicesCollection.deleteOne({serviceName: serviceName});
 
