@@ -5,7 +5,7 @@ const port = 4000;
 
 app.use(bodyParser.json());
 app.listen(port, () => {
-  console.log(`minTAP service running on port ${port}`)
+  console.log(`service API running on port ${port}`)
 });
 
 let lastMail = {
@@ -22,24 +22,17 @@ app.get('/', (req, res) => {
 
 
 //TRIGGERS
-app.get('/triggers/:trigger_slug', (req, res) => {
+app.get('/triggers/helloWorld', (req, res) => {
+  res.send("hello world");
+});
 
-  let slug = req.params.trigger_slug;
+app.get('/triggers/lastMail/:field', (req, res) => {
+  let field = req.params.field;
+  res.send(lastMail[field]);
+});
 
-  if(slug == "last_mail"){
-    res.send(lastMail);
-    return;
-  }
-
-  if(slug == "room_temperature"){
-    res.send({
-      'timestamp': Math.floor(Date.now()/1000),
-      'temperature': (Math.random()*10 + 10).toFixed(1)
-    });
-    return;
-  }
-
-  res.status(404).send({'error': '404 slug not found'});
+app.get('/triggers/roomTemperature', (req, res) => {
+  res.send((Math.random()*10 + 10).toFixed(1));
 });
 
 
