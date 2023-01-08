@@ -4,7 +4,7 @@ const mongoClient = new MongoClient('mongodb://localhost:27017/');
 const tapDB = mongoClient.db('tap');
 
 const ruleClosure = (ruleID, filterCode, triggerApiCallMethodsCode, actuatorApiCallMethodsCode, periodInMs)=>{
- 
+
     let intervalID = null;
 
     let filerCodeFunction = new Function(
@@ -72,8 +72,8 @@ const tapClosure = ()=>{
     const actuators = {};
     const rules = {};
 
-    // Used to store data that the user specified at the set up
-    // and are not necessary for its execution
+    // Used to store data fields that the user specified at the set up
+    // and are not necessary for rule execution
     const rulesObject = {};
 
     const servicesCollection = tapDB.collection('services');
@@ -196,7 +196,7 @@ const tapClosure = ()=>{
             }
         }
 
-        console.log('getServiceByName : Service Not found');
+        console.log('getServiceByName : Service not found');
         return null;
 
     }
@@ -274,12 +274,45 @@ const tapClosure = ()=>{
         
         await initPromise;
 
-        return rulesObject;
+        const rulesArray = [];
+
+        Object.keys(rulesObject).forEach((ruleID)=>{
+            rulesArray.push({
+                _id : ruleID,
+                ruleName : rulesObject[ruleID].ruleName,
+                filterCode : rulesObject[ruleID].filterCode,
+                minimizedAuxiliaryInformation : rulesObject[ruleID].minimizedAuxiliaryInformation,
+                triggerName : rulesObject[ruleID].triggerName,
+                actuatorName : rulesObject[ruleID].actuatorName,
+                periodInMs : rulesObject[ruleID].periodInMs,
+            })
+        });
+
+        return rulesArray;
     }
 
     const getRuleByID = async (id)=>{
+    
         await initPromise;
-        return rulesObject[id];
+        
+        const ruleObject = {}
+
+        if(rulesObject[id]){
+
+            ruleObject['_id'] = id;
+            ruleObject['ruleName'] = ruleName;
+            ruleObject['filterCode'] = filterCode;
+            ruleObject['minimizedAuxiliaryInformation'] = minimizedAuxiliaryInformation;
+            ruleObject['triggerName'] = triggerName;
+            ruleObject['actuatorName'] = actuatorName;
+            ruleObject['periodInMs'] = periodInMs;
+
+            return ruleObject;
+        }
+
+        console.log('getRuleByID : Rule not found');
+        return null;
+
     }
 
     const _setRule = (
@@ -379,16 +412,15 @@ const tapClosure = ()=>{
 
         if(rules[ruleID]){
             rules[ruleID].stop();
-
-            const ruleObj = rulesObject[ruleID];
+            delete rules[ruleID];
 
             await servicesCollection.deleteOne({
-                filterCode: ruleObj.filterCode,
-                triggerName : ruleObj.triggerName,
-                actuatorName : ruleObj.triggerName,
+                filterCode: rulesObject[ruleID].filterCode,
+                triggerName : rulesObject[ruleID].triggerName,
+                actuatorName : rulesObject[ruleID].triggerName,
             });
 
-            delete rules[ruleID];
+            delete rulesObject[ruleID];
 
         }else{
             console.log('ruleID not found');
