@@ -3,6 +3,30 @@
 
 const API_URL = "127.0.0.1:4000";
 
+// Only for trigger manifest
+const dataArray = {
+  "lastMail.author" : null,
+  "lastMail.content" : null,
+  "lastMail.subject" : null,
+  "roomTemperature" : null,
+}
+
+// Only for trigger manifest
+const getTriggerData = (
+  
+  askedFields,
+  // A subset of Object.keys(dataArray)
+
+  minimizedAuxiliaryInformation = null,
+  // Contains the transformed rule and more (See the tap doc). 
+  // Optional and must be null for MinTap incompatible rules.
+
+)=>{
+  // To implements
+  // Contains the fetch
+  // Populates dataArray fields with asked values
+}
+
 class service {
   constructor() {
     this.lastMail = {
