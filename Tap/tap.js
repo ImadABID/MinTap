@@ -279,7 +279,7 @@ const tapClosure = ()=>{
         Object.keys(rulesObject).forEach((ruleID)=>{
             rulesArray.push({
                 _id : ruleID,
-                ruleName : rulesObject[ruleID].ruleName,
+                name : rulesObject[ruleID].ruleName,
                 filterCode : rulesObject[ruleID].filterCode,
                 minimizedAuxiliaryInformation : rulesObject[ruleID].minimizedAuxiliaryInformation,
                 triggerName : rulesObject[ruleID].triggerName,
@@ -300,7 +300,7 @@ const tapClosure = ()=>{
         if(rulesObject[id]){
 
             ruleObject['_id'] = id;
-            ruleObject['ruleName'] = ruleName;
+            ruleObject['name'] = ruleName;
             ruleObject['filterCode'] = filterCode;
             ruleObject['minimizedAuxiliaryInformation'] = minimizedAuxiliaryInformation;
             ruleObject['triggerName'] = triggerName;
@@ -410,6 +410,8 @@ const tapClosure = ()=>{
 
         await initPromise;
 
+        console.log(`deleting the rule with the Id = ${ruleID}`);
+
         if(rules[ruleID]){
             rules[ruleID].stop();
             delete rules[ruleID];
@@ -419,6 +421,14 @@ const tapClosure = ()=>{
                 triggerName : rulesObject[ruleID].triggerName,
                 actuatorName : rulesObject[ruleID].triggerName,
             });
+
+            console.log('rules after deletion');
+            const _rulesCursor = rulesCollection.find({});
+            await _rulesCursor.forEach((rule)=>{
+
+                console.log(rule);
+
+            })
 
             delete rulesObject[ruleID];
 
