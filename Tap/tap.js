@@ -19,8 +19,12 @@ const ruleClosure = (ruleID, filterCode, triggerApiCallMethodsCode, actuatorApiC
         }else{
             intervalID = setInterval(()=>{
                 console.log(`rule #${ruleID} : executing rule`);
-                filerCodeFunction();
-            },periodInMs);
+                try{
+                    filerCodeFunction();
+                }catch(err){
+                   console.log(err); 
+                }
+            },parseInt(periodInMs));
         }  
     };
 
@@ -300,12 +304,12 @@ const tapClosure = ()=>{
         if(rulesObject[id]){
 
             ruleObject['_id'] = id;
-            ruleObject['name'] = ruleName;
-            ruleObject['filterCode'] = filterCode;
-            ruleObject['minimizedAuxiliaryInformation'] = minimizedAuxiliaryInformation;
-            ruleObject['triggerName'] = triggerName;
-            ruleObject['actuatorName'] = actuatorName;
-            ruleObject['periodInMs'] = periodInMs;
+            ruleObject['name'] = rulesObject[id].ruleName;
+            ruleObject['filterCode'] = rulesObject[id].filterCode;
+            ruleObject['minimizedAuxiliaryInformation'] = rulesObject[id].minimizedAuxiliaryInformation;
+            ruleObject['triggerName'] = rulesObject[id].triggerName;
+            ruleObject['actuatorName'] = rulesObject[id].actuatorName;
+            ruleObject['periodInMs'] = rulesObject[id].periodInMs;
 
             return ruleObject;
         }
@@ -416,10 +420,10 @@ const tapClosure = ()=>{
             rules[ruleID].stop();
             delete rules[ruleID];
 
-            await servicesCollection.deleteOne({
+            await rulesCollection.deleteOne({
                 filterCode: rulesObject[ruleID].filterCode,
                 triggerName : rulesObject[ruleID].triggerName,
-                actuatorName : rulesObject[ruleID].triggerName,
+                actuatorName : rulesObject[ruleID].actuatorName,
             });
 
             console.log('rules after deletion');
