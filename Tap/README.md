@@ -192,7 +192,8 @@ Getting rule by ID :
 Returns :
 
     {
-        ruleName : "ruleName",
+        _id : id,
+        name : "ruleName",
         filterCode : "filterCode",
         minimizedAuxiliaryInformation : "minimizedAuxiliaryInformation",
         triggerName : "triggerName",
@@ -206,9 +207,10 @@ Getting all rules :
 
 Returns :
 
-    {
-        ruleId : {
-            ruleName : "ruleName",
+    [
+        {
+            _id : id,
+            name : "ruleName",
             filterCode : "filterCode",
             minimizedAuxiliaryInformation : "minimizedAuxiliaryInformation",
             triggerName : "triggerName",
@@ -216,7 +218,7 @@ Returns :
             periodInMs : periodInMs, 
         },
         ...
-    }
+    ]
 
 ### Executing rules periodically :
 
