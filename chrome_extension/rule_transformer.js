@@ -183,14 +183,20 @@ const setReplaceATriggerFiledByItsTracker = (ruleObj)=>{
     }
 }
 
-const ruleTransformer = (rule, triggerKeyword, actionKeyword, accssedFieldsHandlerFunctionName='console.log')=>{
+/*
+    Returns minimizedAuxiliaryInformation
+*/
+const ruleTransformer = (
+    rule,
+    triggerKeyword,
+    actionKeyword,
+    accssedFieldsHandlerFunctionName='console.log'
+)=>{
 
     // Compute T'
-    trrigerList = []
-    applyForAllVariableOfPackage(rule, triggerKeyword, addToListIfNotExist(trrigerList));
+    const triggerList = []
+    applyForAllVariableOfPackage(rule, triggerKeyword, addToListIfNotExist(triggerList));
 
-    console.log('T\' = ')
-    console.log(trrigerList);
 
     // Compute f'
     let newRule = `
@@ -245,13 +251,11 @@ let tracked_params = {};
 print_access_tracking_result();
     `;
 
-    // Printing Result
-    console.log('f\' = ');
-    console.log(newRuleObj.rule);
 
     return {
-        trigerFields : trrigerList,
-        transformedRule : newRuleObj.rule
+        transformedFilterCode : newRuleObj.rule,
+        dependencySet : triggerList,
+        signature : '',
     };
 
 }
