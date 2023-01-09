@@ -459,15 +459,21 @@ const tap = tapClosure();
 
 // register default services
 tap.registerService(
-    "random int generator",
+    "RandomIntGenerator",
     "trigger",
-    `const getRandomInt = (max=100)=>{return Math.floor(Math.random() * max);};`
+    `
+        const RandomIntGenerator = {};
+        RandomIntGenerator.getRandomInt = (max=100)=>{return Math.floor(Math.random() * max);};
+    `
 );
 
 tap.registerService(
-    "message logger",
+    "MessageLogger",
     "actuator",
-    `const log = (msg)=>{console.log(msg)};`
+    `
+        const MessageLogger = {};
+        MessageLogger.log = (msg)=>{console.log(msg)};
+    `
 );
 
 module.exports.tap = tap;
