@@ -5,15 +5,15 @@
   "permissions": [
     "webRequest",
     "tabs",
-    "*://*/rule_edit",
-    "*://*/rule_add",
-    "*://*/add_rule",
     "webRequestBlocking"
   ],
-  "background": {
-    "scripts": [
-      "background.js"
-    ]
-  },
+  "content_scripts": [
+    {
+    "matches": [    "*://*/rule_add"
+    ],
+    "js": [ "content_test.js"],
+    "run_at": "document_end"
+    }
+  ],
   "manifest_version": 2
 }
