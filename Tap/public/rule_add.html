@@ -75,21 +75,20 @@
       for (let index = 0; index < array.length; index++) {
         const element = array[index];
         if (element.serviceType == "trigger") {
-          var service_name = document.getElementById("service_name");
-          var option = document.createElement('option');
-          option.setAttribute("value", element.serviceName);
-          option.innerText = element.serviceName;
-          service_name.appendChild(option);
-
-
-
-        }
-        else {
           var trigger_name = document.getElementById("trigger_name");
           var option = document.createElement('option');
           option.setAttribute("value", element.serviceName);
           option.innerText = element.serviceName;
           trigger_name.appendChild(option);
+
+
+        }
+        else {
+          var service_name = document.getElementById("service_name");
+          var option = document.createElement('option');
+          option.setAttribute("value", element.serviceName);
+          option.innerText = element.serviceName;
+          service_name.appendChild(option);
         }
 
 
@@ -121,7 +120,7 @@
         <tr>
           <td width="92%">
             <fieldset>
-              <legend>Service name</legend>
+              <legend>Actuator name</legend>
               <select id="service_name" class="insidefieldset" spellcheck="false" style="height: 50px;width: 100%;">
               </select>
             </fieldset>

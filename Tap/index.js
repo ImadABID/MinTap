@@ -21,6 +21,9 @@ app.get('/rule_editor', (req, res) => {
 })
 app.get('/get_filters', async (req, res) => {
   filters = await tap.getAllRules();
+  for (let index = 0; index < filters.length; index++) {
+    //filters[index].status = tap.getRuleStatus(filters[index].ruleName) ; 
+  }
   res.send({ filters: filters });
 
   console.log("get_filters")
@@ -40,17 +43,17 @@ app.get('/get_service', async (req, res) => {
   res.send(cl);
 
 })
-app.post('/add_rule', (req, res) => {
-  console.log(req.body) ; 
-  // let ruleID = tap.setRule(req.body.name,
-  //   req.body.filterCode,
-  //   req.body.minimizedAuxiliaryInformation,
-  //   req.body.triggerName,
-  //   req.body.actuatorName,
-  //   req.body.periodInMs
-  // );
-  // console.log(req.body);
-  // res.send({ msg: 'rule saved' });
+app.post('/add_rule', async (req, res) => {
+  console.log(req.body);
+  let ruleID = await tap.setRule(req.body.name,
+    req.body.filterCode,
+    req.body.minimizedAuxiliaryInformation,
+    req.body.triggerName,
+    req.body.actuatorName,
+    req.body.periodInMs
+  );
+  console.log(req.body);
+  res.send({ msg: 'rule saved' });
 })
 app.post('/edit_rule', async (req, res) => {
 
@@ -70,10 +73,8 @@ app.post('/edit_rule', async (req, res) => {
 
 app.post('/edit_service', async (req, res) => {
 
-  await tap.deleteService(req.body.name)
-  let serviceID = tap.registerService(req.body.serviceName, req.body.serviceType, req.body.serviceApiCallMethodsCode);
-
-
+  await tap.deleteService(req.query.name)
+  await tap.registerService(req.body.serviceName, req.body.serviceType, req.body.serviceApiCallMethodsCode);
   res.json({ msg: 'service updated' });
   console.log(req.body._id + " ==> updated")
 
@@ -82,7 +83,7 @@ app.post('/edit_service', async (req, res) => {
 app.post('/add_service', async (req, res) => {
   let serviceID = await tap.registerService(req.body.serviceName, req.body.serviceType, req.body.serviceApiCallMethodsCode);
   console.log(req.body);
-  res.send({ msg: 'rule saved' });
+  res.send({ msg: 'service saved' });
 })
 app.get('/rule_delete', async (req, res) => {
 
