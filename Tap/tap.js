@@ -414,8 +414,6 @@ const tapClosure = ()=>{
 
         await initPromise;
 
-        console.log(`deleting the rule with the Id = ${ruleID}`);
-
         if(rules[ruleID]){
             rules[ruleID].stop();
             delete rules[ruleID];
@@ -425,14 +423,6 @@ const tapClosure = ()=>{
                 triggerName : rulesObject[ruleID].triggerName,
                 actuatorName : rulesObject[ruleID].actuatorName,
             });
-
-            console.log('rules after deletion');
-            const _rulesCursor = rulesCollection.find({});
-            await _rulesCursor.forEach((rule)=>{
-
-                console.log(rule);
-
-            })
 
             delete rulesObject[ruleID];
 
