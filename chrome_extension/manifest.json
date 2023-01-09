@@ -1,19 +1,19 @@
 {
-  "name": "minTap_S9 extension",
+  
+  "manifest_version": 3,
+  "name": "MinTap",
   "version": "1.0",
-  "description": "project S9 minTap extension!",
-  "permissions": [
-    "webRequest",
-    "tabs",
-    "webRequestBlocking"
-  ],
+
+  "description": "MinTap extension is a part of the ENSEIRB-MATMECA S9 project",
+  
   "content_scripts": [
     {
-    "matches": [    "*://*/rule_add"
-    ],
-    "js": [ "content_test.js"],
-    "run_at": "document_end"
+      "matches": [
+        "*://*/rule_add"
+      ],
+      "js": ["rule_transformer.js", "add_rule_page_modifier.js"],
+      "run_at": "document_end"
     }
-  ],
-  "manifest_version": 2
+  ]
+
 }
