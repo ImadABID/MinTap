@@ -13,7 +13,6 @@ app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/home.html')
-  console.log("here")
 })
 
 app.get('/rule_editor', (req, res) => {
@@ -25,12 +24,9 @@ app.get('/get_filters', async (req, res) => {
     //filters[index].status = tap.getRuleStatus(filters[index].ruleName) ; 
   }
   res.send({ filters: filters });
-
-  console.log("get_filters")
 })
 app.get('/get_services', async (req, res) => {
   services = await tap.getAllServices();
-  console.log(services);
   res.send({ services: services });
 
 })
@@ -44,22 +40,25 @@ app.get('/get_service', async (req, res) => {
 
 })
 app.post('/add_rule', async (req, res) => {
+  
   console.log(req.body);
-  let ruleID = await tap.setRule(req.body.name,
+  
+  await tap.setRule(req.body.name,
     req.body.filterCode,
     req.body.minimizedAuxiliaryInformation,
     req.body.triggerName,
     req.body.actuatorName,
     req.body.periodInMs
   );
-  console.log(req.body);
   res.send({ msg: 'rule saved' });
 })
 app.post('/edit_rule', async (req, res) => {
 
+  console.log(req.body);
+
   await tap.deleteRule(req.body._id)
 
-  let ruleID = await tap.setRule(req.body.name,
+  await tap.setRule(req.body.name,
     req.body.filterCode,
     req.body.minimizedAuxiliaryInformation,
     req.body.triggerName,

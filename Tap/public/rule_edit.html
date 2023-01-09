@@ -141,17 +141,8 @@
             </fieldset>
           </td>
           <td>
-            <div class="button" style="width: 110px;" onclick="sendRule()">
-              <table>
-                <tr>
-                  <td>
-                    <img src="" height="30px" width="auto"></img>
-                  </td>
-                  <td>
-                    edit Rule
-                  </td>
-                </tr>
-              </table>
+            <div id = "send_rule" class="button" style="width: 110px;" onclick="sendRule()">
+              Edit rule
             </div>
           </td>
         </tr>
@@ -163,16 +154,13 @@
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     var Id = urlParams.get('_id');
-    var obj;
     fetch(
       './get_filter?_id=' + Id
     ).then(resjs => resjs.json()).then((res) => {
       document.getElementById("transformed_rule").innerText = res.filterCode;
-      obj =res ; 
       document.getElementById("rule_name").innerText = res.name;
       document.getElementById("trigger_name").value = res.triggerName;
       document.getElementById("service_name").value = res.actuatorName;
-
     });
 
     const sendRule = () => {
@@ -186,11 +174,6 @@
         'filterCode': rule,
         'triggerName': trigger,
         'actuatorName': service,
-        'minimizedAuxiliaryInformation': {
-          'transformedFilterCode': res.minimizedAuxiliaryInformation.transformedFilterCode,
-          'dependencySet': res.minimizedAuxiliaryInformation.dependencySet,
-          'signature': res.minimizedAuxiliaryInformation.signature
-        },
         'periodInMs': '10000'
       };
       fetch(
@@ -212,7 +195,6 @@
         if (res.msg == 'rule updated') {
           window.location.replace("/");
         }
-
       })
     }
   </script>
