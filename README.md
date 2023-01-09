@@ -33,3 +33,4 @@ Test the installation :
 | Server | Port |
 |-----|-----|
 |MongoDB|27017|
+|TAP|8080|
