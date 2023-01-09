@@ -145,7 +145,7 @@
             </fieldset>
           </td>
           <td>
-            <div class="button" style="width: 110px;" onclick="sendRule()">
+            <div id = "send_rule" class="button" style="width: 110px;" onclick="sendRule()">
               <table>
                 <tr>
                   <td>
@@ -176,11 +176,7 @@
         'triggerName': trigger,
         'actuatorName': service,
         'periodInMs': '10000',
-        'minimizedAuxiliaryInformation': {
-          'transformedFilterCode': '',
-          'dependencySet': '',
-          'signature': ''
-        }
+   
       };
       console.log(data)
 

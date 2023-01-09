@@ -5,9 +5,6 @@
   "permissions": [
     "webRequest",
     "tabs",
-    "*://*/rule_edit",
-    "*://*/rule_add",
-    "*://*/add_rule",
     "webRequestBlocking"
   ],
   "background": {
@@ -15,5 +12,13 @@
       "background.js"
     ]
   },
+  "content_scripts": [
+    {
+    "matches": [    "*://*/rule_add"
+    ],
+    "js": [ "content_test.js"],
+    "run_at": "document_idle"
+    }
+  ],
   "manifest_version": 2
 }
