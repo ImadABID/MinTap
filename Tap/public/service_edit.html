@@ -111,7 +111,7 @@
                     <img src="" height="30px" width="auto"></img>
                   </td>
                   <td>
-                    Add Service
+                    Edit Service
                   </td>
                 </tr>
               </table>
@@ -135,7 +135,7 @@
 
     });
 
-    const sendRule = () => {
+    const sendService = () => {
       var serviceApiCallMethodsCode = document.getElementById("transformed_rule").value;
       var serviceName = document.getElementById("service_name").value;
       var serviceType = document.getElementById("service_type").value;
@@ -146,7 +146,7 @@
 
       };
       fetch(
-        './edit_service',
+        './edit_service?name='+name,
         {
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
           mode: 'cors', // no-cors, *cors, same-origin

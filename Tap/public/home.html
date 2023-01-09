@@ -24,6 +24,7 @@
       margin-bottom: 1.5rem;
 
     }
+
     .eleven h1 {
       font-size: 35px;
       font-weight: 300;
@@ -40,7 +41,7 @@
       width: 62px;
       margin-bottom: 1.5rem;
 
-    }  
+    }
 
     .thirteen {
       margin-bottom: 70px;
@@ -339,6 +340,27 @@
         width: 80%;
         margin: 0 auto;
       }
+
+      .circle_vert {
+        background: rgb(14, 167, 0);
+        border-radius: 50%;
+        height: 13px;
+        width: 13px;
+        margin-bottom: -13px;
+        margin-left: auto;
+        align-items: flex-end;
+      }
+
+      .circle_rouge {
+        display: block;
+        background: rgb(167, 0, 0);
+        border-radius: 50%;
+        height: 13px;
+        width: 13px;
+        margin-bottom: -13px;
+        margin-left: auto;
+        align-items: flex-end;
+      }
     }
   </style>
   <script>
@@ -367,6 +389,7 @@
           var p = document.createElement('p');
           var text = "triggerName : " + element.triggerName + "\n" +
             "actuatorName : " + element.actuatorName + "\n" +
+            "status : " + element.status + "\n" +
             "filterCode : " + element.filterCode;
           p.innerText = text;
           var aE = document.createElement('a');
@@ -381,11 +404,17 @@
           buttonD.setAttribute("type", "button")
           buttonD.setAttribute("class", "read_more_btn")
           buttonD.innerText = "Delete Rule";
+          var bulle = document.createElement('figure');
+          if(element.status != "actif")
+          bulle.setAttribute('class', 'circle_rouge');
+          else
+          bulle.setAttribute('class', 'circle_vert');
           aE.appendChild(buttonE);
           aR.appendChild(buttonD);
           solu_description.appendChild(p);
           solu_description.appendChild(aE);
           solu_description.appendChild(aR);
+          solu_title.appendChild(bulle)
           solu_title.appendChild(h3);
           solution_card.appendChild(solu_title);
           solution_card.appendChild(solu_description);
@@ -408,6 +437,7 @@
           solu_description.setAttribute('class', 'solu_description');
           var p = document.createElement('p');
           var text = "triggerName : " + element.triggerName + "\n" +
+            "status : " + element.status + "\n" +
             "actuatorName : " + element.actuatorName + "\n" +
             "filterCode : " + element.filterCode;
           p.innerText = text;
@@ -423,11 +453,17 @@
           buttonD.setAttribute("type", "button")
           buttonD.setAttribute("class", "read_more_btn")
           buttonD.innerText = "Delete Rule";
+          var bulle = document.createElement('figure');
+          if(element.status != "actif")
+          bulle.setAttribute('class', 'circle_rouge');
+          else
+          bulle.setAttribute('class', 'circle_vert');
           aE.appendChild(buttonE);
           aR.appendChild(buttonD);
           solu_description.appendChild(p);
           solu_description.appendChild(aE);
           solu_description.appendChild(aR);
+          solu_title.appendChild(bulle)
           solu_title.appendChild(h3);
           solution_card.appendChild(solu_title);
           solution_card.appendChild(solu_description);
@@ -450,7 +486,7 @@
           var our_solution_category = document.getElementById("our_solution_category_services");
           let id = Math.floor(index / 2) + 1;
           var solution_cards_box = document.createElement("div");
-          let id_s = "service_" + id ; 
+          let id_s = "service_" + id;
           solution_cards_box.setAttribute("id", id_s);
           solution_cards_box.setAttribute("class", "solution_cards_box");
           var solution_card = document.createElement('div');
@@ -493,7 +529,7 @@
         }
         else {
           let id = Math.floor(index / 2);
-          let id_s = "service_"+id;
+          let id_s = "service_" + id;
           var solution_cards_box = document.getElementById(id_s);
           var solution_card = document.createElement('div');
           solution_card.setAttribute('class', 'solution_card');
@@ -565,6 +601,7 @@
                   <h3>Add Rule </h3>
                 </div>
                 <div class="solu_description">
+
                   <a href="rule_add">
                     <button type="button" class="read_more_btn">Add Rule</button>
                   </a>
@@ -583,7 +620,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-    <div class="section_our_solution" style="margin-bottom: 30px;">  
+    <div class="section_our_solution" style="margin-bottom: 30px;">
       <div class="row">
         <div class="eleven">
           <h1></h1>
