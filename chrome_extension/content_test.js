@@ -1,5 +1,24 @@
-var button =  document.getElementById("send_rule")
-button.setAttribute("onclick","nnn ()" );
+
+console.log("executing extension");
+
+const sendRuleContainer = document.getElementById('send_rule_container');
+
+const sendRuleContainerDoc = new DOMParser().parseFromString(sendRuleContainer.outerHTML, "text/xml");
+
+const sendRuleElement = sendRuleContainerDoc.getElementById('send_rule');
+sendRuleElement.setAttribute("onclick","console.log('MinTap')");
+
+sendRuleElement.innerHTML = "Add MinTap compatible rule"
+
+sendRuleContainer.innerHTML = sendRuleContainerDoc.getElementById('send_rule').outerHTML;
+
+
+
+
+
+/*
+var button =  document.getElementById("send_rule");
+button.setAttribute("onclick","nnn()" );
 document.getElementById("send_script").innerText="";
 const extractPackageVariable = (str) => {
     let variableName = '';
@@ -255,3 +274,5 @@ print_access_tracking_result();
     };
 
 }
+
+*/

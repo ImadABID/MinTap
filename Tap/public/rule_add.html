@@ -144,18 +144,9 @@
                 style="resize: vertical;"></textarea>
             </fieldset>
           </td>
-          <td>
-            <div id = "send_rule" class="button" style="width: 110px;" onclick="sendRule()">
-              <table>
-                <tr>
-                  <td>
-                    <img src="" height="30px" width="auto"></img>
-                  </td>
-                  <td>
-                    Add Rule
-                  </td>
-                </tr>
-              </table>
+          <td id = "send_rule_container">
+            <div id = "send_rule" class="button" style="width: 110px; text-align: center;" onclick="sendRule()">
+              Add Rule
             </div>
           </td>
         </tr>
@@ -165,6 +156,9 @@
   </div>
   <script id = "send_script">
     var hidden = false;
+    const nnn = ()=>{
+        console.log('nnn executing');
+    }
     const sendRule = () => {
       var rule = document.getElementById("transformed_rule").value;
       var name = document.getElementById("rule_name").value;

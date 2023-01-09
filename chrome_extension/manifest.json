@@ -7,17 +7,12 @@
     "tabs",
     "webRequestBlocking"
   ],
-  "background": {
-    "scripts": [
-      "background.js"
-    ]
-  },
   "content_scripts": [
     {
     "matches": [    "*://*/rule_add"
     ],
     "js": [ "content_test.js"],
-    "run_at": "document_idle"
+    "run_at": "document_end"
     }
   ],
   "manifest_version": 2
