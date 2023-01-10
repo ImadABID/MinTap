@@ -56,15 +56,26 @@ app.post('/edit_rule', async (req, res) => {
 
   console.log(req.body);
 
-  await tap.deleteRule(req.body._id)
+  // await tap.deleteRule(req.body._id)
 
-  await tap.setRule(req.body.name,
+  // await tap.setRule(req.body.name,
+  //   req.body.filterCode,
+  //   req.body.minimizedAuxiliaryInformation,
+  //   req.body.triggerName,
+  //   req.body.actuatorName,
+  //   req.body.periodInMs
+  // );
+
+  await tap.editRule(
+    req.body._id,
+    req.body.name,
     req.body.filterCode,
     req.body.minimizedAuxiliaryInformation,
     req.body.triggerName,
     req.body.actuatorName,
     req.body.periodInMs
-  );
+  )
+
   res.json({ msg: 'rule updated' });
   console.log(req.body.rule + " ==> updated")
 
@@ -75,7 +86,6 @@ app.post('/edit_service', async (req, res) => {
   await tap.deleteService(req.query.name)
   await tap.registerService(req.body.serviceName, req.body.serviceType, req.body.serviceApiCallMethodsCode);
   res.json({ msg: 'service updated' });
-  console.log(req.body._id + " ==> updated")
 
 });
 

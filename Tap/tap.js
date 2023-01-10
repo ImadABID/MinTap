@@ -335,13 +335,13 @@ const tapClosure = ()=>{
         if(triggers[triggerName]){
             triggerApiCallMethodsCode = triggers[triggerName].serviceApiCallMethodsCode;
         }else{
-            console.log("Unknown trigger name");
+            console.log("setRule : Unknown trigger name");
         }
 
         if(actuators[actuatorName]){
             actuatorApiCallMethodsCode = actuators[actuatorName].serviceApiCallMethodsCode;
         }else{
-            console.log("Unknown actuator name");
+            console.log("setRule : Unknown actuator name");
         }
 
         rules[id] = ruleClosure(
@@ -363,6 +363,8 @@ const tapClosure = ()=>{
             periodInMs : periodInMs,
         }
 
+        return id;
+
     };
 
     const setRule = async (
@@ -376,7 +378,7 @@ const tapClosure = ()=>{
 
         await initPromise;
 
-        _setRule(
+        const ruleID = _setRule(
             ruleName,
             filterCode,
             minimizedAuxiliaryInformation,
@@ -408,6 +410,115 @@ const tapClosure = ()=>{
         };
         await rulesCollection.updateOne(filter, updateDoc, options);
 
+        return ruleID;
+    }
+
+    const _editRule = (
+        ruleID,
+        ruleName,
+        filterCode,
+        minimizedAuxiliaryInformation,
+        triggerName,
+        actuatorName,
+        periodInMs
+    )=>{
+
+        let triggerApiCallMethodsCode;
+        let actuatorApiCallMethodsCode;
+
+        if(triggers[triggerName]){
+            triggerApiCallMethodsCode = triggers[triggerName].serviceApiCallMethodsCode;
+        }else{
+            console.log("editRule : Unknown trigger name");
+        }
+
+        if(actuators[actuatorName]){
+            actuatorApiCallMethodsCode = actuators[actuatorName].serviceApiCallMethodsCode;
+        }else{
+            console.log("editRule : Unknown actuator name");
+        }
+
+        if(rules[ruleID]){
+
+            rules[ruleID].stop();
+            delete rules[ruleID];
+
+            rules[ruleID] = ruleClosure(
+                ruleID,
+                filterCode,
+                triggerApiCallMethodsCode,
+                actuatorApiCallMethodsCode,
+                periodInMs
+            );
+    
+            rules[ruleID].start();
+    
+            rulesObject[ruleID] = {
+                ruleName : ruleName,
+                filterCode : filterCode,
+                minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
+                triggerName : triggerName,
+                actuatorName : actuatorName,
+                periodInMs : periodInMs,
+            }
+
+        }else{
+            console.log("editRule : Unknown rule ID");
+        }
+
+    };
+
+    const editRule = async (
+        ruleId,
+        ruleName,
+        filterCode,
+        minimizedAuxiliaryInformation,
+        triggerName,
+        actuatorName,
+        periodInMs
+    )=>{
+
+        await initPromise;
+
+        if(!rulesObject[ruleId]){
+            return ;
+        }
+
+
+        // create a filter for a service to update
+        const filter = {
+            filterCode: rulesObject[ruleId].filterCode,
+            triggerName : rulesObject[ruleId].triggerName,
+            actuatorName : rulesObject[ruleId].actuatorName,
+        };
+
+        _editRule(
+            ruleId,
+            ruleName,
+            filterCode,
+            minimizedAuxiliaryInformation,
+            triggerName,
+            actuatorName,
+            periodInMs
+        );
+        
+        // this option instructs the method to create a document if no documents match the filter
+        const options = { upsert: true };
+
+        // create a document that sets the doc
+        const updateDoc = {
+            $set: {
+                ruleName : ruleName,
+                filterCode : filterCode,
+                minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
+                triggerName : triggerName,
+                actuatorName : actuatorName,
+                periodInMs : periodInMs,
+            },
+        };
+
+        await rulesCollection.updateOne(filter, updateDoc, options);
+
     }
 
     const deleteRule = async (ruleID)=>{
@@ -427,7 +538,7 @@ const tapClosure = ()=>{
             delete rulesObject[ruleID];
 
         }else{
-            console.log('ruleID not found');
+            console.log('deleteRule : ruleID not found');
         }
 
     }
@@ -441,6 +552,7 @@ const tapClosure = ()=>{
         getRuleByID : getRuleByID,
         getAllRules : getAllRules,
         setRule : setRule,
+        editRule : editRule,
         deleteRule : deleteRule
     }
 }
