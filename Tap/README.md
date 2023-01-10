@@ -179,6 +179,18 @@ This function takes a filterCode and returns an ID of the created rule.
 * actuatorName : the actuator name as registered in tap.registerService().
 * periodInMs : it's an optional parameter that defines the period in milliseconds between two rule executions. By default it takes 10 seconds.
 
+Editing a rule :
+
+    await editRule(
+        ruleId,
+        ruleName,
+        filterCode,
+        minimizedAuxiliaryInformation,
+        triggerName,
+        actuatorName,
+        periodInMs
+    )
+
 Deleting a rule :
 
     await tap.deleteRule(ruleID)
