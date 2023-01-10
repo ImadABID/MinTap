@@ -13,6 +13,13 @@
       ],
       "js": ["rule_transformer.js", "add_rule_page_modifier.js"],
       "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "*://*/rule_edit*"
+      ],
+      "js": ["rule_transformer.js", "edit_rule_page_modifier.js"],
+      "run_at": "document_end"
     }
   ]
 

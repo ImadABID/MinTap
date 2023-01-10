@@ -1,5 +1,3 @@
-console.log("executing extension");
-
 function sendMinTapCompatibleRule(){
         
     const rule = document.getElementById("transformed_rule").value;

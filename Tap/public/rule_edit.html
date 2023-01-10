@@ -115,8 +115,8 @@
         <tr>
           <td width="92%">
             <fieldset>
-              <legend>Service name</legend>
-              <select id="service_name" class="insidefieldset" spellcheck="false" style="height: 50px;width: 100%;">
+              <legend>Trigger name</legend>
+              <select id="trigger_name" class="insidefieldset" spellcheck="false" style="height: 50px;width: 100%;">
               </select>
             </fieldset>
           </td>
@@ -124,8 +124,8 @@
         <tr>
           <td width="92%">
             <fieldset>
-              <legend>Trigger name</legend>
-              <select id="trigger_name" class="insidefieldset" spellcheck="false" style="height: 50px;width: 100%;">
+              <legend>Actuator name</legend>
+              <select id="service_name" class="insidefieldset" spellcheck="false" style="height: 50px;width: 100%;">
               </select>
             </fieldset>
           </td>
@@ -137,8 +137,8 @@
               <textarea id="transformed_rule" class="insidefieldset" spellcheck="false" style="resize: vertical;"></textarea>
             </fieldset>
           </td>
-          <td>
-            <div id = "send_rule" class="button" style="width: 110px;" onclick="sendRule()">
+          <td id = "send_rule_container">
+            <div id = "send_rule" class="button" style="width: 110px; text-align: center;" onclick="sendRule()">
               Edit rule
             </div>
           </td>
@@ -150,7 +150,7 @@
   <script>
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    var Id = urlParams.get('_id');
+    const Id = urlParams.get('_id');
     fetch(
       './get_filter?_id=' + Id
     ).then(resjs => resjs.json()).then((res) => {
@@ -161,11 +161,11 @@
     });
 
     const sendRule = () => {
-      var rule = document.getElementById("transformed_rule").value;
-      var name = document.getElementById("rule_name").value;
-      var trigger = document.getElementById("trigger_name").value;
-      var service = document.getElementById("service_name").value;
-      let data = {
+      const rule = document.getElementById("transformed_rule").value;
+      const name = document.getElementById("rule_name").value;
+      const trigger = document.getElementById("trigger_name").value;
+      const service = document.getElementById("service_name").value;
+      const data = {
         '_id': Id,
         'name': name,
         'filterCode': rule,
