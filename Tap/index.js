@@ -43,12 +43,14 @@ app.post('/add_rule', async (req, res) => {
   
   console.log(req.body);
   
-  await tap.setRule(req.body.name,
+  await tap.setRule(
+    req.body.name,
     req.body.filterCode,
-    req.body.minimizedAuxiliaryInformation,
     req.body.triggerName,
     req.body.actuatorName,
-    req.body.periodInMs
+    req.body.ingredients,
+    req.body.periodInMs,
+    req.body.properties
   );
   res.send({ msg: 'rule saved' });
 })
@@ -56,28 +58,18 @@ app.post('/edit_rule', async (req, res) => {
 
   console.log(req.body);
 
-  // await tap.deleteRule(req.body._id)
-
-  // await tap.setRule(req.body.name,
-  //   req.body.filterCode,
-  //   req.body.minimizedAuxiliaryInformation,
-  //   req.body.triggerName,
-  //   req.body.actuatorName,
-  //   req.body.periodInMs
-  // );
-
   await tap.editRule(
     req.body._id,
     req.body.name,
     req.body.filterCode,
-    req.body.minimizedAuxiliaryInformation,
     req.body.triggerName,
     req.body.actuatorName,
-    req.body.periodInMs
+    req.body.ingredients,
+    req.body.periodInMs,
+    req.body.properties
   )
 
   res.json({ msg: 'rule updated' });
-  console.log(req.body.rule + " ==> updated")
 
 });
 

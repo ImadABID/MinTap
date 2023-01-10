@@ -3,13 +3,22 @@ const { MongoClient } = require("mongodb");
 const mongoClient = new MongoClient('mongodb://localhost:27017/');
 const tapDB = mongoClient.db('tap');
 
-const ruleClosure = (ruleID, filterCode, triggerApiCallMethodsCode, actuatorApiCallMethodsCode, periodInMs)=>{
+const ruleClosure = (
+    ruleID,
+    filterCode,
+    triggerApiCallMethodsCode,
+    actuatorApiCallMethodsCode,
+    ingredients,
+    periodInMs,
+    properties
+)=>{
 
     let intervalID = null;
 
     let filerCodeFunction = new Function(
         triggerApiCallMethodsCode   + '\n' +
         actuatorApiCallMethodsCode  + '\n' +
+        // getTriggerData(ingredients, properties)
         filterCode
     );
 
@@ -17,14 +26,24 @@ const ruleClosure = (ruleID, filterCode, triggerApiCallMethodsCode, actuatorApiC
         if(intervalID != null){
             console.log(`rule #${ruleID} is already started and cannot be started again.`)
         }else{
-            intervalID = setInterval(()=>{
-                console.log(`rule #${ruleID} : executing rule`);
-                try{
-                    filerCodeFunction();
-                }catch(err){
-                   console.log(err); 
-                }
-            },parseInt(periodInMs));
+
+            intervalID = setInterval(
+                ()=>{
+
+                    try{ 
+                        console.log(`rule #${ruleID} : executing rule`);
+                        filerCodeFunction();
+                    }catch(err){
+                        if(intervalID){
+                            clearInterval(intervalID);
+                        }
+                        intervalID = null;
+                        console.log(err);
+                    }
+                },
+                parseInt(periodInMs)
+            );
+
         }  
     };
 
@@ -62,12 +81,6 @@ const ruleClosure = (ruleID, filterCode, triggerApiCallMethodsCode, actuatorApiC
     }
 };
 
-// Rule Test
-// let rule = ruleClosure(1, `console.log("Hello world every 2 seconds.")`, 2000);
-// rule.start();
-// setTimeout(()=>{rule.editRule(`console.log("Hello world every 1 seconds.")`)}, 5000)
-// setTimeout(()=>{rule.editRulePeriod(1000)}, 5000)
-
 const tapClosure = ()=>{
     
     let lastId = 0;
@@ -104,10 +117,11 @@ const tapClosure = ()=>{
                 _setRule(
                     rule.ruleName,
                     rule.filterCode,
-                    rule.minimizedAuxiliaryInformation,
                     rule.triggerName,
                     rule.actuatorName,
+                    rule.ingredients,
                     rule.periodInMs,
+                    rule.properties
                 );
 
             })
@@ -223,8 +237,6 @@ const tapClosure = ()=>{
         serviceType,
         serviceApiCallMethodsCode
     )=>{
-      
-        console.log('register service');
 
         await initPromise;
         
@@ -285,10 +297,11 @@ const tapClosure = ()=>{
                 _id : ruleID,
                 name : rulesObject[ruleID].ruleName,
                 filterCode : rulesObject[ruleID].filterCode,
-                minimizedAuxiliaryInformation : rulesObject[ruleID].minimizedAuxiliaryInformation,
                 triggerName : rulesObject[ruleID].triggerName,
                 actuatorName : rulesObject[ruleID].actuatorName,
+                ingredients : rulesObject[ruleID].ingredients,
                 periodInMs : rulesObject[ruleID].periodInMs,
+                properties : rulesObject[ruleID].properties
             })
         });
 
@@ -306,10 +319,11 @@ const tapClosure = ()=>{
             ruleObject['_id'] = id;
             ruleObject['name'] = rulesObject[id].ruleName;
             ruleObject['filterCode'] = rulesObject[id].filterCode;
-            ruleObject['minimizedAuxiliaryInformation'] = rulesObject[id].minimizedAuxiliaryInformation;
             ruleObject['triggerName'] = rulesObject[id].triggerName;
             ruleObject['actuatorName'] = rulesObject[id].actuatorName;
+            ruleObject['ingredients'] = rulesObject[id].ingredients;
             ruleObject['periodInMs'] = rulesObject[id].periodInMs;
+            ruleObject['properties'] = rulesObject[id].properties;
 
             return ruleObject;
         }
@@ -322,10 +336,11 @@ const tapClosure = ()=>{
     const _setRule = (
         ruleName,
         filterCode,
-        minimizedAuxiliaryInformation,
         triggerName,
         actuatorName,
-        periodInMs
+        ingredients,
+        periodInMs,
+        properties
     )=>{
 
         let id = getNewRuleID();
@@ -349,7 +364,9 @@ const tapClosure = ()=>{
             filterCode,
             triggerApiCallMethodsCode,
             actuatorApiCallMethodsCode,
-            periodInMs
+            ingredients,
+            periodInMs,
+            properties
         );
 
         rules[id].start();
@@ -357,10 +374,11 @@ const tapClosure = ()=>{
         rulesObject[id] = {
             ruleName : ruleName,
             filterCode : filterCode,
-            minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
             triggerName : triggerName,
             actuatorName : actuatorName,
+            ingredients : ingredients,
             periodInMs : periodInMs,
+            properties : properties,
         }
 
         return id;
@@ -370,10 +388,11 @@ const tapClosure = ()=>{
     const setRule = async (
         ruleName,
         filterCode,
-        minimizedAuxiliaryInformation,
         triggerName,
         actuatorName,
-        periodInMs
+        ingredients,
+        periodInMs,
+        properties
     )=>{
 
         await initPromise;
@@ -381,10 +400,11 @@ const tapClosure = ()=>{
         const ruleID = _setRule(
             ruleName,
             filterCode,
-            minimizedAuxiliaryInformation,
             triggerName,
             actuatorName,
-            periodInMs
+            ingredients,
+            periodInMs,
+            properties
         );
 
         // create a filter for a service to update
@@ -402,10 +422,11 @@ const tapClosure = ()=>{
             $set: {
                 ruleName : ruleName,
                 filterCode : filterCode,
-                minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
                 triggerName : triggerName,
                 actuatorName : actuatorName,
+                ingredients : ingredients,
                 periodInMs : periodInMs,
+                properties : properties,
             },
         };
         await rulesCollection.updateOne(filter, updateDoc, options);
@@ -417,10 +438,11 @@ const tapClosure = ()=>{
         ruleID,
         ruleName,
         filterCode,
-        minimizedAuxiliaryInformation,
         triggerName,
         actuatorName,
-        periodInMs
+        ingredients,
+        periodInMs,
+        properties
     )=>{
 
         let triggerApiCallMethodsCode;
@@ -448,7 +470,9 @@ const tapClosure = ()=>{
                 filterCode,
                 triggerApiCallMethodsCode,
                 actuatorApiCallMethodsCode,
-                periodInMs
+                ingredients,
+                periodInMs,
+                properties
             );
     
             rules[ruleID].start();
@@ -456,10 +480,11 @@ const tapClosure = ()=>{
             rulesObject[ruleID] = {
                 ruleName : ruleName,
                 filterCode : filterCode,
-                minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
                 triggerName : triggerName,
                 actuatorName : actuatorName,
+                ingredients : ingredients,
                 periodInMs : periodInMs,
+                properties : properties
             }
 
         }else{
@@ -472,10 +497,11 @@ const tapClosure = ()=>{
         ruleId,
         ruleName,
         filterCode,
-        minimizedAuxiliaryInformation,
         triggerName,
         actuatorName,
-        periodInMs
+        ingredients,
+        periodInMs,
+        properties
     )=>{
 
         await initPromise;
@@ -496,10 +522,11 @@ const tapClosure = ()=>{
             ruleId,
             ruleName,
             filterCode,
-            minimizedAuxiliaryInformation,
             triggerName,
             actuatorName,
-            periodInMs
+            ingredients,
+            periodInMs,
+            properties
         );
         
         // this option instructs the method to create a document if no documents match the filter
@@ -510,10 +537,11 @@ const tapClosure = ()=>{
             $set: {
                 ruleName : ruleName,
                 filterCode : filterCode,
-                minimizedAuxiliaryInformation : minimizedAuxiliaryInformation,
                 triggerName : triggerName,
                 actuatorName : actuatorName,
+                ingredients : ingredients,
                 periodInMs : periodInMs,
+                properties : properties
             },
         };
 
