@@ -161,34 +161,43 @@ Returns :
 
 To preform this task, the tap object offers the following methods :
 
-    await tap.setRule(
+    const ruleID = await tap.setRule(
         ruleName,
         filterCode,
-        minimizedAuxiliaryInformation,
         triggerName,
         actuatorName,
-        periodInMs = 10000
+        ingredients,
+        periodInMs,
+        properties
     )
 
-This function takes a filterCode and returns an ID of the created rule.
+This function takes the following parameters and returns an ID of the created rule.
 
-* ruleName : A string. Meaningful for users only.
+>💡 "optional" argument in this context means that the argument can be null.
+
+* ruleName (optional) : A string. Meaningful for users only.
 * filterCode : It's the JavaScript code as a String that represents the filter code.
-* minimizedAuxiliaryInformation : As described in section 2.
-* triggerName : the trigger name as registered in tap.registerService().
-* actuatorName : the actuator name as registered in tap.registerService().
-* periodInMs : it's an optional parameter that defines the period in milliseconds between two rule executions. By default it takes 10 seconds.
+* triggerName (required) : the trigger name as registered in tap.registerService().
+* actuatorName (required) : the actuator name as registered in tap.registerService().
+* ingredients (required) : an array of fields required for rule execution.
+* periodInMs (required) : it's an optional parameter that defines the period in milliseconds between two rule executions. By default it takes 10 seconds.
+* properties (optional) : May contains minimizedAuxiliaryInformation (As described in section 2) if the clients is MinTap compatible. It this case it is defined like that :
+
+        properties = {
+            minimizedAuxiliaryInformation : minimizedAuxiliaryInformation
+        }
 
 Editing a rule :
 
     await editRule(
-        ruleId,
+        ruleID,
         ruleName,
         filterCode,
-        minimizedAuxiliaryInformation,
         triggerName,
+        ingredients,
         actuatorName,
-        periodInMs
+        periodInMs,
+        properties
     )
 
 Deleting a rule :
@@ -245,8 +254,8 @@ Not yet implemented.
 
 ## 5 - Web interface API
 
-TODO : by Aymen.
+> 🎯 TODO : by Aymen.
 
 ## 6 - Debug user interface API
 
-TODO : by Imad & Hicham.
+> 🎯 TODO : by Imad & Hicham.
