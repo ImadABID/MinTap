@@ -17,7 +17,7 @@ const getTriggerData = (
   askedFields,
   // A subset of Object.keys(dataArray)
 
-  minimizedAuxiliaryInformation = null,
+  minimizedAuxiliaryInformation = null
   // Contains the transformed rule and more (See the tap doc). 
   // Optional and must be null for MinTap incompatible rules.
 
@@ -27,8 +27,17 @@ const getTriggerData = (
   // Populates dataArray fields with asked values
 }
 
-class service {
-  constructor() {
+class serviceClass {
+  constructor(
+    askedFields,
+    minimizedAuxiliaryInformation = null
+  ) {
+
+    getTriggerData(
+      askedFields,
+      minimizedAuxiliaryInformation
+    );
+
     this.lastMail = {
       get author(){
         return dataArray["lastMail.author"];
@@ -53,4 +62,4 @@ class service {
   }
 }
 
-let myService = new service();
+// let service = new serviceClass([]);
