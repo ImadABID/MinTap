@@ -629,15 +629,20 @@ tap.registerService(
 
         const dataArray = {
             "RandomIntGenerator.getRandomInt" : null,
-            "RandomIntGenerator.getRandomInt1" : null,
-            "RandomIntGenerator.getRandomInt2" : null,
+            "RandomIntGenerator.getRandomFloat" : null
         }
 
         const getTriggerData = (
             askedFields,
             minimizedAuxiliaryInformation = null
         )=>{
-            dataArray['RandomIntGenerator.getRandomInt'] = Math.floor(Math.random() * 100);
+            if(askedFields.includes('RandomIntGenerator.getRandomInt')){
+                dataArray['RandomIntGenerator.getRandomInt'] = Math.floor(Math.random() * 100);
+            }
+
+            if(askedFields.includes('RandomIntGenerator.getRandomFloat')){
+                dataArray['RandomIntGenerator.getRandomFloat'] = Math.random();
+            }
         }
 
         class RandomIntGeneratorClass{
@@ -654,6 +659,11 @@ tap.registerService(
             get getRandomInt(){
                 return dataArray['RandomIntGenerator.getRandomInt'];
             }
+
+            get getRandomFloat(){
+                return dataArray['RandomIntGenerator.getRandomFloat'];
+            }
+
         }
 
         // let RandomIntGenerator = new RandomIntGeneratorClass([]);
