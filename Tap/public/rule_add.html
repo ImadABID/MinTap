@@ -95,7 +95,6 @@
       for (let index = 0; index < array.length; index++) {
         const element = array[index];
         if (element.serviceType == "trigger") {
-          // array[index].ingredients = ["test" + index, "test" + index, "test" + index, "test" + index]
           var trigger_name = document.getElementById("trigger_name");
           var option = document.createElement('option');
           option.setAttribute('value', index)
@@ -204,7 +203,7 @@
         }
         else{
           val = options[i].value
-          obj = { name : val , "select" : "selected"} ; 
+          obj = { name : val , "select" : "not_selected"} ; 
           ingredients.push(obj);
         }
       }

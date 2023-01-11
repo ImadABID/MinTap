@@ -15,6 +15,8 @@ const ruleClosure = (
 
     let intervalID = null;
 
+    let status = '';
+
     let filerCodeFunction = new Function(
         triggerApiCallMethodsCode   + '\n' +
         actuatorApiCallMethodsCode  + '\n' +
@@ -26,7 +28,7 @@ const ruleClosure = (
         if(intervalID != null){
             console.log(`rule #${ruleID} is already started and cannot be started again.`)
         }else{
-
+            status = '';
             intervalID = setInterval(
                 ()=>{
 
@@ -38,6 +40,7 @@ const ruleClosure = (
                             clearInterval(intervalID);
                         }
                         intervalID = null;
+                        status = '🚨 JS syntax error at rule filter code';
                         console.log(err);
                     }
                 },
@@ -55,6 +58,10 @@ const ruleClosure = (
             intervalID = null;
         }
     };
+
+    const getStatus = ()=>{
+        return status;
+    }
 
     const editRule = (newFilterCode)=>{
         stop();
@@ -76,6 +83,7 @@ const ruleClosure = (
     return {
         start : start,
         stop : stop,
+        getStatus : getStatus,
         editRule : editRule,
         editRulePeriod : editRulePeriod,
     }
@@ -137,7 +145,7 @@ const tapClosure = ()=>{
     }
 
     let initPromise = new Promise(async (resolve)=>{
-        await deleteAllDB();
+        // await deleteAllDB();
         await init();
         resolve();
     });
@@ -165,10 +173,8 @@ const tapClosure = ()=>{
                     serviceApiCallMethodsCode : serviceApiCallMethodsCode,
                 }
 
-                console.log(`registering a trigger with the name ${serviceName}`);
-                console.log(triggers[serviceName])
-
                 break;
+
             case 'actuator':
                 actuators[serviceName] = {
                     serviceApiCallMethodsCode : serviceApiCallMethodsCode,
@@ -347,6 +353,16 @@ const tapClosure = ()=>{
         console.log('getRuleByID : Rule not found');
         return null;
 
+    }
+
+    const getRuleStatus = (ruleID)=>{
+        if(rules[ruleID]){
+            if(rules[ruleID].getStatus() === '')
+                return 'actif';
+            return rules[ruleID].getStatus();
+        }else{
+            console.log('getRuleStatus : ruleID not found');
+        }
     }
 
     const _setRule = (
@@ -595,6 +611,7 @@ const tapClosure = ()=>{
         deleteService : deleteService,
         getRuleByID : getRuleByID,
         getAllRules : getAllRules,
+        getRuleStatus : getRuleStatus,
         setRule : setRule,
         editRule : editRule,
         deleteRule : deleteRule
@@ -612,6 +629,8 @@ tap.registerService(
 
         const dataArray = {
             "RandomIntGenerator.getRandomInt" : null,
+            "RandomIntGenerator.getRandomInt1" : null,
+            "RandomIntGenerator.getRandomInt2" : null,
         }
 
         const getTriggerData = (

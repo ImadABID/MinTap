@@ -21,7 +21,7 @@ app.get('/rule_editor', (req, res) => {
 app.get('/get_filters', async (req, res) => {
   filters = await tap.getAllRules();
   for (let index = 0; index < filters.length; index++) {
-    //filters[index].status = tap.getRuleStatus(filters[index].ruleName) ; 
+    filters[index].status = tap.getRuleStatus(filters[index]._id) ; 
   }
   res.send({ filters: filters });
 })
