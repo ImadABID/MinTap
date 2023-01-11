@@ -397,6 +397,8 @@
           aE.setAttribute("href", "rule_edit?_id=" + element._id)
           var aR = document.createElement('a');
           aR.setAttribute("href", "rule_delete?_id=" + element._id)
+          var aD = document.createElement('a');
+          aD.setAttribute("href", "rule_debug?_id=" + element._id)
           var buttonE = document.createElement('button');
           buttonE.setAttribute("type", "button")
           buttonE.setAttribute("class", "read_more_btn")
@@ -405,6 +407,10 @@
           buttonD.setAttribute("type", "button")
           buttonD.setAttribute("class", "read_more_btn")
           buttonD.innerText = "Delete Rule";
+          var buttonDeb = document.createElement('button');
+          buttonDeb.setAttribute("type", "button")
+          buttonDeb.setAttribute("class", "read_more_btn")
+          buttonDeb.innerText = "Debug Rule";
           var bulle = document.createElement('figure');
           if(element.status != "actif")
           bulle.setAttribute('class', 'circle_rouge');
@@ -412,9 +418,12 @@
           bulle.setAttribute('class', 'circle_vert');
           aE.appendChild(buttonE);
           aR.appendChild(buttonD);
+          aD.appendChild(buttonDeb);
           solu_description.appendChild(p);
           solu_description.appendChild(aE);
           solu_description.appendChild(aR);
+          solu_description.appendChild(aD);
+          solu_description.appendChild(a);
           solu_title.appendChild(bulle)
           solu_title.appendChild(h3);
           solution_card.appendChild(solu_title);
@@ -447,6 +456,8 @@
           aE.setAttribute("href", "rule_edit?_id=" + element._id)
           var aR = document.createElement('a');
           aR.setAttribute("href", "rule_delete?_id=" + element._id)
+          var aD = document.createElement('a');
+          aD.setAttribute("href", "rule_debug?_id=" + element._id)
           var buttonE = document.createElement('button');
           buttonE.setAttribute("type", "button")
           buttonE.setAttribute("class", "read_more_btn")
@@ -455,6 +466,10 @@
           buttonD.setAttribute("type", "button")
           buttonD.setAttribute("class", "read_more_btn")
           buttonD.innerText = "Delete Rule";
+          var buttonDeb = document.createElement('button');
+          buttonDeb.setAttribute("type", "button")
+          buttonDeb.setAttribute("class", "read_more_btn")
+          buttonDeb.innerText = "Debug Rule";
           var bulle = document.createElement('figure');
           if(element.status != "actif")
           bulle.setAttribute('class', 'circle_rouge');
@@ -462,9 +477,11 @@
           bulle.setAttribute('class', 'circle_vert');
           aE.appendChild(buttonE);
           aR.appendChild(buttonD);
+          aD.appendChild(buttonDeb);
           solu_description.appendChild(p);
           solu_description.appendChild(aE);
           solu_description.appendChild(aR);
+          solu_description.appendChild(aD);
           solu_title.appendChild(bulle)
           solu_title.appendChild(h3);
           solution_card.appendChild(solu_title);

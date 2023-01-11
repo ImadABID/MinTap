@@ -1,5 +1,35 @@
 const bodyParser = require("body-parser");
 const { exec } = require("child_process");
+var server = require('websocket').server; 
+
+http = require('http');
+
+var socket = new server({  
+    httpServer: http.createServer().listen(1337)
+});
+
+socket.on('request', function(request) {  
+    var connection = request.accept(null, request.origin);
+    var data = {
+      'ruleID' : "1",
+      'type':'Log',
+      'msg': 'test socket'
+    }     
+        setTimeout(function() {
+          connection.send(JSON.stringify(data))
+          connection.send(JSON.stringify(data))
+          connection.send(JSON.stringify(data))
+          connection.send(JSON.stringify(data))
+          connection.send(JSON.stringify(data))
+          connection.send(JSON.stringify(data))
+        }, 1000);
+
+
+    connection.on('close', function(connection) {
+        console.log('connection closed');
+    });
+});
+
 
 const express = require("express");
 
@@ -107,7 +137,9 @@ app.get('/debug', (req, res) => {
 app.get('/rule_transformer.js', (req, res) => {
   res.sendFile(__dirname + '/rule_transformer.js')
 })
-
+app.get('/rule_debug', (req, res) => {
+  res.sendFile(__dirname + '/public/debug.html')
+})
 app.get('/rule_add', (req, res) => {
   res.sendFile(__dirname + '/public/rule_add.html')
 })

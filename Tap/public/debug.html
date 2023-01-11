@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MinTap Debug</title>
+    <style>
+
+        textarea.insidefieldset, input.insidefieldset{
+            border: none;
+            margin: 0;
+            width: 98%;
+        }
+        textarea.insidefieldset{
+            resize: none;
+            height: 200px;
+        }
+
+        textarea:focus, input.insidefieldset:focus{
+            outline: none;
+        }
+        fieldset.text_input{
+            padding-left: 12px;
+            padding-right: 0;
+            padding-bottom: 6px;
+            padding-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">MinTap Debug</h1>
+    <div >
+    <fieldset style="display:inline;width: 60%; height: 1000px; margin-bottom: -16px;">
+    <table style="width: 100%; margin: auto;">
+
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Triggers </legend>
+                    <ul>
+                        <li>Office365Mail.newEmail.Subject</li>
+                    </ul>
+                 </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Actions </legend>
+                    <ul>
+                        <li>
+                            Slack.postToChannel.skip()
+                        </li>
+                    </ul>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend>Rule</legend>
+                    <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
+                    <textarea id="rule" class="insidefieldset" spellcheck="false"></textarea>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend><img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Refresh_icon.svg" height="14pt" onclick="updateOutput()"> Transformed rule</legend>
+                    <textarea id="transformed_rule" class="insidefieldset"  spellcheck="false"></textarea>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>Static minimizer</legend>
+                    <div id="static_filter"></div>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend><img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Refresh_icon.svg" height="14pt" onclick="executeDynamicFilter()">Dynamic minimizer</legend>
+                    Data : <br>
+                    <fieldset class="text_input">
+                        <legend>Subject</legend>
+                        <input class="insidefieldset" type="text" id="email_subject">
+                    </fieldset>
+                    <fieldset class="text_input">
+                        <legend>Body</legend>
+                        <textarea class="insidefieldset" type="text" id="email_body" style="height: 80px;"></textarea>
+                    </fieldset><br>
+                    Accessed fields :
+                    <br><br>
+                    <div id="accessed_fields"></div>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<fieldset style="display: inline;  width: 35%; border-color: tomato ;">
+                    <legend>Real time messages</legend>
+                    <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
+                    <textarea id="log" style="            
+                    border: none;
+                    height: 1000px; 
+                    width: 98%;
+                    " 
+class="log" spellcheck="false"></textarea>
+</fieldset>
+</div>
+    <script>
+    var socket = new WebSocket('ws://localhost:1337');
+    socket.onopen = function () {
+        console.log ("soncket is opened");
+    };
+
+    socket.onmessage = function (msg) {
+        message = JSON.parse(msg.data)
+        if ( message.type != 'RuleExec'  ){
+            console.log( message);
+        var content = document.getElementById('log');
+        content.innerHTML += "\n" + message.msg;
+        }
+    };
+
+    socket.onerror = function (error) {
+        console.log('WebSocket error: ' + error);
+    };       
+
+    </script>
+</body>
+</html>
