@@ -137,10 +137,19 @@ const tapClosure = ()=>{
     }
 
     let initPromise = new Promise(async (resolve)=>{
-        // await deleteAllDB();
+        await deleteAllDB();
         await init();
         resolve();
     });
+
+    const _getTriggerIngredientsFromManifest = (manifest)=>{
+        
+        const manifestFunc = new Function(
+            manifest + 'return Object.keys(dataArray);'
+        )
+        
+        return manifestFunc();
+    }
 
     /*
     serviceType : trigger | actuator
@@ -150,9 +159,15 @@ const tapClosure = ()=>{
 
         switch(serviceType){
             case 'trigger':
+
                 triggers[serviceName] = {
+                    ingredients : _getTriggerIngredientsFromManifest(serviceApiCallMethodsCode),
                     serviceApiCallMethodsCode : serviceApiCallMethodsCode,
                 }
+
+                console.log(`registering a trigger with the name ${serviceName}`);
+                console.log(triggers[serviceName])
+
                 break;
             case 'actuator':
                 actuators[serviceName] = {
@@ -178,6 +193,7 @@ const tapClosure = ()=>{
             services.push({
                 'serviceName' : triggerName,
                 'serviceType': 'trigger',
+                'ingredients': triggers[triggerName].ingredients,
                 'serviceApiCallMethodsCode' : triggers[triggerName].serviceApiCallMethodsCode,
             })
         })
@@ -592,8 +608,36 @@ tap.registerService(
     "RandomIntGenerator",
     "trigger",
     `
-        const RandomIntGenerator = {};
-        RandomIntGenerator.getRandomInt = (max=100)=>{return Math.floor(Math.random() * max);};
+        // define ingredient & minimizedAuxiliaryInformation
+
+        const dataArray = {
+            "RandomIntGenerator.getRandomInt" : null,
+        }
+
+        const getTriggerData = (
+            askedFields,
+            minimizedAuxiliaryInformation = null
+        )=>{
+            dataArray['RandomIntGenerator.getRandomInt'] = Math.floor(Math.random() * 100);
+        }
+
+        class RandomIntGeneratorClass{
+            constructor(
+                askedFields,
+                minimizedAuxiliaryInformation = null
+            ){
+                getTriggerData(
+                    askedFields,
+                    minimizedAuxiliaryInformation = null
+                )
+            }
+
+            get getRandomInt(){
+                return dataArray['RandomIntGenerator.getRandomInt'];
+            }
+        }
+
+        // let RandomIntGenerator = new RandomIntGeneratorClass([]);
     `
 );
 
