@@ -5,6 +5,15 @@ function sendMinTapCompatibleRule(){
     const actuator = document.getElementById("service_name").value;
     const trigger = document.getElementById("trigger_name").value;
 
+    const options = document.getElementById("ingredients").options;
+    const ingredients = [];
+
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].selected) {
+            ingredients.push(options[i].value);
+        }
+    }
+
     const minimizedAuxiliaryInformation = ruleTransformer(rule, trigger, actuator);
 
     const data = {
@@ -12,6 +21,7 @@ function sendMinTapCompatibleRule(){
         'filterCode': rule,
         'triggerName': trigger,
         'actuatorName': actuator,
+        'ingredients': ingredients,
         'periodInMs': '10000',
         'properties' : {
             'minimizedAuxiliaryInformation' : minimizedAuxiliaryInformation,
