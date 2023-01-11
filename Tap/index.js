@@ -1,33 +1,33 @@
 const bodyParser = require("body-parser");
 const { exec } = require("child_process");
-var server = require('websocket').server; 
+var server = require('websocket').server;
 
 http = require('http');
 
-var socket = new server({  
-    httpServer: http.createServer().listen(1337)
+var socket = new server({
+  httpServer: http.createServer().listen(1337)
 });
 
-socket.on('request', function(request) {  
-    var connection = request.accept(null, request.origin);
-    var data = {
-      'ruleID' : "1",
-      'type':'Log',
-      'msg': 'test socket'
-    }     
-        setTimeout(function() {
-          connection.send(JSON.stringify(data))
-          connection.send(JSON.stringify(data))
-          connection.send(JSON.stringify(data))
-          connection.send(JSON.stringify(data))
-          connection.send(JSON.stringify(data))
-          connection.send(JSON.stringify(data))
-        }, 1000);
+socket.on('request', function (request) {
+  var connection = request.accept(null, request.origin);
+  var data = {
+    'ruleID': "1",
+    'type': 'Log',
+    'msg': 'test socket'
+  }
+  setTimeout(function () {
+    connection.send(JSON.stringify(data))
+    connection.send(JSON.stringify(data))
+    connection.send(JSON.stringify(data))
+    connection.send(JSON.stringify(data))
+    connection.send(JSON.stringify(data))
+    connection.send(JSON.stringify(data))
+  }, 1000);
 
 
-    connection.on('close', function(connection) {
-        console.log('connection closed');
-    });
+  connection.on('close', function (connection) {
+    console.log('connection closed');
+  });
 });
 
 
@@ -51,7 +51,7 @@ app.get('/rule_editor', (req, res) => {
 app.get('/get_filters', async (req, res) => {
   filters = await tap.getAllRules();
   for (let index = 0; index < filters.length; index++) {
-    filters[index].status = tap.getRuleStatus(filters[index]._id) ; 
+    filters[index].status = tap.getRuleStatus(filters[index]._id);
   }
   res.send({ filters: filters });
 })
@@ -70,9 +70,9 @@ app.get('/get_service', async (req, res) => {
 
 })
 app.post('/add_rule', async (req, res) => {
-  
+
   console.log(req.body);
-  
+
   await tap.setRule(
     req.body.name,
     req.body.filterCode,
