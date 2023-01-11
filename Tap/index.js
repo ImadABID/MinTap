@@ -26,7 +26,7 @@ app.get('/get_filters', async (req, res) => {
   res.send({ filters: filters });
 })
 app.get('/get_services', async (req, res) => {
-  services = await tap.getAllServices();
+  const services = await tap.getAllServices();
   res.send({ services: services });
 
 })

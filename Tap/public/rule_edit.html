@@ -66,57 +66,7 @@
       width: 90%;
     }
   </style>
-  <script>
-    var array;
-    function setIndredients() {
-      var trigger_name = document.getElementById("trigger_name");
-      var index = trigger_name.selectedIndex;
-      var ingredients = array[index].ingredients;
-      var ingredient_select = document.getElementById("ingredients");
-      var child = ingredient_select.lastElementChild;
-      while (child) {
-        ingredient_select.removeChild(child);
-        child = ingredient_select.lastElementChild;
 
-      }
-      for (let index = 0; index < ingredients.length; index++) {
-        const element = ingredients[index];
-        var option = document.createElement('option');
-        option.innerText = element;
-        ingredient_select.appendChild(option);
-
-
-      }
-    }
-    fetch(
-      './get_services'
-    ).then(resjs => resjs.json()).then((res) => {
-      array = res.services;
-
-      for (let index = 0; index < array.length; index++) {
-        const element = array[index];
-        if (element.serviceType == "trigger") {
-          array[index].ingredients = ["test" + index, "test" + index, "test" + index, "test" + index]
-          var trigger_name = document.getElementById("trigger_name");
-          var option = document.createElement('option');
-          option.setAttribute('value', index)
-          option.setAttribute("value", element.serviceName);
-          option.innerText = element.serviceName;
-          trigger_name.appendChild(option);
-        }
-        else {
-          var service_name = document.getElementById("service_name");
-          var option = document.createElement('option');
-          option.setAttribute("value", element.serviceName);
-          option.innerText = element.serviceName;
-          service_name.appendChild(option);
-        }
-
-
-      }
-    })
-
-  </script>
 </head>
 
 <body>
@@ -157,7 +107,7 @@
         <tr>
           <td width="92%">
             <fieldset>
-              <legend>ingredients</legend>
+              <legend>Ingredients</legend>
               <select id="ingredients" class="insidefieldset" spellcheck="false" style="height: auto;width: 100%;"
                 multiple>
               </select>
@@ -182,49 +132,111 @@
     </div>
   </div>
   <script>
+
+    var array;
+
+    function setIndredients() {
+      let trigger_name = document.getElementById("trigger_name");
+      let index = trigger_name.selectedIndex;
+      let ingredients = array[index].ingredients;
+      let ingredient_select = document.getElementById("ingredients");
+      let child = ingredient_select.lastElementChild;
+      while (child) {
+        ingredient_select.removeChild(child);
+        child = ingredient_select.lastElementChild;
+
+      }
+      for (let index = 0; index < ingredients.length; index++) {
+        const element = ingredients[index];
+        var option = document.createElement('option');
+        option.innerText = element;
+        ingredient_select.appendChild(option);
+      }
+    }
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const Id = urlParams.get('_id');
+
+
     fetch(
-      './get_filter?_id=' + Id
+      './get_services'
     ).then(resjs => resjs.json()).then((res) => {
-      res.ingredients = [ { 'name' : "test", 'select' : "selected" },{ 'name' : "test", 'select' : "selected" },{ 'name' : "test", 'select' : "not_selected" } ]
-      document.getElementById("transformed_rule").innerText = res.filterCode;
-      document.getElementById("rule_name").innerText = res.name;
-      document.getElementById("trigger_name").value = res.triggerName;
-      document.getElementById("service_name").value = res.actuatorName;
-      for (let index = 0; index < res.ingredients.length; index++) {
-        var option = document.createElement('OPTION');
-        option.innerText = res.ingredients[index].name
-        console.log("ee")
-        if ( res.ingredients[index].select == 'selected' )
-        option.setAttribute("selected","selected")
-        document.getElementById("ingredients").appendChild(option) ; 
+
+      array = res.services;
+
+      for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+        if (element.serviceType == "trigger") {
+          let trigger_name = document.getElementById("trigger_name");
+          let option = document.createElement('option');
+          option.setAttribute("value", element.serviceName);
+          option.innerText = element.serviceName;
+          trigger_name.appendChild(option);
+        }
+        else {
+          let service_name = document.getElementById("service_name");
+          let option = document.createElement('option');
+          option.setAttribute("value", element.serviceName);
+          option.innerText = element.serviceName;
+          service_name.appendChild(option);
+        }
+
+        fetch(
+          './get_filter?_id=' + Id
+        ).then(resjs => resjs.json()).then((resRule) => {
+          
+
+          document.getElementById("transformed_rule").innerText = resRule.filterCode;
+          document.getElementById("rule_name").innerText = resRule.name;
+          document.getElementById("trigger_name").value = resRule.triggerName;
+          document.getElementById("service_name").value = resRule.actuatorName;
+
+          // Set Ingredients
+
+          let trigger_name = document.getElementById("trigger_name");
+          let index = trigger_name.selectedIndex;
+          let ingredients = array[index].ingredients;
+          let ingredient_select = document.getElementById("ingredients");
+          let child = ingredient_select.lastElementChild;
+          while (child) {
+            ingredient_select.removeChild(child);
+            child = ingredient_select.lastElementChild;
+
+          }
+          for (let i = 0; i < ingredients.length; i++) {
+            const element = ingredients[i];
+            let option = document.createElement('option');
+            option.innerText = element;
+            if (resRule.ingredients.includes(ingredients[i])){
+              option.setAttribute("selected","selected")
+            }
+            ingredient_select.appendChild(option);
+          }
+
+        });
+
 
       }
-        
-    });
+
+      // setIndredients();
+
+    })
 
     const sendRule = () => {
       const rule = document.getElementById("transformed_rule").value;
       const name = document.getElementById("rule_name").value;
       const trigger = document.getElementById("trigger_name").value;
       const service = document.getElementById("service_name").value;
-      var options = document.getElementById("ingredients").options;
-      var ingredients = [];
-      for (var i = 0; i < options.length; i++) {
+      const options = document.getElementById("ingredients").options;
+      const ingredients = [];
+
+      for (let i = 0; i < options.length; i++) {
         if (options[i].selected) {
-          val = options[i].value
-          obj = { 'name' : val , "select" : "selected"} ; 
-          ingredients.push(obj);
-        }
-        else{
-          val = options[i].value
-          obj = { 'name' : val , "select" : "selected"} ; 
-          ingredients.push(obj);
+            ingredients.push(options[i].value);
         }
       }
-      console.log(ingredients);
+      
       const data = {
         '_id': Id,
         'name': name,
