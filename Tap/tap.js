@@ -3,6 +3,8 @@ const { MongoClient } = require("mongodb");
 const mongoClient = new MongoClient('mongodb://localhost:27017/');
 const tapDB = mongoClient.db('tap');
 
+const logger = require('./logger').logger;
+
 const ruleClosure = (
     ruleID,
     filterCode,
@@ -106,7 +108,8 @@ const tapClosure = ()=>{
 
     const init = ()=>{
         return new Promise(async (resolve)=>{
-            console.log('Tap Init : Start');
+
+            logger.log('general', 'Tap initialization started.');
 
             const _servicesCursor = servicesCollection.find({});
             await _servicesCursor.forEach((service)=>{
@@ -134,7 +137,7 @@ const tapClosure = ()=>{
 
             })
 
-            console.log('Tap Init : End');
+            logger.log('general', 'Tap initialization ended.');
             resolve();
         })
     }
@@ -680,3 +683,4 @@ tap.registerService(
 );
 
 module.exports.tap = tap;
+module.exports.logger = logger;

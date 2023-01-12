@@ -2,7 +2,13 @@ const bodyParser = require("body-parser");
 const { exec } = require("child_process");
 var server = require('websocket').server;
 
-http = require('http');
+const http = require('http');
+
+const express = require("express");
+
+const tapModule = require('./tap');
+const tap = tapModule.tap;
+const logger = tapModule.logger;
 
 var socket = new server({
   httpServer: http.createServer().listen(1337)
@@ -29,11 +35,6 @@ socket.on('request', function (request) {
     console.log('connection closed');
   });
 });
-
-
-const express = require("express");
-
-const tap = require('./tap').tap;
 
 var app = express();
 //app.use(express.urlencoded({ extended: true }));
@@ -158,4 +159,7 @@ app.post('/post_filter_code', (req, res) => {
   res.sendFile(__dirname + '/index.html')
 });
 
-app.listen(8080, () => console.log(`Started server at http://localhost:8080 !`));
+const port = 8080;
+app.listen(port, ()=>{
+  logger.log('general', `Tap server listening at ${port}`);
+});
