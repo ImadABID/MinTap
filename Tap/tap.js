@@ -3,6 +3,8 @@ const { MongoClient } = require("mongodb");
 const mongoClient = new MongoClient('mongodb://localhost:27017/');
 const tapDB = mongoClient.db('tap');
 
+const logger = require('./logger').logger;
+
 const ruleClosure = (
     ruleID,
     filterCode,
@@ -28,12 +30,13 @@ const ruleClosure = (
         if(intervalID != null){
             console.log(`rule #${ruleID} is already started and cannot be started again.`)
         }else{
+            logger.log(`rule#${ruleID}`, 'Scheduling rule executions');
             status = '';
             intervalID = setInterval(
                 ()=>{
 
                     try{ 
-                        console.log(`rule #${ruleID} : executing rule`);
+                        logger.log(`rule#${ruleID}`, 'Executing the rule');
                         filerCodeFunction();
                     }catch(err){
                         if(intervalID){
@@ -42,6 +45,7 @@ const ruleClosure = (
                         intervalID = null;
                         status = '🚨 JS syntax error at rule filter code';
                         console.log(err);
+                        logger.log(`rule#${ruleID}`, `🚨 JS syntax error at rule filter code`, 'Error');
                     }
                 },
                 parseInt(periodInMs)
@@ -106,7 +110,8 @@ const tapClosure = ()=>{
 
     const init = ()=>{
         return new Promise(async (resolve)=>{
-            console.log('Tap Init : Start');
+
+            logger.log('general', 'Tap initialization started.');
 
             const _servicesCursor = servicesCollection.find({});
             await _servicesCursor.forEach((service)=>{
@@ -134,7 +139,7 @@ const tapClosure = ()=>{
 
             })
 
-            console.log('Tap Init : End');
+            logger.log('general', 'Tap initialization ended.');
             resolve();
         })
     }
@@ -142,6 +147,7 @@ const tapClosure = ()=>{
     const deleteAllDB = async ()=>{
         await servicesCollection.deleteMany({});
         await rulesCollection.deleteMany({});
+        logger.log('general', 'Deleting the data base.');
     }
 
     let initPromise = new Promise(async (resolve)=>{
@@ -400,6 +406,7 @@ const tapClosure = ()=>{
             periodInMs,
             properties
         );
+        logger.log(`rule#${id}`, 'Setting up the rule');
 
         rules[id].start();
 
@@ -680,3 +687,4 @@ tap.registerService(
 );
 
 module.exports.tap = tap;
+module.exports.logger = logger;

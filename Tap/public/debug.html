@@ -226,6 +226,14 @@
 
 
         var socket = new WebSocket('ws://localhost:1337');
+
+        // Rule ID :
+        const ruleID =
+            new URLSearchParams(window.location.search)
+            .get('_id')
+        ;
+
+        var socket = new WebSocket(`ws://localhost:1337?ruleID=${ruleID}`);
         socket.onopen = function () {
             console.log("soncket is opened");
         };
