@@ -7,6 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MinTap Debug</title>
     <style>
+        .execution {
+            border: 1px solid;
+
+
+        }
+
         textarea.insidefieldset,
         input.insidefieldset {
             border: none;
@@ -16,7 +22,7 @@
 
         textarea.insidefieldset {
             resize: none;
-            height: 200px;
+            min-height: 150px;
         }
 
         textarea:focus,
@@ -36,95 +42,189 @@
 <body>
     <h1 style="text-align: center;">MinTap Debug</h1>
     <div>
-        <fieldset style="display:inline;width: 60%; height: 1000px; margin-bottom: -16px;">
-            <table style="width: 100%; margin: auto;">
+        <fieldset style="display:inline;width: 60%; min-height: 1000px; margin-bottom: -16px;">
+            <fieldset>
+                <legend>Rule Setup</legend>
+                <table style="width: 100%; margin: auto;">
 
-                <tr>
-                    <td>
-                        <fieldset>
-                            <legend>TriggerName </legend>
-                            <ul id="TriggerName">
-                            </ul>
-                        </fieldset>
-                    </td>
-                    <td>
-                        <fieldset>
-                            <legend>ActionName </legend>
-                            <ul id="ActionName">
-
-                            </ul>
-                        </fieldset>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <fieldset>
-                            <legend>ActionName </legend>
-                            <ul id="ActionName">
-
-                            </ul>
-                        </fieldset>
-                    </td>
-                </tr>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <fieldset>
-                            <legend>Rule</legend>
-                            <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
-                            <textarea id="rule" class="insidefieldset" spellcheck="false"></textarea>
-                        </fieldset>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <fieldset>
-                            <legend><img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Refresh_icon.svg"
-                                    height="14pt" onclick="updateOutput()"> Transformed rule</legend>
-                            <textarea id="transformed_rule" class="insidefieldset" spellcheck="false"></textarea>
-                        </fieldset>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <fieldset>
-                            <legend>Static minimizer</legend>
-                            <div id="static_filter"></div>
-                        </fieldset>
-                    </td>
-                    <td>
-                        <fieldset>
-                            <legend><img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Refresh_icon.svg"
-                                    height="14pt" onclick="executeDynamicFilter()">Dynamic minimizer</legend>
-                            Data : <br>
-                            <fieldset class="text_input">
-                                <legend>Subject</legend>
-                                <input class="insidefieldset" type="text" id="email_subject">
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>TriggerName </legend>
+                                <ul id="TriggerName">
+                                </ul>
                             </fieldset>
-                            <fieldset class="text_input">
-                                <legend>Body</legend>
-                                <textarea class="insidefieldset" type="text" id="email_body"
-                                    style="height: 80px;"></textarea>
-                            </fieldset><br>
-                            Accessed fields :
-                            <br><br>
-                            <div id="accessed_fields"></div>
-                        </fieldset>
-                    </td>
-                </tr>
-            </table>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <legend>ActuatorName </legend>
+                                <ul id="ActuatorName">
+
+                                </ul>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <fieldset>
+                                <legend>Ingredients </legend>
+                                <ul id="Ingredients">
+
+                                </ul>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <fieldset>
+                                <legend>Rule</legend>
+                                <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
+                                <textarea id="rule" class="insidefieldset" spellcheck="false" readonly></textarea>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <fieldset>
+                                <legend> Transformed rule</legend>
+                                <textarea id="transformed_rule" class="insidefieldset" spellcheck="false"
+                                    readonly></textarea>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>DataSet</legend>
+                                <textarea id="DataSet" style="border: none;
+                                margin: 0;width: 98%; resize: none; min-height: 50px;" spellcheck="false" readonly></textarea>
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <legend>Signature</legend>
+                                <textarea id="Signature" class="insidefieldset" style="border: none;
+                                margin: 0;width: 98%; resize: none; min-height: 50px;"  spellcheck="false"
+                                    readonly></textarea>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset style="margin-top: 20px;">
+                <legend>Rule Execution</legend>
+                <table style="width: 100%; height: auto; margin: auto;">
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>Ingredients</legend>
+                                <table id="table" class="execution" style="width: 100%;">
+                                    <tr id="first_tr">
+                                        <th class="execution"> name </th>
+                                        <th class="execution"> value </th>
+                                    </tr>
+
+                                </table>
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <legend>Execution</legend>
+                                <select name="Execution" id="Execution" style="width: 100%;"
+                                    onchange="change()"></select>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
         </fieldset>
         <fieldset style="display: inline;  width: 35%; border-color: tomato ;">
             <legend>Real time messages</legend>
             <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
             <textarea id="log" style="            
                     border: none;
-                    height: 1000px; 
+                    min-height: 984px; 
                     width: 98%;
                     " class="log" spellcheck="false"></textarea>
         </fieldset>
+
     </div>
     <script>
+        var array = [];
+        function change() {
+            let Execution = document.getElementById("Execution");
+            let id = Execution.value;
+            let child_div = document.getElementById("table").lastElementChild;
+            let child = child_div.lastElementChild;
+            while (child && (child.id == "not_first")) {
+
+                child_div.removeChild(child);
+                child = child_div.lastElementChild;
+
+            }
+            for (let index = 0; index < array.length; index++) {
+                const element = array[index];
+
+
+                if (element.ExecID == id) {
+
+                    const data = element.Data;
+                    const keys = Object.keys(data);
+                    const val = Object.values(data);
+                    console.log(keys)
+                    for (let index = 0; index < keys.length; index++) {
+                        let tr = document.createElement("tr");
+                        tr.setAttribute("id", "not_first");
+                        let td_1 = document.createElement("td");
+                        td_1.setAttribute("class", "execution");
+                        td_1.setAttribute("id", "not_first");
+                        td_1.innerText = keys[index];
+                        let td_2 = document.createElement("td");
+                        td_2.setAttribute("class", "execution");
+                        td_2.setAttribute("id", "not_first");
+                        td_2.innerText = val[index];
+                        tr.appendChild(td_1)
+                        tr.appendChild(td_2)
+                        child_div.appendChild(tr)
+                    }
+
+                }
+            }
+
+        }
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const Id = urlParams.get('_id');
+
+        fetch(
+            './get_filter?_id=' + Id
+        ).then(resjs => resjs.json()).then((resRule) => {
+
+            var li_trigger = document.createElement("li");
+            li_trigger.innerText = resRule.triggerName;
+            document.getElementById("TriggerName").appendChild(li_trigger);
+            var li_actuator = document.createElement("li");
+            li_actuator.innerText = resRule.actuatorName;
+            ActuatorName = document.getElementById("ActuatorName");
+            ActuatorName.appendChild(li_actuator);
+            rule = document.getElementById("rule");
+            rule.innerText = resRule.filterCode;
+
+            ingredients = resRule.ingredients;
+            ing = document.getElementById("Ingredients");
+            for (let i = 0; i < ingredients.length; i++) {
+                const element = ingredients[i];
+                let option = document.createElement('li');
+                option.innerText = element;
+                ing.appendChild(option);
+
+
+            }
+
+        });
+
+
         var socket = new WebSocket('ws://localhost:1337');
         socket.onopen = function () {
             console.log("soncket is opened");
@@ -132,10 +232,22 @@
 
         socket.onmessage = function (msg) {
             message = JSON.parse(msg.data)
-            if (message.type != 'RuleExec') {
-                console.log(message);
-                var content = document.getElementById('log');
-                content.innerHTML += "\n" + message.msg;
+            if (message.ruleID == Id) {
+                if (message.type != 'RuleExec') {
+                    //console.log(message);
+                    var content = document.getElementById('log');
+                    content.innerHTML += "\n" + message.msg;
+                }
+                else {
+                    console.log(message.msg)
+                    array.push(message.msg);
+                    select_exec = document.getElementById("Execution");
+                    let option = document.createElement("option");
+                    option.setAttribute("value", message.msg.ExecID)
+                    option.innerText = message.msg.ExecID;
+                    select_exec.appendChild(option);
+                    change();
+                }
             }
         };
 

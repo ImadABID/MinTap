@@ -15,13 +15,21 @@ socket.on('request', function (request) {
     'type': 'Log',
     'msg': 'test socket'
   }
+  var data1 = {
+    'ruleID': "1",
+    'type': 'RuleExec',
+    'msg':{ "ExecID" : 1 , "Data" : { "field_1" : "value_1" ,"field_2" : "value_2", "field_3" : "value_2","field_4" : "value_2"  }}
+  }
+  var data2 = {
+    'ruleID': "1",
+    'type': 'RuleExec',
+    'msg':{ "ExecID" : 2 , "Data" : { "field_1" : "value_2" ,"field_2" : "value_2", "field_3" : "value_2","field_4" : "value_2"  }}
+  }
   setTimeout(function () {
     connection.send(JSON.stringify(data))
-    connection.send(JSON.stringify(data))
-    connection.send(JSON.stringify(data))
-    connection.send(JSON.stringify(data))
-    connection.send(JSON.stringify(data))
-    connection.send(JSON.stringify(data))
+    connection.send(JSON.stringify(data1))
+    connection.send(JSON.stringify(data2))
+
   }, 1000);
 
 
