@@ -102,14 +102,13 @@ class Logger{
     }
 
     provide(consumer, topic){
-        if(consumer[topic] === undefined){
+        if(consumer.topics[topic] === undefined){
             // console.log(`A consumer has not the right to read the topic "${topic}"`);
         }else{
-
-            const log = this.logs[topic][consumer[topic]];
+            const log = this.logs[topic][consumer.topics[topic]];
             if(log){
 
-                consumer[topic]++;
+                consumer.topics[topic]++;
 
                 const msg = {
                     'ruleID': topic,
@@ -129,7 +128,7 @@ class Logger{
         this.terminalConsume(topic);
         
         Object.keys(this.consumers).forEach((consumerID)=>{
-            provide(this.consumers[consumerID], topic)
+            this.provide(this.consumers[consumerID], topic)
         });
     
     }

@@ -30,12 +30,13 @@ const ruleClosure = (
         if(intervalID != null){
             console.log(`rule #${ruleID} is already started and cannot be started again.`)
         }else{
+            logger.log(`rule#${ruleID}`, 'Scheduling rule executions');
             status = '';
             intervalID = setInterval(
                 ()=>{
 
                     try{ 
-                        console.log(`rule #${ruleID} : executing rule`);
+                        logger.log(`rule#${ruleID}`, 'Executing the rule');
                         filerCodeFunction();
                     }catch(err){
                         if(intervalID){
@@ -44,6 +45,7 @@ const ruleClosure = (
                         intervalID = null;
                         status = '🚨 JS syntax error at rule filter code';
                         console.log(err);
+                        logger.log(`rule#${ruleID}`, `🚨 JS syntax error at rule filter code`, 'Error');
                     }
                 },
                 parseInt(periodInMs)
@@ -145,6 +147,7 @@ const tapClosure = ()=>{
     const deleteAllDB = async ()=>{
         await servicesCollection.deleteMany({});
         await rulesCollection.deleteMany({});
+        logger.log('general', 'Deleting the data base.');
     }
 
     let initPromise = new Promise(async (resolve)=>{
@@ -403,6 +406,7 @@ const tapClosure = ()=>{
             periodInMs,
             properties
         );
+        logger.log(`rule#${id}`, 'Setting up the rule');
 
         rules[id].start();
 
