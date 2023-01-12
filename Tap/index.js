@@ -15,6 +15,13 @@ var socket = new server({
 });
 
 socket.on('request', function (request) {
+  
+  logger.addConsumer(
+    request,
+    ['general', `rule#${request.resourceURL.query.ruleID}`]
+  );
+
+  /*
   var connection = request.accept(null, request.origin);
   var data = {
     'ruleID': "1",
@@ -34,6 +41,7 @@ socket.on('request', function (request) {
   connection.on('close', function (connection) {
     console.log('connection closed');
   });
+  */
 });
 
 var app = express();
