@@ -36,48 +36,53 @@ const ruleClosure = (
     );
 
     const start = ()=>{
+
         if(intervalID != null){
             console.log(`rule #${ruleID} is already started and cannot be started again.`)
         }else{
+
+            const executeFunc = ()=>{
+
+                try{ 
+                    
+                    logger.log(`rule#${ruleID}`, 'Executing the rule');
+                    
+                    const dataArray = filerCodeFunction();
+                    const IngredientsValues = {};
+
+                    ingredients.forEach((ingredient)=>{
+                        IngredientsValues[ingredient] = dataArray[ingredient];
+                    });
+
+                    const msg = {
+                        "ExecID" : execID,
+                        'Data' : IngredientsValues
+                    }
+
+                    logger.log(
+                        `rule#${ruleID}`,
+                        JSON.stringify(msg),
+                        'RuleExec'
+                    );
+
+                    execID++;
+
+                }catch(err){
+                    if(intervalID){
+                        clearInterval(intervalID);
+                    }
+                    intervalID = null;
+                    status = '🚨 JS syntax error at rule filter code';
+                    console.log(err);
+                    logger.log(`rule#${ruleID}`, `🚨 JS syntax error at rule filter code`, 'Error');
+                }
+            };
+
             logger.log(`rule#${ruleID}`, 'Scheduling rule executions');
             status = '';
+            executeFunc();
             intervalID = setInterval(
-                ()=>{
-
-                    try{ 
-                        
-                        logger.log(`rule#${ruleID}`, 'Executing the rule');
-                        
-                        const dataArray = filerCodeFunction();
-                        const IngredientsValues = {};
-
-                        ingredients.forEach((ingredient)=>{
-                            IngredientsValues[ingredient] = dataArray[ingredient];
-                        });
-
-                        const msg = {
-                            "ExecID" : execID,
-                            'Data' : IngredientsValues
-                        }
-
-                        logger.log(
-                            `rule#${ruleID}`,
-                            JSON.stringify(msg),
-                            'RuleExec'
-                        );
-
-                        execID++;
-
-                    }catch(err){
-                        if(intervalID){
-                            clearInterval(intervalID);
-                        }
-                        intervalID = null;
-                        status = '🚨 JS syntax error at rule filter code';
-                        console.log(err);
-                        logger.log(`rule#${ruleID}`, `🚨 JS syntax error at rule filter code`, 'Error');
-                    }
-                },
+                executeFunc,
                 parseInt(periodInMs)
             );
 
