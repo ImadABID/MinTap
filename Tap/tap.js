@@ -18,6 +18,7 @@ const ruleClosure = (
 )=>{
 
     let intervalID = null;
+    let execID = 0;
 
     let status = '';
 
@@ -30,7 +31,8 @@ const ruleClosure = (
                 ${JSON.stringify(properties)},
             );
         ` +
-        filterCode
+        filterCode +
+        'return dataArray;'
     );
 
     const start = ()=>{
@@ -43,8 +45,27 @@ const ruleClosure = (
                 ()=>{
 
                     try{ 
+                        
                         logger.log(`rule#${ruleID}`, 'Executing the rule');
-                        filerCodeFunction();
+                        
+                        const dataArray = filerCodeFunction();
+                        const IngredientsValues = {};
+
+                        ingredients.forEach((ingredient)=>{
+                            IngredientsValues[ingredient] = dataArray[ingredient];
+                        });
+
+                        logger.log(
+                            `rule#${ruleID}`,
+                            {
+                              "ExecID" : execID,
+                              'Data' : IngredientsValues
+                            },
+                            'RuleExec'
+                        );
+
+                        execID++;
+
                     }catch(err){
                         if(intervalID){
                             clearInterval(intervalID);

@@ -21,6 +21,7 @@ socket.on('request', function (request) {
     ['general', `rule#${request.resourceURL.query.ruleID}`]
   );
 
+  /*
   logger.log(
     `rule#${request.resourceURL.query.ruleID}`,
     {
@@ -48,6 +49,7 @@ socket.on('request', function (request) {
     },
     'RuleExec'
   );
+  */
 
   /*
   var connection = request.accept(null, request.origin);
