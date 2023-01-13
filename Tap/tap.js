@@ -8,6 +8,8 @@ const logger = require('./logger').logger;
 const ruleClosure = (
     ruleID,
     filterCode,
+    triggerName,
+    actuatorName,
     triggerApiCallMethodsCode,
     actuatorApiCallMethodsCode,
     ingredients,
@@ -22,7 +24,12 @@ const ruleClosure = (
     let filerCodeFunction = new Function(
         triggerApiCallMethodsCode   + '\n' +
         actuatorApiCallMethodsCode  + '\n' +
-        // getTriggerData(ingredients, properties)
+        `
+            let ${triggerName} = new ${triggerName}Class(
+                ${JSON.stringify(ingredients)},
+                ${JSON.stringify(properties)},
+            );
+        ` +
         filterCode
     );
 
@@ -400,6 +407,8 @@ const tapClosure = ()=>{
         rules[id] = ruleClosure(
             id,
             filterCode,
+            triggerName,
+            actuatorName,
             triggerApiCallMethodsCode,
             actuatorApiCallMethodsCode,
             ingredients,
@@ -507,6 +516,8 @@ const tapClosure = ()=>{
             rules[ruleID] = ruleClosure(
                 ruleID,
                 filterCode,
+                triggerName,
+                actuatorName,
                 triggerApiCallMethodsCode,
                 actuatorApiCallMethodsCode,
                 ingredients,
@@ -632,7 +643,6 @@ tap.registerService(
     "RandomIntGenerator",
     "trigger",
     `
-        // define ingredient & minimizedAuxiliaryInformation
 
         const dataArray = {
             "RandomIntGenerator.getRandomInt" : null,
@@ -641,7 +651,7 @@ tap.registerService(
 
         const getTriggerData = (
             askedFields,
-            minimizedAuxiliaryInformation = null
+            properties = null
         )=>{
             if(askedFields.includes('RandomIntGenerator.getRandomInt')){
                 dataArray['RandomIntGenerator.getRandomInt'] = Math.floor(Math.random() * 100);
@@ -655,11 +665,11 @@ tap.registerService(
         class RandomIntGeneratorClass{
             constructor(
                 askedFields,
-                minimizedAuxiliaryInformation = null
+                properties = null
             ){
                 getTriggerData(
                     askedFields,
-                    minimizedAuxiliaryInformation = null
+                    properties
                 )
             }
 
