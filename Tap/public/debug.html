@@ -97,8 +97,11 @@
                         <td>
                             <fieldset>
                                 <legend>DataSet</legend>
-                                <textarea id="DataSet" style="border: none;
-                                margin: 0;width: 98%; resize: none; min-height: 50px;" spellcheck="false" readonly></textarea>
+
+                                <ul id="DataSet" style="border: none;
+                                margin: 0;width: 98%; resize: none; min-height: 50px;" spellcheck="false" >
+
+                                </ul>
                             </fieldset>
                         </td>
                         <td>
@@ -200,7 +203,7 @@
         fetch(
             './get_filter?_id=' + Id
         ).then(resjs => resjs.json()).then((resRule) => {
-
+            console.log(resRule);
             var li_trigger = document.createElement("li");
             li_trigger.innerText = resRule.triggerName;
             document.getElementById("TriggerName").appendChild(li_trigger);
@@ -210,7 +213,24 @@
             ActuatorName.appendChild(li_actuator);
             rule = document.getElementById("rule");
             rule.innerText = resRule.filterCode;
-
+            if (resRule.properties ) {
+                
+                document.getElementById("transformed_rule").innerText = resRule.properties.minimizedAuxiliaryInformation.transformedFilterCode
+                const array  = resRule.properties.minimizedAuxiliaryInformation.dependencySet
+                for (let index = 0; index < array.length; index++) {
+                    const element = array[index];
+                    let li = document.createElement("li")
+                    li.innerText = element ; 
+                    document.getElementById("DataSet").appendChild(li);    
+                }
+                document.getElementById("Signature").innerText = resRule.properties.minimizedAuxiliaryInformation.signature
+            }
+            else
+            {
+                document.getElementById("transformed_rule").innerText = "Rule has been created without the extension running"
+                document.getElementById("DataSet").innerText = "Rule has been created without the extension running"
+                document.getElementById("Signature").innerText = "Rule has been created without the extension running"
+            }
             ingredients = resRule.ingredients;
             ing = document.getElementById("Ingredients");
             for (let i = 0; i < ingredients.length; i++) {
@@ -223,7 +243,7 @@
             }
 
         });
-
+        
 
         var socket = new WebSocket('ws://localhost:1337');
 
