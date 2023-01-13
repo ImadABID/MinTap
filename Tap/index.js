@@ -21,6 +21,34 @@ socket.on('request', function (request) {
     ['general', `rule#${request.resourceURL.query.ruleID}`]
   );
 
+  logger.log(
+    `rule#${request.resourceURL.query.ruleID}`,
+    {
+      "ExecID" : 1,
+      'Data' : {
+        "field_1" : "value_1",
+        "field_2" : "value_2",
+        "field_3" : "value_3",
+        "field_4" : "value_4"
+      }
+    },
+    'RuleExec'
+  );
+
+  logger.log(
+    `rule#${request.resourceURL.query.ruleID}`,
+    {
+      "ExecID" : 2,
+      'Data' : {
+        "field_10" : "value_10",
+        "field_20" : "value_20",
+        "field_30" : "value_30",
+        "field_40" : "value_40"
+      }
+    },
+    'RuleExec'
+  );
+
   /*
   var connection = request.accept(null, request.origin);
   var data = {

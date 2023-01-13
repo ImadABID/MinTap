@@ -13,7 +13,7 @@ class Logger{
                     {
                         date : new Date(),
                         type : 'Log' | 'Error' | 'Warning' | 'RuleExec' ,
-                        message : 'message'
+                        message : 'message' | {'ExecID' : 1, 'Data' : {'field1' : 'value1': , ... }}
                     },
                     ...
                 ],
@@ -109,11 +109,18 @@ class Logger{
             if(log){
 
                 consumer.topics[topic]++;
+                
+                let msg = {
+                    'type': log.type
+                }
 
-                const msg = {
-                    'ruleID': topic,
-                    'type': log.type,
-                    'msg': `[${log.date.toLocaleString()}] ${log.type} : ${log.message}`
+                // Building msg content
+                switch(log.type){
+                    case 'RuleExec' :
+                        msg['msg'] = log.message;
+                        break;
+                    default :
+                        msg['msg'] = `[${log.date.toLocaleString()}] ${log.type} : ${log.message}`;
                 }
 
                 consumer.connection.send(JSON.stringify(msg));
