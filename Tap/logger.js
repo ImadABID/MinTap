@@ -83,15 +83,7 @@ class Logger{
 
                 this.logs[topicName].forEach((log)=>{
 
-                    this.consumers[consumerID].topics[topicName]++;
-                    
-                    const msg = {
-                        'ruleID': topicName,
-                        'type': log.type,
-                        'msg': `[${log.date.toLocaleString()}] ${log.type} : ${log.message}`
-                    }
-    
-                    this.consumers[consumerID].connection.send(JSON.stringify(msg));
+                    this.provide(this.consumers[consumerID], topicName);
     
                 })
 
@@ -117,7 +109,7 @@ class Logger{
                 // Building msg content
                 switch(log.type){
                     case 'RuleExec' :
-                        msg['msg'] = log.message;
+                        msg['msg'] = JSON.parse(log.message);
                         break;
                     default :
                         msg['msg'] = `[${log.date.toLocaleString()}] ${log.type} : ${log.message}`;

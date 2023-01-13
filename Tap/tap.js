@@ -55,12 +55,14 @@ const ruleClosure = (
                             IngredientsValues[ingredient] = dataArray[ingredient];
                         });
 
+                        const msg = {
+                            "ExecID" : execID,
+                            'Data' : IngredientsValues
+                        }
+
                         logger.log(
                             `rule#${ruleID}`,
-                            {
-                              "ExecID" : execID,
-                              'Data' : IngredientsValues
-                            },
+                            JSON.stringify(msg),
                             'RuleExec'
                         );
 

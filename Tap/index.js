@@ -21,65 +21,6 @@ socket.on('request', function (request) {
     ['general', `rule#${request.resourceURL.query.ruleID}`]
   );
 
-  /*
-  logger.log(
-    `rule#${request.resourceURL.query.ruleID}`,
-    {
-      "ExecID" : 1,
-      'Data' : {
-        "field_1" : "value_1",
-        "field_2" : "value_2",
-        "field_3" : "value_3",
-        "field_4" : "value_4"
-      }
-    },
-    'RuleExec'
-  );
-
-  logger.log(
-    `rule#${request.resourceURL.query.ruleID}`,
-    {
-      "ExecID" : 2,
-      'Data' : {
-        "field_10" : "value_10",
-        "field_20" : "value_20",
-        "field_30" : "value_30",
-        "field_40" : "value_40"
-      }
-    },
-    'RuleExec'
-  );
-  */
-
-  /*
-  var connection = request.accept(null, request.origin);
-  var data = {
-    'ruleID': "1",
-    'type': 'Log',
-    'msg': 'test socket'
-  }
-  var data1 = {
-    'ruleID': "1",
-    'type': 'RuleExec',
-    'msg':{ "ExecID" : 1 , "Data" : { "field_1" : "value_1" ,"field_2" : "value_2", "field_3" : "value_2","field_4" : "value_2"  }}
-  }
-  var data2 = {
-    'ruleID': "1",
-    'type': 'RuleExec',
-    'msg':{ "ExecID" : 2 , "Data" : { "field_1" : "value_2" ,"field_2" : "value_2", "field_3" : "value_2","field_4" : "value_2"  }}
-  }
-  setTimeout(function () {
-    connection.send(JSON.stringify(data))
-    connection.send(JSON.stringify(data1))
-    connection.send(JSON.stringify(data2))
-
-  }, 1000);
-
-
-  connection.on('close', function (connection) {
-    console.log('connection closed');
-  });
-  */
 });
 
 var app = express();
@@ -118,8 +59,6 @@ app.get('/get_service', async (req, res) => {
 })
 app.post('/add_rule', async (req, res) => {
 
-  console.log(req.body);
-
   await tap.setRule(
     req.body.name,
     req.body.filterCode,
@@ -129,11 +68,11 @@ app.post('/add_rule', async (req, res) => {
     req.body.periodInMs,
     req.body.properties
   );
+
   res.send({ msg: 'rule saved' });
+
 })
 app.post('/edit_rule', async (req, res) => {
-
-  console.log(req.body);
 
   await tap.editRule(
     req.body._id,
