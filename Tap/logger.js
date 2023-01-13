@@ -111,7 +111,6 @@ class Logger{
                 consumer.topics[topic]++;
 
                 const msg = {
-                    'ruleID': topic,
                     'type': log.type,
                     'msg': `[${log.date.toLocaleString()}] ${log.type} : ${log.message}`
                 }

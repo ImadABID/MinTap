@@ -193,12 +193,15 @@
             }
 
         }
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const Id = urlParams.get('_id');
+
+        // Rule ID :
+        const ruleID =
+            new URLSearchParams(window.location.search)
+            .get('_id')
+        ;
 
         fetch(
-            './get_filter?_id=' + Id
+            './get_filter?_id=' + ruleID
         ).then(resjs => resjs.json()).then((resRule) => {
 
             var li_trigger = document.createElement("li");
@@ -224,38 +227,26 @@
 
         });
 
-
-        var socket = new WebSocket('ws://localhost:1337');
-
-        // Rule ID :
-        const ruleID =
-            new URLSearchParams(window.location.search)
-            .get('_id')
-        ;
-
         var socket = new WebSocket(`ws://localhost:1337?ruleID=${ruleID}`);
         socket.onopen = function () {
-            console.log("soncket is opened");
+            console.log("socket is opened");
         };
 
         socket.onmessage = function (msg) {
             message = JSON.parse(msg.data)
-            if (message.ruleID == Id) {
-                if (message.type != 'RuleExec') {
-                    //console.log(message);
-                    var content = document.getElementById('log');
-                    content.innerHTML += "\n" + message.msg;
-                }
-                else {
-                    console.log(message.msg)
-                    array.push(message.msg);
-                    select_exec = document.getElementById("Execution");
-                    let option = document.createElement("option");
-                    option.setAttribute("value", message.msg.ExecID)
-                    option.innerText = message.msg.ExecID;
-                    select_exec.appendChild(option);
-                    change();
-                }
+            if (message.type != 'RuleExec') {
+                console.log(message);
+                var content = document.getElementById('log');
+                content.innerHTML += "\n" + message.msg;
+            } else {
+                console.log(message.msg)
+                array.push(message.msg);
+                select_exec = document.getElementById("Execution");
+                let option = document.createElement("option");
+                option.setAttribute("value", message.msg.ExecID)
+                option.innerText = message.msg.ExecID;
+                select_exec.appendChild(option);
+                change();
             }
         };
 
