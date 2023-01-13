@@ -14,11 +14,11 @@ const ruleClosure = (
     actuatorApiCallMethodsCode,
     ingredients,
     periodInMs,
-    properties
+    properties,
+    execID = 0
 )=>{
 
     let intervalID = null;
-    let execID = 0;
 
     let status = '';
 
@@ -91,6 +91,7 @@ const ruleClosure = (
             clearInterval(intervalID);
             intervalID = null;
         }
+        return execID;
     };
 
     const getStatus = ()=>{
@@ -533,8 +534,10 @@ const tapClosure = ()=>{
 
         if(rules[ruleID]){
 
-            rules[ruleID].stop();
+            const execID = rules[ruleID].stop();
             delete rules[ruleID];
+
+            logger.log(`rule#${id}`, 'Editing the rule');
 
             rules[ruleID] = ruleClosure(
                 ruleID,
@@ -545,7 +548,8 @@ const tapClosure = ()=>{
                 actuatorApiCallMethodsCode,
                 ingredients,
                 periodInMs,
-                properties
+                properties,
+                execID
             );
     
             rules[ruleID].start();
