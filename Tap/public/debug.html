@@ -5,12 +5,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <title>MinTap Debug</title>
     <style>
         .execution {
             border: 1px solid;
 
 
+        }
+
+        .button {
+            background-color: #707070;
+            /* Green */
+            margin-top: 10px;
+            padding: 5px 15px;
+            color: white;
+            text-align: center;
+            font-size: 16px;
         }
 
         textarea.insidefieldset,
@@ -41,118 +53,129 @@
 
 <body>
     <h1 style="text-align: center;">MinTap Debug</h1>
-    <div>
-        <fieldset style="display:inline;width: 60%; min-height: 1000px; margin-bottom: -16px;">
-            <fieldset>
-                <legend>Rule Setup</legend>
-                <table style="width: 100%; margin: auto;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 60%;height: 100vh; ">
+                <fieldset style="height: auto;">
+                    <fieldset>
+                        <legend>Rule Setup</legend>
+                        <table style="width: 100%; margin: auto;">
 
-                    <tr>
-                        <td>
-                            <fieldset>
-                                <legend>TriggerName </legend>
-                                <ul id="TriggerName">
-                                </ul>
-                            </fieldset>
-                        </td>
-                        <td>
-                            <fieldset>
-                                <legend>ActuatorName </legend>
-                                <ul id="ActuatorName">
+                            <tr>
+                                <td>
+                                    <fieldset>
+                                        <legend>TriggerName </legend>
+                                        <ul id="TriggerName">
+                                        </ul>
+                                    </fieldset>
+                                </td>
+                                <td>
+                                    <fieldset>
+                                        <legend>ActuatorName </legend>
+                                        <ul id="ActuatorName">
 
-                                </ul>
-                            </fieldset>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <fieldset>
-                                <legend>Ingredients </legend>
-                                <ul id="Ingredients">
+                                        </ul>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <fieldset>
+                                        <legend>Ingredients </legend>
+                                        <ul id="Ingredients">
 
-                                </ul>
-                            </fieldset>
-                        </td>
-                    </tr>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <fieldset>
-                                <legend>Rule</legend>
-                                <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
-                                <textarea id="rule" class="insidefieldset" spellcheck="false" readonly></textarea>
-                            </fieldset>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <fieldset>
-                                <legend> Transformed rule</legend>
-                                <textarea id="transformed_rule" class="insidefieldset" spellcheck="false"
-                                    readonly></textarea>
-                            </fieldset>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <fieldset>
-                                <legend>DataSet</legend>
+                                        </ul>
+                                    </fieldset>
+                                </td>
+                            </tr>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend>Rule</legend>
+                    <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
+                    <pre><code class="language-html"id="rule" >
+                                </code></pre>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <fieldset>
+                    <legend> Transformed rule</legend>
+                    <pre><code class="language-html"id="transformed_rule" >
+                                </code></pre>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>DataSet</legend>
 
-                                <ul id="DataSet" style="border: none;
-                                margin: 0;width: 98%; resize: none; min-height: 50px;" spellcheck="false" >
+                    <ul id="DataSet" style="border: none;
+                                margin: 0;width: 98%; resize: none; min-height: 50px;" spellcheck="false">
 
-                                </ul>
-                            </fieldset>
-                        </td>
-                        <td>
-                            <fieldset>
-                                <legend>Signature</legend>
-                                <textarea id="Signature" class="insidefieldset" style="border: none;
-                                margin: 0;width: 98%; resize: none; min-height: 50px;"  spellcheck="false"
-                                    readonly></textarea>
-                            </fieldset>
-                        </td>
-                    </tr>
-                </table>
-            </fieldset>
-            <fieldset style="margin-top: 20px;">
-                <legend>Rule Execution</legend>
-                <table style="width: 100%; height: auto; margin: auto;">
-                    <tr>
-                        <td>
-                            <fieldset>
-                                <legend>Ingredients</legend>
-                                <table id="table" class="execution" style="width: 100%;">
-                                    <tr id="first_tr">
-                                        <th class="execution"> name </th>
-                                        <th class="execution"> value </th>
-                                    </tr>
+                    </ul>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Signature</legend>
+                    <textarea id="Signature" class="insidefieldset" style="border: none;
+                                margin: 0;width: 98%; resize: none; min-height: 50px;" spellcheck="false"
+                        readonly></textarea>
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+    </fieldset>
+    <fieldset style="margin-top: 20px;">
+        <legend>Rule Execution</legend>
+        <table style="width: 100%; height: auto; margin: auto;">
+            <tr>
+                <td>
+                    <fieldset>
+                        <legend>Ingredients</legend>
+                        <table id="table" class="execution" style="width: 100%;">
+                            <tr id="first_tr">
+                                <th class="execution"> name </th>
+                                <th class="execution"> value </th>
+                            </tr>
 
-                                </table>
-                            </fieldset>
-                        </td>
-                        <td>
-                            <fieldset>
-                                <legend>Execution</legend>
-                                <select name="Execution" id="Execution" style="width: 100%;"
-                                    onchange="change()"></select>
-                            </fieldset>
-                        </td>
-                    </tr>
-                </table>
-            </fieldset>
-        </fieldset>
-        <fieldset style="display: inline;  width: 35%; border-color: tomato ;">
+                        </table>
+                    </fieldset>
+                </td>
+                <td>
+                    <fieldset>
+                        <legend>Execution ID</legend>
+                        <select name="Execution" id="Execution" style="width: 100%;" onchange="change()"></select>
+                    </fieldset>
+                    <div style="display: flex; justify-content: space-around">
+                        <button class="button" onclick="previous()">previous</button>
+                        <button class="button" onclick="next()">next</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    </fieldset>
+    </td>
+    <td style=" height:100vh ;  ">
+        <fieldset style="border-color: tomato ; ">
             <legend>Real time messages</legend>
             <!-- <input class="insidefieldset" type="textarea" name="Ename" style="resize: none;"> -->
             <textarea id="log" style="            
                     border: none;
-                    min-height: 984px; 
+                    height:100vh;
                     width: 98%;
-                    " class="log" spellcheck="false"></textarea>
+                    resize: none;
+                    " class="log"></textarea>
         </fieldset>
+    </td>
+    </tr>
+    </table>
 
-    </div>
     <script>
         var array = [];
         function change() {
@@ -175,7 +198,7 @@
                     const data = element.Data;
                     const keys = Object.keys(data);
                     const val = Object.values(data);
-                    console.log(keys)
+                    //console.log(keys)
                     for (let index = 0; index < keys.length; index++) {
                         let tr = document.createElement("tr");
                         tr.setAttribute("id", "not_first");
@@ -196,17 +219,37 @@
             }
 
         }
-
+        function next() {
+            document.getElementById("Execution").lastChild.value;
+            document.getElementById("Execution").value;
+            if (document.getElementById("Execution").value == document.getElementById("Execution").lastChild.value) {
+                document.getElementById("Execution").value = 0;
+                change();
+            }
+            else {
+                document.getElementById("Execution").value = parseInt(document.getElementById("Execution").value) + 1;
+                change();
+            }
+        }
+        function previous() {
+            if (document.getElementById("Execution").value > 0) {
+                document.getElementById("Execution").value = parseInt(document.getElementById("Execution").value) - 1;
+                change();
+            }
+            else {
+                document.getElementById("Execution").value = document.getElementById("Execution").lastChild.value;
+                change();
+            }
+        }
         // Rule ID :
         const ruleID =
             new URLSearchParams(window.location.search)
-            .get('_id')
-        ;
+                .get('_id')
+            ;
 
         fetch(
             './get_filter?_id=' + ruleID
         ).then(resjs => resjs.json()).then((resRule) => {
-            console.log(resRule);
             var li_trigger = document.createElement("li");
             li_trigger.innerText = resRule.triggerName;
             document.getElementById("TriggerName").appendChild(li_trigger);
@@ -216,20 +259,20 @@
             ActuatorName.appendChild(li_actuator);
             rule = document.getElementById("rule");
             rule.innerText = resRule.filterCode;
-            if (resRule.properties ) {
-                
+
+            if (resRule.properties) {
+
                 document.getElementById("transformed_rule").innerText = resRule.properties.minimizedAuxiliaryInformation.transformedFilterCode
-                const array  = resRule.properties.minimizedAuxiliaryInformation.dependencySet
+                const array = resRule.properties.minimizedAuxiliaryInformation.dependencySet
                 for (let index = 0; index < array.length; index++) {
                     const element = array[index];
                     let li = document.createElement("li")
-                    li.innerText = element ; 
-                    document.getElementById("DataSet").appendChild(li);    
+                    li.innerText = element;
+                    document.getElementById("DataSet").appendChild(li);
                 }
                 document.getElementById("Signature").innerText = resRule.properties.minimizedAuxiliaryInformation.signature
             }
-            else
-            {
+            else {
                 document.getElementById("transformed_rule").innerText = "Rule has been created without the extension running"
                 document.getElementById("DataSet").innerText = "Rule has been created without the extension running"
                 document.getElementById("Signature").innerText = "Rule has been created without the extension running"
@@ -255,11 +298,11 @@
         socket.onmessage = function (msg) {
             message = JSON.parse(msg.data)
             if (message.type != 'RuleExec') {
-                console.log(message);
+                //console.log(message);
                 var content = document.getElementById('log');
                 content.innerHTML += "\n" + message.msg;
             } else {
-                console.log(message.msg)
+                //console.log(message.msg)
                 array.push(message.msg);
                 select_exec = document.getElementById("Execution");
                 let option = document.createElement("option");

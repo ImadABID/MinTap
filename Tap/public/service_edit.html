@@ -100,7 +100,8 @@
           <td width="92%">
             <fieldset>
               <legend>Manifest</legend>
-              <textarea id="transformed_rule" class="insidefieldset" spellcheck="false" style="resize: vertical;"></textarea>
+              <textarea id="transformed_rule" class="insidefieldset" spellcheck="false"
+                style="resize: vertical;"></textarea>
             </fieldset>
           </td>
           <td>
@@ -125,11 +126,11 @@
   <script>
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    var name  = urlParams.get('name');
+    var name = urlParams.get('name');
     fetch(
-      './get_service?name=' + name 
+      './get_service?name=' + name
     ).then(resjs => resjs.json()).then((res) => {
-      document.getElementById("transformed_rule").innerText = res.serviceApiCallMethodsCode;
+      document.getElementById("transformed_rule").innerHTML = res.serviceApiCallMethodsCode;
       document.getElementById("service_type").value = res.serviceType;
       document.getElementById("service_name").innerText = res.serviceName;
 
@@ -146,7 +147,7 @@
 
       };
       fetch(
-        './edit_service?name='+name,
+        './edit_service?name=' + name,
         {
           method: 'POST', // *GET, POST, PUT, DELETE, etc.
           mode: 'cors', // no-cors, *cors, same-origin

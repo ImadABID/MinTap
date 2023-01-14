@@ -185,9 +185,9 @@
         fetch(
           './get_filter?_id=' + Id
         ).then(resjs => resjs.json()).then((resRule) => {
-          
 
-          document.getElementById("transformed_rule").innerText = resRule.filterCode;
+
+          document.getElementById("transformed_rule").innerHTML = resRule.filterCode;
           document.getElementById("rule_name").innerText = resRule.name;
           document.getElementById("trigger_name").value = resRule.triggerName;
           document.getElementById("service_name").value = resRule.actuatorName;
@@ -208,8 +208,8 @@
             const element = ingredients[i];
             let option = document.createElement('option');
             option.innerText = element;
-            if (resRule.ingredients.includes(ingredients[i])){
-              option.setAttribute("selected","selected")
+            if (resRule.ingredients.includes(ingredients[i])) {
+              option.setAttribute("selected", "selected")
             }
             ingredient_select.appendChild(option);
           }
@@ -230,10 +230,10 @@
 
       for (let i = 0; i < options.length; i++) {
         if (options[i].selected) {
-            ingredients.push(options[i].value);
+          ingredients.push(options[i].value);
         }
       }
-      
+
       const data = {
         '_id': Id,
         'name': name,
