@@ -43,10 +43,10 @@ const ruleClosure = (
 
             const executeFunc = ()=>{
 
-                try{ 
-                    
+                try{
+
                     logger.log(`rule#${ruleID}`, 'Executing the rule');
-                    
+
                     const dataArray = filerCodeFunction();
                     const IngredientsValues = {};
 
@@ -88,7 +88,7 @@ const ruleClosure = (
                 parseInt(periodInMs)
             );
 
-        }  
+        }
     };
 
     const stop = ()=>{
@@ -132,9 +132,9 @@ const ruleClosure = (
 };
 
 const tapClosure = ()=>{
-    
+
     let lastId = 0;
-    
+
     const triggers = {};
     const actuators = {};
     const rules = {};
@@ -195,11 +195,11 @@ const tapClosure = ()=>{
     });
 
     const _getTriggerIngredientsFromManifest = (manifest)=>{
-        
+
         const manifestFunc = new Function(
             manifest + 'return Object.keys(dataArray);'
         )
-        
+
         return manifestFunc();
     }
 
@@ -227,7 +227,7 @@ const tapClosure = ()=>{
             default :
                 correctType =  false;
                 console.log("Unknown service type.");
-                break; 
+                break;
         }
 
     }
@@ -263,12 +263,12 @@ const tapClosure = ()=>{
     const getServiceByName = async (name)=>{
 
         await initPromise;
-        
+
         if(triggers[name]){
             return {
                 'serviceName' : name,
                 'serviceType': 'trigger',
-                'serviceApiCallMethodsCode' : triggers[name].serviceApiCallMethodsCode, 
+                'serviceApiCallMethodsCode' : triggers[name].serviceApiCallMethodsCode,
             }
         }
 
@@ -276,7 +276,7 @@ const tapClosure = ()=>{
             return {
                 'serviceName' : name,
                 'serviceType': 'actuator',
-                'serviceApiCallMethodsCode' : actuators[name].serviceApiCallMethodsCode, 
+                'serviceApiCallMethodsCode' : actuators[name].serviceApiCallMethodsCode,
             }
         }
 
@@ -305,7 +305,7 @@ const tapClosure = ()=>{
     )=>{
 
         await initPromise;
-        
+
         _registerService(
             serviceName,
             serviceType,
@@ -317,7 +317,7 @@ const tapClosure = ()=>{
             serviceName: serviceName,
             serviceType : serviceType,
         };
-        
+
         // this option instructs the method to create a document if no documents match the filter
         const options = { upsert: true };
 
@@ -353,7 +353,7 @@ const tapClosure = ()=>{
     }
 
     const getAllRules = async ()=>{
-        
+
         await initPromise;
 
         const rulesArray = [];
@@ -375,9 +375,9 @@ const tapClosure = ()=>{
     }
 
     const getRuleByID = async (id)=>{
-    
+
         await initPromise;
-        
+
         const ruleObject = {}
 
         if(rulesObject[id]){
@@ -493,7 +493,7 @@ const tapClosure = ()=>{
             triggerName : triggerName,
             actuatorName : actuatorName,
         };
-        
+
         // this option instructs the method to create a document if no documents match the filter
         const options = { upsert: true };
 
@@ -559,9 +559,9 @@ const tapClosure = ()=>{
                 properties,
                 execID
             );
-    
+
             rules[ruleID].start();
-    
+
             rulesObject[ruleID] = {
                 ruleName : ruleName,
                 filterCode : filterCode,
@@ -613,7 +613,7 @@ const tapClosure = ()=>{
             periodInMs,
             properties
         );
-        
+
         // this option instructs the method to create a document if no documents match the filter
         const options = { upsert: true };
 

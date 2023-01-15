@@ -1,6 +1,5 @@
 //MANIFEST.js
 //l'objet dataArray est la reponse en JSON à la requete contenant r' vers le filtre
-
 const API_URL = "127.0.0.1:4000";
 
 // Only for trigger manifest
@@ -12,30 +11,33 @@ const dataArray = {
 }
 
 // Only for trigger manifest
-const getTriggerData = (
-  
-  askedFields,
-  // A subset of Object.keys(dataArray)
+const getTriggerData = function(askedFields, properties){
+      let ruleCode = properties.minimizedAuxiliaryInformation.transformedFilterCode ?? null;
+      let fields = properties.askedFields;
 
-  minimizedAuxiliaryInformation = null
-  // Contains the transformed rule and more (See the tap doc). 
-  // Optional and must be null for MinTap incompatible rules.
+      fetch(`${API_URL}/filter`, {
+      method: 'POST',
+      body: JSON.stringify({
 
-)=>{
-  // To implements
-  // Contains the fetch
-  // Populates dataArray fields with asked values
+        ruleCode: ruleCode
+      }),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => res.json())
+      .then(function(json){
+        dataArray = json;
+      }).catch(err => console.error(err));
 }
 
 class serviceClass {
   constructor(
     askedFields,
-    minimizedAuxiliaryInformation = null
+    properties = null
   ) {
 
     getTriggerData(
       askedFields,
-      minimizedAuxiliaryInformation
+      properties
     );
 
     this.lastMail = {
@@ -56,10 +58,6 @@ class serviceClass {
   }
 
   push_notification(){
-    requestURL(`http://${API_URL}/actions/push_notification`);
-    //definir une fonction "requestURL" de fetch qui tourne dans l'environnement du TAP
-    //en async si possible
+    fetch(`http://${API_URL}/actions/push_notification`);
   }
 }
-
-// let service = new serviceClass([]);

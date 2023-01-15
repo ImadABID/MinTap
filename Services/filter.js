@@ -1,6 +1,7 @@
-const syncRequest = require('sync-request');
 const express = require('express')
 const bodyParser = require('body-parser');
+const manifest = require("./manifest_filter");
+
 const app = express()
 const port = 5000;
 
@@ -10,63 +11,34 @@ app.listen(port, () => {
 });
 
 //BARRIER
-app.post('/filter', (req, res) => {
+app.get('/filter', (req, res) => {
 
     let ruleCode = `
       if(myService.lastMail.author == "john.deer@localhost"){
         if(myService.lastMail.content.includes("hello world")){
-          console.log("heho");
+          //ee
         }
       }
-    `;//req.body.ruleCode;
-    let dataArray = {};
+    `;
 
-
-    function requestURL(url){
-      try {
-        let res = syncRequest('GET', url, {encoding: 'utf8', timeout: 1000});
-        return res.getBody().toString();
-      } catch (err) {
-        return -1;
-      }
-    }
-
-    //MANIFEST
-    const API_URL = "127.0.0.1:4000";
-    class service {
-      constructor() {
-        this.lastMail = {
-          get author(){
-            let res = requestURL(`http://${API_URL}/triggers/lastMail/author`);
-            dataArray["lastMail.author"] = res;
-            return res;
-          },
-          get content(){
-            let res = requestURL(`http://${API_URL}/triggers/lastMail/content`);
-            dataArray["lastMail.content"] = res;
-            return res;
-          },
-          get subject(){
-            let res = requestURL(`http://${API_URL}/triggers/lastMail/subject`);
-            dataArray["lastMail.subject"] = res;
-            return res;
-          },
-        }
-      }
-      get roomTemperature(){
-        let res = requestURL(`http://${API_URL}/triggers/roomTemperature`);
-        dataArray["roomTemperature"] = res;
-        return res;
-      }
-    }
-    let myService = new service();
-    //END MANIFEST
-
+    let myService = new manifest.Service();
 
     eval(ruleCode);
+    res.status(200).send(manifest.dataArray);
+});
 
+app.post('/filter', (req, res) => {
 
+    let ruleCode = req.body.ruleCode;
+    if(ruleCode != null){
+      eval(ruleCode);
+    } else {
+      let fields = req.body.fields;
+      if(fields != null){
+        fields.forEach((field) => {eval(field)});
+      }
+    }
 
-    res.status(200).send(dataArray);
-
+    let myService = new manifest.Service();
+    res.status(200).send(manifest.dataArray);
 });
