@@ -23,8 +23,8 @@ const ruleClosure = (
     let status = '';
 
     let filerCodeFunction = new Function(
-        triggerApiCallMethodsCode   + '\n' +
-        actuatorApiCallMethodsCode  + '\n' +
+        triggerApiCallMethodsCode   + ';\n' +
+        actuatorApiCallMethodsCode  + ';\n' +
         `
             let ${triggerName} = new ${triggerName}Class(
                 ${JSON.stringify(ingredients)},
@@ -32,7 +32,7 @@ const ruleClosure = (
             );
         ` +
         filterCode +
-        'return dataArray;'
+        ';\nreturn dataArray;'
     );
 
     const start = ()=>{
@@ -79,8 +79,10 @@ const ruleClosure = (
             };
 
             logger.log(`rule#${ruleID}`, 'Scheduling rule executions');
+            
             status = '';
-            executeFunc();
+
+            setTimeout(executeFunc,0);
             intervalID = setInterval(
                 executeFunc,
                 parseInt(periodInMs)
@@ -486,7 +488,8 @@ const tapClosure = ()=>{
 
         // create a filter for a service to update
         const filter = {
-            filterCode: filterCode,
+            ruleName : ruleName,
+            filterCode : filterCode,
             triggerName : triggerName,
             actuatorName : actuatorName,
         };
@@ -542,7 +545,7 @@ const tapClosure = ()=>{
             const execID = rules[ruleID].stop();
             delete rules[ruleID];
 
-            logger.log(`rule#${id}`, 'Editing the rule');
+            logger.log(`rule#${ruleID}`, 'Editing the rule');
 
             rules[ruleID] = ruleClosure(
                 ruleID,
