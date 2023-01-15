@@ -228,6 +228,17 @@ const print_access_tracking_result = ()=>{
     ${accssedFieldsHandlerFunctionName}(str);
 }
 
+const getAccessedFields = ()=>{
+    const accessedFields = [];
+    for(traked_param_name in tracked_params){
+        if(tracked_params[traked_param_name].accessed){
+            accessedFields.push(traked_param_name)
+        }
+    }
+
+    return accessedFields;
+}
+
 let tracked_params = {};
         `
     };
