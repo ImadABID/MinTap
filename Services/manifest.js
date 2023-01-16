@@ -1,9 +1,9 @@
 //MANIFEST.js
 //l'objet dataArray est la reponse en JSON à la requete contenant r' vers le filtre
-const API_URL = "127.0.0.1:4000";
+const API_URL = "127.0.0.1:5000";
 
 // Only for trigger manifest
-const dataArray = {
+let dataArray = {
   "lastMail.author" : null,
   "lastMail.content" : null,
   "lastMail.subject" : null,
@@ -15,10 +15,10 @@ const getTriggerData = function(askedFields, properties){
       let ruleCode = properties.minimizedAuxiliaryInformation.transformedFilterCode ?? null;
       let fields = properties.askedFields;
 
-      fetch(`${API_URL}/filter`, {
+      fetch(`http://${API_URL}/filter`, {
       method: 'POST',
       body: JSON.stringify({
-
+        fields: fields,
         ruleCode: ruleCode
       }),
       headers: { 'Content-Type': 'application/json' }

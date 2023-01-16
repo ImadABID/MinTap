@@ -32,6 +32,7 @@ exports.Service = class Service {
       },
     }
   }
+  
   get roomTemperature(){
     let res = requestURL(`http://${API_URL}/triggers/roomTemperature`);
     exports.dataArray["roomTemperature"] = res;
