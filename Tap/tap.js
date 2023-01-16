@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 
-const mongoClient = new MongoClient('mongodb://localhost:27017/');
+const mongoClient = new MongoClient('mongodb://127.0.0.1:27017/');
 const tapDB = mongoClient.db('tap');
 
 const logger = require('./logger').logger;
