@@ -17,25 +17,25 @@ exports.Service = class Service {
     this.lastMail = {
       get author(){
         let res = requestURL(`http://${API_URL}/triggers/lastMail/author`);
-        exports.dataArray["lastMail.author"] = res;
+        exports.dataArray["service.lastMail.author"] = res;
         return res;
       },
       get content(){
         let res = requestURL(`http://${API_URL}/triggers/lastMail/content`);
-        exports.dataArray["lastMail.content"] = res;
+        exports.dataArray["service.lastMail.content"] = res;
         return res;
       },
       get subject(){
         let res = requestURL(`http://${API_URL}/triggers/lastMail/subject`);
-        exports.dataArray["lastMail.subject"] = res;
+        exports.dataArray["service.lastMail.subject"] = res;
         return res;
       },
     }
   }
-  
+
   get roomTemperature(){
     let res = requestURL(`http://${API_URL}/triggers/roomTemperature`);
-    exports.dataArray["roomTemperature"] = res;
+    exports.dataArray["service.roomTemperature"] = res;
     return res;
   }
 

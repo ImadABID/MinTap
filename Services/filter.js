@@ -13,13 +13,13 @@ app.listen(port, () => {
 //BARRIER
 app.get('/filter', (req, res) => {
     let ruleCode = `
-      if(myService.lastMail.author == "john.deer@localhost"){
-        if(myService.lastMail.content.includes("hello world")){
+      if(service.lastMail.author == "john.deer@localhost"){
+        if(service.lastMail.content.includes("hello world")){
           //ee
         }
       }
     `;
-    let myService = new manifest.Service();
+    let service = new manifest.Service();
 
     eval(ruleCode);
     res.status(200).send(manifest.dataArray);
@@ -28,6 +28,8 @@ app.get('/filter', (req, res) => {
 app.post('/filter', (req, res) => {
 
     console.log(req.body);
+
+    let service = new manifest.Service();
 
     let ruleCode = req.body.ruleCode;
     if(ruleCode != null){
@@ -39,7 +41,7 @@ app.post('/filter', (req, res) => {
       }
     }
 
-    let myService = new manifest.Service();
+
     console.log(manifest.dataArray);
     res.status(200).send(manifest.dataArray);
 });

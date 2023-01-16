@@ -4,10 +4,10 @@ const API_URL = "127.0.0.1:5000";
 
 // Only for trigger manifest
 let dataArray = {
-  "lastMail.author" : null,
-  "lastMail.content" : null,
-  "lastMail.subject" : null,
-  "roomTemperature" : null,
+  "service.lastMail.author" : null,
+  "service.lastMail.content" : null,
+  "service.lastMail.subject" : null,
+  "service.roomTemperature" : null,
 }
 
 // Only for trigger manifest
@@ -41,19 +41,19 @@ class serviceClass {
 
     this.lastMail = {
       get author(){
-        return dataArray["lastMail.author"];
+        return dataArray["service.lastMail.author"];
       },
       get content(){
-        return dataArray["lastMail.content"];
+        return dataArray["service.lastMail.content"];
       },
       get subject(){
-        return dataArray["lastMail.subject"];
+        return dataArray["service.lastMail.subject"];
       }
     };
   }
 
   get roomTemperature(){
-    return dataArray["roomTemperature"] ;
+    return dataArray["service.roomTemperature"] ;
   }
 
   push_notification(){
