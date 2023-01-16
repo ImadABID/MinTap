@@ -13,12 +13,11 @@ let dataArray = {
 // Only for trigger manifest
 const getTriggerData = function(askedFields, properties){
       let ruleCode = properties.minimizedAuxiliaryInformation.transformedFilterCode ?? null;
-      let fields = properties.askedFields;
 
       fetch(`http://${API_URL}/filter`, {
       method: 'POST',
       body: JSON.stringify({
-        fields: fields,
+        fields: askedFields,
         ruleCode: ruleCode
       }),
       headers: { 'Content-Type': 'application/json' }
