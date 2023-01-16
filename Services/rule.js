@@ -2,8 +2,8 @@
 
 
 
-if(myService.lastMail.author == "test"){
-  if(myService.lastMail.content.includes("hello world")){
-    myService.push_notification();
+if(service.lastMail.author == "test"){
+  if(service.lastMail.content.includes("hello world")){
+    service.push_notification();
   }
 }

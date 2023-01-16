@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser');
+const { exec } = require("child_process");
 const app = express()
 const port = 4000;
 
@@ -43,7 +44,7 @@ app.post('/actions/:action_slug', (req, res) => {
 
   if(slug == "push_notification"){
     console.log("PUSH NOTIFICATION");
-    console.log('\u0007');
+    exec("ffplay -autoexit notif.mp3")
     res.status(200).send();
     return;
   }

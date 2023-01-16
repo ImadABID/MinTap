@@ -59,6 +59,6 @@ class serviceClass {
   }
 
   push_notification(){
-    fetch(`http://${API_URL}/actions/push_notification`);
+    fetch(`http://${API_URL}/actions/push_notification`, {method: 'POST'});
   }
 }

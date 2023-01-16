@@ -14,8 +14,8 @@ app.listen(port, () => {
 app.get('/filter', (req, res) => {
     let ruleCode = `
       if(service.lastMail.author == "john.deer@localhost"){
-        if(service.lastMail.content.includes("hello world")){
-          //ee
+        if(service.lastMail.content.includes("service")){
+          
         }
       }
     `;
