@@ -39,6 +39,13 @@ exports.Service = class Service {
     return res;
   }
 
+  get seconds(){
+    let res = requestURL(`http://${API_URL}/triggers/seconds`);
+    exports.dataArray["service.seconds"] = res;
+    return res;
+  }
+
+
   push_notification(){
     //nothing
   }

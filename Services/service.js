@@ -36,6 +36,12 @@ app.get('/triggers/roomTemperature', (req, res) => {
   res.send((Math.random()*10 + 10).toFixed(1));
 });
 
+app.get('/triggers/seconds', (req, res) => {
+  res.send(Math.floor(Date.now()/1000) % 60);
+});
+
+
+
 
 //ACTIONS
 app.post('/actions/:action_slug', (req, res) => {

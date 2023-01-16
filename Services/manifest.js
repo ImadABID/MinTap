@@ -8,11 +8,11 @@ let dataArray = {
   "service.lastMail.content" : null,
   "service.lastMail.subject" : null,
   "service.roomTemperature" : null,
+  "service.seconds" : null
 }
 
 // Only for trigger manifest
 const getTriggerData = function(askedFields, properties){
-
       let ruleCode = null;
       if (!properties.minimizedAuxiliaryInformation) ruleCode = properties.minimizedAuxiliaryInformation.transformedFilterCode;
 
@@ -56,6 +56,10 @@ class serviceClass {
 
   get roomTemperature(){
     return dataArray["service.roomTemperature"] ;
+  }
+
+  get seconds(){
+    return dataArray["service.seconds"] ;
   }
 
   push_notification(){
