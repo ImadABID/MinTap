@@ -1,7 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const manifest = require("./manifest_filter");
-import fetch from "node-fetch";
 
 const app = express()
 const port = 5000;
