@@ -1,3 +1,4 @@
+const syncRequest = require('sync-request');
 //MANIFEST.js
 //l'objet dataArray est la reponse en JSON à la requete contenant r' vers le filtre
 const API_URL = "127.0.0.1:5000";
@@ -14,7 +15,7 @@ let dataArray = {
 // Only for trigger manifest
 const getTriggerData = function(askedFields, properties){
       let ruleCode = null;
-      if (!properties.minimizedAuxiliaryInformation) ruleCode = properties.minimizedAuxiliaryInformation.transformedFilterCode;
+      if (properties != null) ruleCode = properties.minimizedAuxiliaryInformation.transformedFilterCode;
 
       fetch(`http://${API_URL}/filter`, {
       method: 'POST',
