@@ -1,16 +1,14 @@
-const bodyParser = require("body-parser");
-const { exec } = require("child_process");
-var server = require('websocket').server;
-
-const http = require('http');
-
 const express = require("express");
+const bodyParser = require("body-parser");
+
+const server = require('websocket').server;
+const http = require('http');
 
 const tapModule = require('./tap');
 const tap = tapModule.tap;
 const logger = tapModule.logger;
 
-var socket = new server({
+const socket = new server({
   httpServer: http.createServer().listen(1337)
 });
 
@@ -23,7 +21,7 @@ socket.on('request', function (request) {
 
 });
 
-var app = express();
+const app = express();
 //app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
