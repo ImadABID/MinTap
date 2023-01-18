@@ -1,3 +1,4 @@
+const syncRequest = require('sync-request');
 //MANIFEST.js
 //l'objet dataArray est la reponse en JSON à la requete contenant r' vers le filtre
 const API_URL = "127.0.0.1:5000";
@@ -8,11 +9,13 @@ let dataArray = {
   "service.lastMail.content" : null,
   "service.lastMail.subject" : null,
   "service.roomTemperature" : null,
+  "service.seconds" : null
 }
 
 // Only for trigger manifest
 const getTriggerData = function(askedFields, properties){
-      let ruleCode = properties.minimizedAuxiliaryInformation.transformedFilterCode ?? null;
+      let ruleCode = null;
+      if (properties != null) ruleCode = properties.minimizedAuxiliaryInformation.transformedFilterCode;
 
       fetch(`http://${API_URL}/filter`, {
       method: 'POST',
@@ -56,7 +59,11 @@ class serviceClass {
     return dataArray["service.roomTemperature"] ;
   }
 
+  get seconds(){
+    return dataArray["service.seconds"] ;
+  }
+
   push_notification(){
-    fetch(`http://${API_URL}/actions/push_notification`);
+    fetch(`http://${API_URL}/actions/push_notification`, {method: 'POST'});
   }
 }
