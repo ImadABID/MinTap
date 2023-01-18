@@ -2,30 +2,30 @@
 
 // Only for trigger manifest
 let dataArray = {
-  "Spotify.currentTrack.artistNames" : null,
-  "Spotify.currentTrack.trackName" : null,
-  "Spotify.currentTrack.albumName" : null,
-  "Spotify.currentTrack.releaseDate" : null,
-  "Spotify.currentTrack.trackDuration" : null,
+  "Spotify.currentTrack.artistNames": null,
+  "Spotify.currentTrack.trackName": null,
+  "Spotify.currentTrack.albumName": null,
+  "Spotify.currentTrack.releaseDate": null,
+  "Spotify.currentTrack.trackDuration": null,
 }
 
-class SpotifyClass { 
+class SpotifyClass {
 
-  constructor(){
+  constructor() {
 
     // ------ Define the service object --------
-    
+
     this.currentTrack = {
-      get artistNames(){
+      get artistNames() {
         return dataArray["Spotify.currentTrack.artistNames"];
       },
-      get trackDuration(){
+      get trackDuration() {
         return dataArray["Spotify.currentTrack.trackDuration"];
       },
-      get albumName(){
+      get albumName() {
         return dataArray["Spotify.currentTrack.albumName"];
       },
-      get Duration(){
+      get Duration() {
         return dataArray["Spotify.currentTrack.releaseDate"];
       },
     };
@@ -37,7 +37,7 @@ class SpotifyClass {
   static async SpotifyClassFactory(
     askedFields,
     properties = null
-  ){
+  ) {
 
     // Only for trigger manifest
     // ------ Type here the code that populates dataArray --------
@@ -46,18 +46,18 @@ class SpotifyClass {
 
     fetch(`http://${API_URL}/tap`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         askedFields: askedFields,
         properties: properties
       }),
     })
-    .then(res => res.json())
-    .then((json)=>{
-      dataArray = json;
-      resolve(new SpotifyClass());
-    })
-    .catch(err => console.error(err));
+      .then(res => res.json())
+      .then((json) => {
+        dataArray = json;
+        resolve(new SpotifyClass());
+      })
+      .catch(err => console.error(err));
 
     // -----------------------------------------------------------
 
