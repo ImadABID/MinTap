@@ -21,10 +21,10 @@ class GmailClass {
 
 // Testing
 
-const main = async () => {
+// const main = async () => {
 
-  const Gmail = new GmailClass();
-  Gmail.sendMail("it was easy to do that", "imad.abied@gmail.com");
+//   const Gmail = new GmailClass();
+//   Gmail.sendMail("it was easy to do that", "imad.abied@gmail.com");
 
-}
-main();
+// }
+// main();

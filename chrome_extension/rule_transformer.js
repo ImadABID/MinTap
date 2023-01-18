@@ -228,7 +228,7 @@ const print_access_tracking_result = ()=>{
     ${accssedFieldsHandlerFunctionName}(str);
 }
 
-const getAccessedFields = ()=>{
+var getAccessedFields = ()=>{
     const accessedFields = [];
     for(traked_param_name in tracked_params){
         if(tracked_params[traked_param_name].accessed){
@@ -259,7 +259,7 @@ let tracked_params = {};
 
     // Adding print code for accessed params
     newRuleObj.rule += `
-print_access_tracking_result();
+// print_access_tracking_result();
     `;
 
 

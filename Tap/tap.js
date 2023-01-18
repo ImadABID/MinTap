@@ -25,14 +25,17 @@ const ruleClosure = (
     let filerCodeFunction = new Function(
         triggerApiCallMethodsCode   + ';\n' +
         actuatorApiCallMethodsCode  + ';\n' +
+        `   return new Promise((resolve)=>{
+                let ${actuatorName} = new ${actuatorName}Class();
+                ${triggerName}Class.${triggerName}ClassFactory(
+                    ${JSON.stringify(ingredients)},
+                    ${JSON.stringify(properties)},
+                ).then((${triggerName})=>{
+                    ${filterCode};
+                    resolve(dataArray);
+                });
+            });
         `
-            let ${triggerName} = new ${triggerName}Class(
-                ${JSON.stringify(ingredients)},
-                ${JSON.stringify(properties)},
-            );
-        ` +
-        filterCode +
-        ';\nreturn dataArray;'
     );
 
     const start = ()=>{
@@ -41,13 +44,13 @@ const ruleClosure = (
             console.log(`rule #${ruleID} is already started and cannot be started again.`)
         }else{
 
-            const executeFunc = ()=>{
+            const executeFunc = async ()=>{
 
                 try{
 
                     logger.log(`rule#${ruleID}`, 'Executing the rule');
 
-                    const dataArray = filerCodeFunction();
+                    const dataArray = await filerCodeFunction();
                     const IngredientsValues = {};
 
                     ingredients.forEach((ingredient)=>{
@@ -726,8 +729,10 @@ tap.registerService(
     "MessageLogger",
     "actuator",
     `
-        const MessageLogger = {};
-        MessageLogger.log = (msg)=>{console.log(msg)};
+        class MessageLoggerClass{
+
+        }
+    
     `
 );
 

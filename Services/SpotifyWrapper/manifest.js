@@ -19,6 +19,9 @@ class SpotifyClass {
       get artistNames() {
         return dataArray["Spotify.currentTrack.artistNames"];
       },
+      get trackName() {
+        return dataArray["Spotify.currentTrack.trackName"];
+      },
       get trackDuration() {
         return dataArray["Spotify.currentTrack.trackDuration"];
       },
@@ -34,32 +37,35 @@ class SpotifyClass {
 
   }
 
-  static async SpotifyClassFactory(
+  static SpotifyClassFactory(
     askedFields,
     properties = null
   ) {
 
-    // Only for trigger manifest
-    // ------ Type here the code that populates dataArray --------
+    return new Promise((resolve)=>{
 
-    const API_URL = "127.0.0.1:3006";
+      // Only for trigger manifest
+      // ------ Type here the code that populates dataArray --------
 
-    fetch(`http://${API_URL}/tap`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        askedFields: askedFields,
-        properties: properties
-      }),
-    })
+      const API_URL = "127.0.0.1:3006";
+
+      fetch(`http://${API_URL}/tap`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          askedFields: askedFields,
+          properties: properties
+        }),
+      })
       .then(res => res.json())
       .then((json) => {
         dataArray = json;
         resolve(new SpotifyClass());
       })
-      .catch(err => console.error(err));
 
-    // -----------------------------------------------------------
+      // -----------------------------------------------------------
+
+    });
 
   }
 
