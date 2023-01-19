@@ -6,7 +6,7 @@ var spotifyApi = new SpotifyWebApi({
     clientSecret: 'c86e0453fbdc422ab814b61afc6dd386',
     redirectUri: 'https://MinTapActuator.com'
 });
-spotifyApi.setAccessToken("BQAs3PkyU6nlHuNP2IAc_v4HfeNCDzSoYziZi-oTiyxGyA5UcgMuwA2jYekomV7Ue1fi_7YLcCED-5rnm1AXyGOKO5mZOUJF1Czxiv6E0VAnC3rDYXL-Olxee2tFZuwMjQlmDB_7rM_zEOsBlCZ-0GOtnaLtLckCzvt-j_3IM-oeiI_DOGk6DqTkSg_1DF3ZrdrW80sg");
+spotifyApi.setAccessToken("BQAERKNqKDC2_DOyArOIcU5oVCzhjVG04zzib-cC4tuNRqGP_A2u1c-npYOPys_uwz8vt43GBLl4TXuO9bcrernXD8VfbDIEEPW1mCuyFYLuUTGZDJTmKMqQj9SunY8DgkbqTTCKKR25RFleqgeIhW-9_sMRX60B4yYtAaPTRLj0HdlI_qxex4JMxjSIJS931rOmkcUW");
 
 const getTriggerData = (askedFields) => {
     return new Promise((resolve, reject) => {
@@ -17,24 +17,24 @@ const getTriggerData = (askedFields) => {
                     const element = askedFields[index];
                     if (element == "Spotify.currentTrack.artistNames") {
                         let array = [];
-                        for (let i = 0; i < data.body.item.artists.length; i++) {
-                            array.push(data.body.item.artists[i].name);
+                        for (let i = 0; i < data.body?.item?.artists?.length; i++) {
+                            array.push(data.body?.item?.artists[i]?.name);
 
                         }
                         returned_data["Spotify.currentTrack.artistNames"] = array;
                     }
                     else if (element == "Spotify.currentTrack.trackName") {
-                        returned_data["Spotify.currentTrack.trackName"] = data.body.item.name;
+                        returned_data["Spotify.currentTrack.trackName"] = data.body?.item?.name;
                     }
                     else if (element == "Spotify.currentTrack.albumName") {
-                        returned_data["Spotify.currentTrack.albumName"] = data.body.item.album.name;
+                        returned_data["Spotify.currentTrack.albumName"] = data.body?.item?.album?.name;
 
                     }
                     else if (element == "Spotify.currentTrack.releaseDate") {
-                        returned_data["Spotify.currentTrack.releaseDate"] = data.body.item.album.release_date;
+                        returned_data["Spotify.currentTrack.releaseDate"] = data.body?.item?.album?.release_date;
                     }
                     else if (element == "Spotify.currentTrack.trackDuration") {
-                        returned_data["Spotify.currentTrack.trackDuration"] = data.body.item.duration_ms;
+                        returned_data["Spotify.currentTrack.trackDuration"] = data.body?.item?.duration_ms;
                     }
                 }
                 resolve(returned_data);
