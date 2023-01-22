@@ -250,7 +250,7 @@ This functionality  is done automatically by the tap object ;
 
 ### Giving information to the debug user interface :
 
-Not yet implemented.
+> 🎯 TODO
 
 ## 5 - Web interface API
 
