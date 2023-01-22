@@ -35,3 +35,5 @@ Test the installation :
 |MongoDB|27017|
 |TAP|8080|
 |TAP DEBUG WEB SOCKET|1337|
+|Spotify Wrapper|3006|
+|Gmail Wrapper|3007|

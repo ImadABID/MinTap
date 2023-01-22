@@ -254,8 +254,8 @@ Not yet implemented.
 
 ## 5 - Web interface API
 
-> 🎯 TODO : by Aymen.
+> 🎯 TODO
 
 ## 6 - Debug user interface API
 
-> 🎯 TODO : by Imad & Hicham.
+> 🎯 TODO
