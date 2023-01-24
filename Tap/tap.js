@@ -192,7 +192,7 @@ const tapClosure = ()=>{
     }
 
     let initPromise = new Promise(async (resolve)=>{
-        // await deleteAllDB();
+        await deleteAllDB();
         await init();
         resolve();
     });
@@ -675,66 +675,6 @@ const tapClosure = ()=>{
 }
 
 const tap = tapClosure();
-
-// register default services
-tap.registerService(
-    "RandomIntGenerator",
-    "trigger",
-    `
-
-        const dataArray = {
-            "RandomIntGenerator.getRandomInt" : null,
-            "RandomIntGenerator.getRandomFloat" : null
-        }
-
-        const getTriggerData = (
-            askedFields,
-            properties = null
-        )=>{
-            if(askedFields.includes('RandomIntGenerator.getRandomInt')){
-                dataArray['RandomIntGenerator.getRandomInt'] = Math.floor(Math.random() * 100);
-            }
-
-            if(askedFields.includes('RandomIntGenerator.getRandomFloat')){
-                dataArray['RandomIntGenerator.getRandomFloat'] = Math.random();
-            }
-        }
-
-        class RandomIntGeneratorClass{
-            constructor(
-                askedFields,
-                properties = null
-            ){
-                getTriggerData(
-                    askedFields,
-                    properties
-                )
-            }
-
-            get getRandomInt(){
-                return dataArray['RandomIntGenerator.getRandomInt'];
-            }
-
-            get getRandomFloat(){
-                return dataArray['RandomIntGenerator.getRandomFloat'];
-            }
-
-        }
-
-        // let RandomIntGenerator = new RandomIntGeneratorClass([]);
-    `
-);
-
-tap.registerService(
-    "MessageLogger",
-    "actuator",
-    `
-        class MessageLoggerClass{
-
-        }
-    
-    `
-);
 
 module.exports.tap = tap;
 module.exports.logger = logger;
