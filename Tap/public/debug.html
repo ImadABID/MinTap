@@ -130,35 +130,35 @@
         </tr>
     </table>
     </fieldset>
-    <fieldset style="margin-top: 20px;">
-        <legend>Rule Execution</legend>
-        <table style="width: 100%; height: auto; margin: auto;">
-            <tr>
-                <td>
-                    <fieldset>
-                        <legend>Ingredients</legend>
-                        <table id="table" class="execution" style="width: 100%;">
-                            <tr id="first_tr">
-                                <th class="execution"> name </th>
-                                <th class="execution"> value </th>
-                            </tr>
-
-                        </table>
-                    </fieldset>
-                </td>
-                <td>
-                    <fieldset>
-                        <legend>Execution ID</legend>
-                        <select name="Execution" id="Execution" style="width: 100%;" onchange="change()"></select>
-                    </fieldset>
-                    <div style="display: flex; justify-content: space-around">
-                        <button class="button" onclick="previous()">previous</button>
-                        <button class="button" onclick="next()">next</button>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </fieldset>
+    <div id="ruleExecutionFieldsetContainer">
+        <fieldset id="ruleExecutionFieldset" style="margin-top: 20px;">
+            <legend onclick="zoom('ruleExecutionFieldset')">🔎 Rule Execution</legend>
+            <table style="width: 100%; height: auto; margin: auto;">
+                <tr>
+                    <td>
+                        <fieldset>
+                            <legend>Ingredients</legend>
+                            <table id="table" class="execution" style="width: 100%;">
+                                <tr id="first_tr">
+                                    <th class="execution"> name </th>
+                                    <th class="execution"> value </th>
+                                </tr>
+    
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+            </table>
+            <fieldset>
+                <legend>Execution ID</legend>
+                <select name="Execution" id="Execution" style="width: 200px;" onchange="change()"></select>
+                <div>
+                    <button class="button" onclick="previous()">previous</button>
+                    <button class="button" onclick="next()">next</button>
+                </div>
+            </fieldset>
+        </fieldset>
+    </div>
     </fieldset>
     </td>
     <td style=" height:100vh ;  ">
@@ -177,6 +177,57 @@
     </table>
 
     <script>
+
+        function zoom(zoomObjID){
+
+            window.scrollTo(0,0);
+
+            const body = document.body;
+
+            var background = document.createElement('div');
+            background.style = `
+                background-color : #00000055;
+                
+                position : absolute;
+                top : 0;
+                left 0;
+
+                height : ${body.clientHeight}px;
+                width : ${body.clientWidth}px;
+
+                font-size : 28pt;
+
+            `;
+
+            var QuiteZoom = ()=>{
+                console.log('Quitting Zoom');
+                const contentContainer = document.getElementById('ruleExecutionFieldsetContainer');
+                contentContainer.append(content);
+                background.remove();
+            }
+
+            var quitButton = document.createElement('div');
+            quitButton.innerHTML = '↩️';
+            quitButton.onclick = QuiteZoom;
+            background.appendChild(quitButton);
+
+            // var content = document.createElement('div');
+            // content.innerHTML = document.getElementById(zoomObjID);
+            // content.style = 'background-color : WHITE;'
+
+            // if(content){
+            //     delete content;
+            // }
+
+            var content = document.getElementById(zoomObjID);
+
+            content.style += ";background-color: WHITE;"
+            background.appendChild(content);
+
+            body.appendChild(background);
+
+        }
+
         var array = [];
         function change() {
             let Execution = document.getElementById("Execution");

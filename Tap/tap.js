@@ -192,7 +192,7 @@ const tapClosure = ()=>{
     }
 
     let initPromise = new Promise(async (resolve)=>{
-        await deleteAllDB();
+        // await deleteAllDB();
         await init();
         resolve();
     });
